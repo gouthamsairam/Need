@@ -4,10 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-public class TwoPointers {
+public class LeetCode {
 //    @Test
 //    Void  twoSum(){
-////        int n = arr.length;
+
+    /// /        int n = arr.length;
 //        int[] arr = {2, 1, 8, 6, 4, 6, 5, 5};
 //        for (int i = 0; i < n; i++) {
 //
@@ -27,7 +28,6 @@ public class TwoPointers {
 //        // all possibilities
 //
 //    }
-
     @Test
     void maxWater() {
         int[] arr = {2, 1, 8, 6, 4, 6, 5, 5};
@@ -197,14 +197,16 @@ public class TwoPointers {
         // Compare sorted strings
         System.out.println(Arrays.equals(s1Array, s2Array));
     }
+
     @Test
-    public void  permute() {
-        int[] nums = {1,2,3};
+    public void permute() {
+        int[] nums = {1, 2, 3};
         List<List<Integer>> resultList = new ArrayList<>();
 
         backtrack(resultList, new ArrayList<>(), nums);
-        System.out.println( resultList);
+        System.out.println(resultList);
     }
+
     private void backtrack(List<List<Integer>> resultList,
                            ArrayList<Integer> tempList, int[] nums) {
         // If we match the length, it is a permutation
@@ -228,6 +230,7 @@ public class TwoPointers {
             tempList.remove(tempList.size() - 1);
         }
     }
+
     @Test
     public void groupAnagrams() {
         String txt = "BACDGABCDA";
@@ -260,7 +263,7 @@ public class TwoPointers {
     }
 
     @Test
-    public void mergeIntervels(){
+    public void mergeIntervels() {
         int[][] arr = {{7, 8}, {1, 5}, {2, 4}, {4, 6}};
 
         int n = arr.length;
@@ -291,14 +294,16 @@ public class TwoPointers {
             System.out.println(interval[0] + " " + interval[1]);
         }
     }
+
     @Test
-    public void productofArrayExceptitself(){
+    public void productofArrayExceptitself() {
 
     }
+
     @Test
-    public void rearrangeStringnoTochararactersshouldbeconsective(){
+    public void rearrangeStringnoTochararactersshouldbeconsective() {
         int[] hash = new int[26];
-        String str  = "aabbccrr";
+        String str = "aabbccrr";
         for (int i = 0; i < str.length(); i++) hash[str.charAt(i) - 'a']++;
 
         int max = 0, letter = 0;
@@ -308,7 +313,8 @@ public class TwoPointers {
                 letter = i;
             }
 
-        if (max > (str.length() + 1) / 2) System.out.println( String.valueOf(" "));;
+        if (max > (str.length() + 1) / 2) System.out.println(String.valueOf(" "));
+        ;
 
         char[] res = new char[str.length()];
 
@@ -328,7 +334,7 @@ public class TwoPointers {
                 idx += 2;
             }
 
-        System.out.println( String.valueOf(res));
+        System.out.println(String.valueOf(res));
 
     }
 
@@ -341,14 +347,14 @@ public class TwoPointers {
         for (int i = 0; i < str.length(); i++) {
             boolean repeating = false;
             for (int j = i + 1; j < str.length(); j++) {
-                if(str.charAt(i)==str.charAt(j)){
+                if (str.charAt(i) == str.charAt(j)) {
                     repeating = true;
                     break;
                 }
             }
-            if(!repeating){
+            if (!repeating) {
                 count++;
-                if(count==k){
+                if (count == k) {
                     System.out.println(str.charAt(i));
                 }
             }
@@ -359,9 +365,10 @@ public class TwoPointers {
     public void minimumdiffrences_BetweenHighestand_lowestScores() {
 
     }
+
     @Test
-    public void MaxFruit_In_Basket(){
-        int [] A =  {1, 2, 3, 2, 2};
+    public void MaxFruit_In_Basket() {
+        int[] A = {1, 2, 3, 2, 2};
         int n = A.length;
         int maxFruitsCollected = 0;
 
@@ -383,16 +390,16 @@ public class TwoPointers {
 
         System.out.println(maxFruitsCollected);
     }
-    @Test
-    public void Coinchange(){
 
-        int amount  =1;
+    @Test
+    public void Coinchange() {
+
+        int amount = 1;
         int coins[] = {2, 5, 3, 6};
 
 
-
         // Check edge case
-        if (amount < 1){
+        if (amount < 1) {
             System.out.println(0);
         }
 
@@ -410,7 +417,39 @@ public class TwoPointers {
             }
         }
 
-        System.out.println( minCoinsDP[amount] == Integer.MAX_VALUE ? -1 : minCoinsDP[amount]);
+        System.out.println(minCoinsDP[amount] == Integer.MAX_VALUE ? -1 : minCoinsDP[amount]);
 
+    }
+
+    @Test
+    void Spiral_Matrix() {
+
+    }
+
+    ///  Two pointers approach
+    @Test
+    void findTriplets() {
+        int[] arr = {1, 2, 3, 4, 5, 6, 9, 10};
+        int target = 11;
+        int n = arr.length;
+
+        for (int i = 0; i < n - 2; i++) {
+            int left = i + 1;
+            int right = n - 1;
+
+            while (left < right) {
+                int sum = arr[i] + arr[left] + arr[right];
+
+                if (sum == target) {
+                    System.out.println("(" + arr[i] + "," + arr[left] + "," + arr[right] + ")");
+                    left++;
+                    right--;
+                } else if (sum < target) {
+                    left++;
+                } else {
+                    right--;
+                }
+            }
+        }
     }
 }

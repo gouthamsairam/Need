@@ -432,10 +432,11 @@ k = 3
         int end = 3;
         int Max = Integer.MIN_VALUE, sum = 0;
         while (end <= arr.length) {
+            sum =0;
             for (int i = start; i < end; i++) {
                 sum = sum + arr[i];
             }
-            System.out.println();
+
             start++;
             end++;
             Max = Math.max(Max, sum);
@@ -466,6 +467,23 @@ k = 4
 [2,1,3,4] -> 4
 [1,3,4,2] -> 4
 [3,4,2,3] -> 3*/
+        int arr[] = {1, 2, 1, 3, 4, 2, 3};
+        int sum = 0;
+        int k = 4;
+        int start = 0;
+        int end = k;
+        while (end <= arr.length) {
+            for(int i=start;i<end;i++){
+                System.out.print(arr[i] + ",");
+                for(int i=)
+            }
+            System.out.println();
+           // sum = sum - arr[start];
+            start++;
+         //   sum = sum + arr[end];
+           // System.out.print(sum);
+            end++;
+        }
     }
 
     @Test
@@ -498,7 +516,7 @@ AAAA
     void Minimum_Window_Substring() {
         /*
         s = "ADOBECODEBANC"
-t = "ABC"
+Distributed Transaction Management in Microservices = "ABC"
 "BANC"
          */
     }
