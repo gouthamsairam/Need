@@ -3,6 +3,7 @@ package Need.example.Need;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class NeedSubArray {
     @Test
@@ -473,11 +474,17 @@ k = 4
         int start = 0;
         int end = k;
         while (end <= arr.length) {
+            List<Integer> list = new ArrayList<>();
             for(int i=start;i<end;i++){
-                System.out.print(arr[i] + ",");
-                for(int i=)
+               // System.out.print(arr[i] + ",");
+                list.add(arr[i]);
             }
-            System.out.println();
+
+           // System.out.println();
+           // list.stream().distinct().collect(Collectors.toList());
+           // if(list.stream().distinct().collect(Collectors.toList()).size()== list.size()){
+                System.out.println(list.stream().distinct().collect(Collectors.toList()).size());
+           // }
            // sum = sum - arr[start];
             start++;
          //   sum = sum + arr[end];
