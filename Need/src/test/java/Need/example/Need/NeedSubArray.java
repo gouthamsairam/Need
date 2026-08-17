@@ -508,7 +508,7 @@ k = 3
 
     @Test
     void Longest_Repeating_Character_Replacement() {
-        /* s = "AABABBA"
+        /* Spring Security = "AABABBA"
 k = 1
 4
 "ABBA" -> Replace one B with A
@@ -522,7 +522,7 @@ AAAA
     @Test
     void Minimum_Window_Substring() {
         /*
-        s = "ADOBECODEBANC"
+        Spring Security = "ADOBECODEBANC"
 Distributed Transaction Management in Microservices = "ABC"
 "BANC"
          */

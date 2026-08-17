@@ -197,40 +197,6 @@ public class LeetCode {
         // Compare sorted strings
         System.out.println(Arrays.equals(s1Array, s2Array));
     }
-
-    @Test
-    public void permute() {
-        int[] nums = {1, 2, 3};
-        List<List<Integer>> resultList = new ArrayList<>();
-
-        backtrack(resultList, new ArrayList<>(), nums);
-        System.out.println(resultList);
-    }
-
-    private void backtrack(List<List<Integer>> resultList,
-                           ArrayList<Integer> tempList, int[] nums) {
-        // If we match the length, it is a permutation
-        if (tempList.size() == nums.length) {
-            resultList.add(new ArrayList<>(tempList));
-            return;
-        }
-
-        for (int number : nums) {
-            // Skip if we get same element
-            if (tempList.contains(number))
-                continue;
-
-            // Add the new element
-            tempList.add(number);
-
-            // Go back to try other element
-            backtrack(resultList, tempList, nums);
-
-            // Remove the element
-            tempList.remove(tempList.size() - 1);
-        }
-    }
-
     @Test
     public void groupAnagrams() {
         String txt = "BACDGABCDA";
@@ -294,10 +260,40 @@ public class LeetCode {
             System.out.println(interval[0] + " " + interval[1]);
         }
     }
+@Test
+public  void rotatedArray(){
+        /*Input: nums = [1,2,3,4,5,6,7], k = 3
+Output: [5,6,7,1,2,3,4]
+Explanation:
+rotate 1 steps to the right: [7,1,2,3,4,5,6]
+rotate 2 steps to the right: [6,7,1,2,3,4,5]
+rotate 3 steps to the right: [5,6,7,1,2,3,4]*/
+}
 
     @Test
     public void productofArrayExceptitself() {
+/*Example 1:
 
+Input: nums = [1,2,3,4]
+Output: [24,12,8,6]
+Example 2:
+
+Input: nums = [-1,1,0,-3,3]
+Output: [0,0,9,0,0]
+* */
+
+
+    }
+    @Test
+    public void find_all_numbers_disappeared(){
+        /*Example 1:
+
+Input: nums = [4,3,2,7,8,2,3,1]
+Output: [5,6]
+Example 2:
+
+Input: nums = [1,1]
+Output: [2]*/
     }
 
     @Test
@@ -450,6 +446,38 @@ public class LeetCode {
                     right--;
                 }
             }
+        }
+    }
+    @Test
+    public void permute() {
+        int[] nums = {1, 2, 3};
+        List<List<Integer>> resultList = new ArrayList<>();
+
+        backtrack(resultList, new ArrayList<>(), nums);
+        System.out.println(resultList);
+    }
+
+    private void backtrack(List<List<Integer>> resultList,
+                           ArrayList<Integer> tempList, int[] nums) {
+        // If we match the length, it is a permutation
+        if (tempList.size() == nums.length) {
+            resultList.add(new ArrayList<>(tempList));
+            return;
+        }
+
+        for (int number : nums) {
+            // Skip if we get same element
+            if (tempList.contains(number))
+                continue;
+
+            // Add the new element
+            tempList.add(number);
+
+            // Go back to try other element
+            backtrack(resultList, tempList, nums);
+
+            // Remove the element
+            tempList.remove(tempList.size() - 1);
         }
     }
 }

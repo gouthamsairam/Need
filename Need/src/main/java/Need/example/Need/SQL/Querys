@@ -781,6 +781,596 @@ WHERE salary < (
 ```
 
 But for a Senior Developer, prefer a window function:
+A **window function in SQL** is a function that performs a calculation across a set of related rows **without collapsing those rows into a single row**.
+
+This is the key difference from `GROUP BY`.
+
+### 1. Simple example
+
+Suppose we have an `employees` table:
+
+| id | name  | department | salary |
+| -: | ----- | ---------- | -----: |
+|  1 | John  | IT         |  80000 |
+|  2 | David | IT         |  90000 |
+|  3 | Mike  | IT         |  70000 |
+|  4 | Sarah | HR         |  60000 |
+|  5 | Jane  | HR         |  70000 |
+
+If you want to calculate the **average salary of each department**, you could use:
+
+```sql
+SELECT department, AVG(salary)
+FROM employees
+GROUP BY department;
+```
+
+Result:
+
+| department | avg_salary |
+| ---------- | ---------: |
+| IT         |      80000 |
+| HR         |      65000 |
+
+Notice that the individual employees disappeared.
+
+With a **window function**:
+
+```sql
+SELECT
+    name,
+    department,
+    salary,
+    AVG(salary) OVER (PARTITION BY department) AS dept_avg_salary
+FROM employees;
+```
+
+Result:
+
+| name  | department | salary | dept_avg_salary |
+| ----- | ---------- | -----: | --------------: |
+| John  | IT         |  80000 |           80000 |
+| David | IT         |  90000 |           80000 |
+| Mike  | IT         |  70000 |           80000 |
+| Sarah | HR         |  60000 |           65000 |
+| Jane  | HR         |  70000 |           65000 |
+
+**The original rows remain.**
+
+That's the main idea of a window function.
+
+---
+
+# 2. Window function syntax
+
+The general syntax is:
+
+```sql
+function_name(...)
+OVER (
+    PARTITION BY ...
+    ORDER BY ...
+)
+```
+
+For example:
+
+```sql
+AVG(salary) OVER (
+    PARTITION BY department
+)
+```
+
+Think of it as:
+
+```text
+AVG(salary)
+     ↓
+Calculate something
+
+OVER
+     ↓
+Define which rows participate
+```
+
+---
+
+# 3. `PARTITION BY`
+
+`PARTITION BY` divides the result into logical groups.
+
+Example:
+
+```sql
+AVG(salary) OVER (
+    PARTITION BY department
+)
+```
+
+means:
+
+```text
+IT
+ ├── John   80000
+ ├── David  90000
+ └── Mike   70000
+
+HR
+ ├── Sarah  60000
+ └── Jane   70000
+```
+
+The average is calculated separately for each partition.
+
+### Without `PARTITION BY`
+
+```sql
+AVG(salary) OVER ()
+```
+
+calculates the average across **all employees**.
+
+```text
+John   80000 ─┐
+David  90000  │
+Mike   70000  ├── Overall average
+Sarah  60000  │
+Jane   70000 ─┘
+```
+
+---
+
+# 4. `ORDER BY` inside a window
+
+`ORDER BY` is extremely important for functions such as `ROW_NUMBER`, `RANK`, `LAG`, `LEAD`, and running totals.
+
+For example:
+
+```sql
+SELECT
+    name,
+    salary,
+    ROW_NUMBER() OVER (
+        ORDER BY salary DESC
+    ) AS row_num
+FROM employees;
+```
+
+Result:
+
+| name  | salary | row_num |
+| ----- | -----: | ------: |
+| David |  90000 |       1 |
+| John  |  80000 |       2 |
+| Mike  |  70000 |       3 |
+| Jane  |  70000 |       4 |
+| Sarah |  60000 |       5 |
+
+We're saying:
+
+> Order employees by salary descending and assign a number to each row.
+
+---
+
+# 5. Most important window functions
+
+For interviews, focus on these:
+
+### Ranking
+
+```sql
+ROW_NUMBER()
+RANK()
+DENSE_RANK()
+```
+
+### Aggregate window functions
+
+```sql
+SUM()
+AVG()
+MIN()
+MAX()
+COUNT()
+```
+
+### Navigation
+
+```sql
+LAG()
+LEAD()
+FIRST_VALUE()
+LAST_VALUE()
+```
+
+---
+
+# 6. `ROW_NUMBER()`
+
+Assigns a unique sequential number.
+
+```sql
+SELECT
+    name,
+    department,
+    salary,
+    ROW_NUMBER() OVER (
+        PARTITION BY department
+        ORDER BY salary DESC
+    ) AS rn
+FROM employees;
+```
+
+Result:
+
+| name  | department | salary | rn |
+| ----- | ---------- | -----: | -: |
+| David | IT         |  90000 |  1 |
+| John  | IT         |  80000 |  2 |
+| Mike  | IT         |  70000 |  3 |
+| Jane  | HR         |  70000 |  1 |
+| Sarah | HR         |  60000 |  2 |
+
+This is extremely useful when you need:
+
+> **Top N records per group**
+
+---
+
+# 7. `RANK()` vs `DENSE_RANK()`
+
+Suppose salaries are:
+
+```text
+90000
+80000
+80000
+70000
+```
+
+### `RANK()`
+
+```sql
+RANK() OVER (ORDER BY salary DESC)
+```
+
+Result:
+
+```text
+90000 → 1
+80000 → 2
+80000 → 2
+70000 → 4
+```
+
+There is a gap after the tie.
+
+### `DENSE_RANK()`
+
+```sql
+DENSE_RANK() OVER (ORDER BY salary DESC)
+```
+
+Result:
+
+```text
+90000 → 1
+80000 → 2
+80000 → 2
+70000 → 3
+```
+
+No gap.
+
+### Easy interview rule
+
+```text
+ROW_NUMBER  → always unique
+RANK        → ties + gaps
+DENSE_RANK  → ties + no gaps
+```
+
+---
+
+# 8. Running total
+
+Window functions are excellent for calculating running totals.
+
+Suppose:
+
+| date  | amount |
+| ----- | -----: |
+| Jan 1 |    100 |
+| Jan 2 |    200 |
+| Jan 3 |    150 |
+| Jan 4 |    300 |
+
+Query:
+
+```sql
+SELECT
+    date,
+    amount,
+    SUM(amount) OVER (
+        ORDER BY date
+    ) AS running_total
+FROM transactions;
+```
+
+Result:
+
+| date  | amount | running_total |
+| ----- | -----: | ------------: |
+| Jan 1 |    100 |           100 |
+| Jan 2 |    200 |           300 |
+| Jan 3 |    150 |           450 |
+| Jan 4 |    300 |           750 |
+
+Conceptually:
+
+```text
+100
+100 + 200
+100 + 200 + 150
+100 + 200 + 150 + 300
+```
+
+---
+
+# 9. `LAG()` — previous row
+
+`LAG()` allows you to access the previous row.
+
+Example:
+
+```sql
+SELECT
+    date,
+    amount,
+    LAG(amount) OVER (
+        ORDER BY date
+    ) AS previous_amount
+FROM transactions;
+```
+
+Result:
+
+| date  | amount | previous_amount |
+| ----- | -----: | --------------: |
+| Jan 1 |    100 |            NULL |
+| Jan 2 |    200 |             100 |
+| Jan 3 |    150 |             200 |
+| Jan 4 |    300 |             150 |
+
+This is very useful for calculating differences.
+
+```sql
+SELECT
+    date,
+    amount,
+    amount - LAG(amount) OVER (
+        ORDER BY date
+    ) AS difference
+FROM transactions;
+```
+
+Result:
+
+| date  | amount | difference |
+| ----- | -----: | ---------: |
+| Jan 1 |    100 |       NULL |
+| Jan 2 |    200 |        100 |
+| Jan 3 |    150 |        -50 |
+| Jan 4 |    300 |        150 |
+
+---
+
+# 10. `LEAD()` — next row
+
+`LEAD()` is the opposite of `LAG()`.
+
+```sql
+SELECT
+    date,
+    amount,
+    LEAD(amount) OVER (
+        ORDER BY date
+    ) AS next_amount
+FROM transactions;
+```
+
+Result:
+
+| date  | amount | next_amount |
+| ----- | -----: | ----------: |
+| Jan 1 |    100 |         200 |
+| Jan 2 |    200 |         150 |
+| Jan 3 |    150 |         300 |
+| Jan 4 |    300 |        NULL |
+
+Think:
+
+```text
+LAG()  → look backward
+LEAD() → look forward
+```
+
+---
+
+# 11. Very important interview problem: second-highest salary
+
+Suppose you need the **second-highest salary in each department**.
+
+Use:
+
+```sql
+SELECT *
+FROM (
+    SELECT
+        e.*,
+        DENSE_RANK() OVER (
+            PARTITION BY department
+            ORDER BY salary DESC
+        ) AS rnk
+    FROM employees e
+) x
+WHERE rnk = 2;
+```
+
+This is a very common real-world and interview use case.
+
+---
+
+# 12. Window Function vs GROUP BY
+
+This is one of the most important concepts.
+
+### `GROUP BY`
+
+```sql
+SELECT
+    department,
+    AVG(salary)
+FROM employees
+GROUP BY department;
+```
+
+Output:
+
+```text
+IT → 80000
+HR → 65000
+```
+
+Rows are **collapsed**.
+
+### Window function
+
+```sql
+SELECT
+    name,
+    department,
+    salary,
+    AVG(salary) OVER (
+        PARTITION BY department
+    ) AS avg_salary
+FROM employees;
+```
+
+Output:
+
+```text
+John   IT   80000   80000
+David  IT   90000   80000
+Mike   IT   70000   80000
+```
+
+Rows are **not collapsed**.
+
+### Remember this
+
+```text
+GROUP BY
+    ↓
+Multiple rows → ONE row per group
+
+WINDOW FUNCTION
+    ↓
+Multiple rows → Multiple rows
+                    +
+                calculated value
+```
+
+---
+
+# 13. A real production example
+
+Imagine an e-commerce application with:
+
+```text
+orders
+--------------------------------
+order_id
+customer_id
+order_date
+amount
+```
+
+You want to find each customer's previous order amount.
+
+```sql
+SELECT
+    customer_id,
+    order_id,
+    order_date,
+    amount,
+    LAG(amount) OVER (
+        PARTITION BY customer_id
+        ORDER BY order_date
+    ) AS previous_order_amount
+FROM orders;
+```
+
+Now you can answer questions like:
+
+> Did the customer's latest order increase compared with their previous order?
+
+This type of analysis is very common in production reporting and analytics.
+
+---
+
+# 14. One important rule
+
+A window function generally **doesn't reduce the number of rows**.
+
+For example:
+
+```sql
+SELECT
+    employee_id,
+    salary,
+    AVG(salary) OVER () AS avg_salary
+FROM employees;
+```
+
+If there are **1,000 employees**, you'll still get **1,000 rows**.
+
+Each row simply gets an additional calculated value.
+
+---
+
+# 15. Easy way to remember
+
+Think of a window as:
+
+```text
+                WINDOW
+        ┌───────────────────┐
+        │ John    80K       │
+        │ David   90K       │
+        │ Mike    70K       │
+        └───────────────────┘
+                 ↓
+             Calculate
+                 ↓
+        Average = 80K
+```
+
+The database looks at a **window of rows**, performs a calculation, and attaches the result to each applicable row.
+
+---
+
+## Interview definition
+
+If an interviewer asks:
+
+> **What is a window function?**
+
+A strong answer is:
+
+> **A window function performs a calculation across a set of related rows while preserving the individual rows in the result set. We define the window using `OVER()`, optionally using `PARTITION BY` to divide rows into groups and `ORDER BY` to define their order. Common window functions include `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `SUM`, `AVG`, `LAG`, and `LEAD`.**
+
+For your **Java/Spring Boot interviews**, the most important window-function problems to practice are **Top N per group, second-highest salary, duplicate detection, running totals, previous/next record comparison, latest record per customer, and pagination**.
 
 ```sql
 SELECT salary

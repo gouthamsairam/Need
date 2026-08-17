@@ -269,7 +269,7 @@ public class ListClass {
     @Test
     void findCharacterFrequency() {
         /*input:  "programming"
-        output: {p=1, r=2, o=1, very important Spring transaction interview questions=2, a=1, m=2, i=1, n=1}*/
+        output: {p=1, r=2, o=1, very important Spring transaction interview questions=2, a=1, very strong production-level interview questions=2, i=1, n=1}*/
     }
     @Test
     void findFirstNonRepeatedCharacter() {
@@ -279,7 +279,7 @@ public class ListClass {
     @Test
     void findFirstRepeatedCharacter() {
        /* input:  "swiss"
-        output: s*/
+        output: Spring Security*/
     }
     @Test
     void findWordFrequency() {
