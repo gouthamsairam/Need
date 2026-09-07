@@ -32,7 +32,7 @@ public class NeedSubArray {
 
     @Test
     void LongestnonrepeatedString() {
-        String str = "Gomuutthamm";
+        String str = "pwwkew";
         List<String> list = new ArrayList<>();
         for (int i = 0; i <= str.length(); i++) {
             for (int j = i + 1; j <= str.length(); j++) {
@@ -63,7 +63,7 @@ public class NeedSubArray {
     @Test
     void PrintNth_Non_repaeating_character() {
         String str = "GGowthamsairamz";
-        int k = 1;
+        int k = 8;
         int a = 0;
         for (int i = 0; i < str.length(); i++) {
             boolean check = false;
@@ -508,7 +508,7 @@ k = 3
 
     @Test
     void Longest_Repeating_Character_Replacement() {
-        /* Spring Security = "AABABBA"
+        /* Spring Security.md = "AABABBA"
 k = 1
 4
 "ABBA" -> Replace one B with A
@@ -522,8 +522,8 @@ AAAA
     @Test
     void Minimum_Window_Substring() {
         /*
-        Spring Security = "ADOBECODEBANC"
-Distributed Transaction Management in Microservices = "ABC"
+        Spring Security.md = "ADOBECODEBANC"
+Distributed Transaction Management in Microservices.md = "ABC"
 "BANC"
          */
     }

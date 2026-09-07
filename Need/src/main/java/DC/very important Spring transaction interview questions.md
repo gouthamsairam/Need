@@ -1367,3 +1367,595 @@ For interviews, remember this:
 3. **Default rollback = `RuntimeException` and `Error`.**
 4. **`REQUIRES_NEW` suspends the current transaction and starts another.**
 5. **DB transaction + Kafka/external API is not automatically one atomic transaction; use patterns such as Outbox for reliable distributed consistency.**
+Yes. But there is an important correction to the explanation you quoted:
+
+> **`@Transactional` does not work simply because a method is public.**
+> The key issue is that Spring's proxy must be involved in the method invocation.
+
+For a senior Java interview, explain it like this.
+
+## 1. The recommended solution: move the transaction to a public service method
+
+Instead of:
+
+```java
+@Service
+public class PaymentService {
+
+    @Transactional
+    private void processRefund(Long paymentId) {
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+        ledgerRepository.createEntry(paymentId, "CREDIT");
+    }
+}
+```
+
+make the transactional operation a public method:
+
+```java
+@Service
+public class PaymentService {
+
+    @Transactional
+    public void processRefund(Long paymentId) {
+
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+
+        ledgerRepository.createEntry(paymentId, "CREDIT");
+    }
+}
+```
+
+Then call it from another Spring bean:
+
+```java
+@Service
+public class RefundControllerService {
+
+    private final PaymentService paymentService;
+
+    public RefundControllerService(PaymentService paymentService) {
+        this.paymentService = paymentService;
+    }
+
+    public void refund(Long paymentId) {
+        paymentService.processRefund(paymentId);
+    }
+}
+```
+
+The flow is:
+
+```text
+Controller
+    |
+    v
+PaymentService Proxy
+    |
+    |  @Transactional
+    v
+Transaction starts
+    |
+    v
+PaymentService.processRefund()
+    |
+    +---- paymentRepository.updateStatus()
+    |
+    +---- ledgerRepository.createEntry()
+    |
+    v
+Transaction commits
+```
+
+If an exception occurs:
+
+```text
+processRefund()
+      |
+      +--> updateStatus()
+      |
+      +--> createEntry()
+              |
+              X Exception
+              |
+              v
+         Transaction Rollback
+```
+
+---
+
+# 2. What if I don't want the method to be public?
+
+This is where the design becomes important.
+
+You **shouldn't make a method public just to make `@Transactional` work**.
+
+Instead, put the transaction boundary at the service-level public method.
+
+For example:
+
+```java
+@Service
+public class PaymentService {
+
+    @Transactional
+    public void refund(Long paymentId) {
+        validateRefund(paymentId);
+        processRefund(paymentId);
+    }
+
+    private void validateRefund(Long paymentId) {
+        // validation
+    }
+
+    private void processRefund(Long paymentId) {
+
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+
+        ledgerRepository.createEntry(paymentId, "CREDIT");
+    }
+}
+```
+
+Here:
+
+```java
+@Transactional
+public void refund(...)
+```
+
+is the **transaction boundary**.
+
+The private method doesn't need `@Transactional`.
+
+The transaction is already active when:
+
+```java
+processRefund()
+```
+
+executes.
+
+This is usually the **best solution**.
+
+---
+
+# 3. Very important: private methods CAN execute inside a transaction
+
+This is a common misunderstanding.
+
+Suppose:
+
+```java
+@Service
+public class PaymentService {
+
+    @Transactional
+    public void refund(Long paymentId) {
+
+        processRefund(paymentId);
+    }
+
+    private void processRefund(Long paymentId) {
+
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+
+        ledgerRepository.createEntry(paymentId, "CREDIT");
+    }
+}
+```
+
+`processRefund()` is private.
+
+But it **still executes inside the transaction**.
+
+Why?
+
+Because the transaction was started when the proxy intercepted:
+
+```java
+refund()
+```
+
+The private method executes as part of that same call.
+
+So:
+
+```text
+Proxy
+  |
+  | @Transactional
+  ↓
+refund()
+  |
+  ↓
+private processRefund()
+  |
+  +--> DB operation
+  |
+  +--> DB operation
+```
+
+Everything happens within the same transaction.
+
+---
+
+# 4. The bigger problem: self-invocation
+
+This is actually more important than public/private.
+
+Consider:
+
+```java
+@Service
+public class PaymentService {
+
+    public void refund(Long paymentId) {
+        processRefund(paymentId);
+    }
+
+    @Transactional
+    public void processRefund(Long paymentId) {
+
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+    }
+}
+```
+
+You might think:
+
+```java
+refund()
+   |
+   v
+@Transactional processRefund()
+```
+
+means Spring starts a transaction.
+
+**It doesn't.**
+
+Because this:
+
+```java
+processRefund(paymentId);
+```
+
+is a direct call on `this`.
+
+Conceptually:
+
+```java
+this.processRefund(paymentId);
+```
+
+The call doesn't go through the Spring proxy.
+
+Therefore:
+
+```text
+Spring Proxy
+     |
+     X
+     |
+PaymentService
+     |
+     +--> refund()
+             |
+             +--> this.processRefund()
+```
+
+The proxy is bypassed.
+
+---
+
+# 5. Solution for self-invocation: move the method to another bean
+
+This is usually the cleanest solution.
+
+### PaymentService
+
+```java
+@Service
+public class PaymentService {
+
+    private final RefundService refundService;
+
+    public PaymentService(RefundService refundService) {
+        this.refundService = refundService;
+    }
+
+    public void refund(Long paymentId) {
+
+        refundService.processRefund(paymentId);
+    }
+}
+```
+
+### RefundService
+
+```java
+@Service
+public class RefundService {
+
+    @Transactional
+    public void processRefund(Long paymentId) {
+
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+
+        ledgerRepository.createEntry(paymentId, "CREDIT");
+    }
+}
+```
+
+Now:
+
+```text
+PaymentService
+      |
+      v
+RefundService Proxy
+      |
+      | @Transactional
+      v
+processRefund()
+      |
+      +--> DB
+      +--> DB
+```
+
+The proxy is involved.
+
+Therefore the transaction works.
+
+---
+
+# 6. Another solution: inject the proxy
+
+You may see this approach:
+
+```java
+@Service
+public class PaymentService {
+
+    private final PaymentService self;
+
+    public PaymentService(PaymentService self) {
+        this.self = self;
+    }
+
+    public void refund(Long paymentId) {
+
+        self.processRefund(paymentId);
+    }
+
+    @Transactional
+    public void processRefund(Long paymentId) {
+
+        paymentRepository.updateStatus(paymentId, "REFUNDED");
+    }
+}
+```
+
+Now:
+
+```java
+self.processRefund()
+```
+
+can go through the Spring proxy.
+
+But I **wouldn't recommend this as the first choice**.
+
+It makes the class harder to understand and can introduce circular/self-reference concerns depending on configuration.
+
+Prefer splitting responsibilities into another service.
+
+---
+
+# 7. `AopContext.currentProxy()` — possible but not preferred
+
+Another approach is:
+
+```java
+public void refund(Long paymentId) {
+
+    PaymentService proxy =
+        (PaymentService) AopContext.currentProxy();
+
+    proxy.processRefund(paymentId);
+}
+```
+
+with:
+
+```java
+@Transactional
+public void processRefund(Long paymentId) {
+    // transaction
+}
+```
+
+But this requires proxy exposure:
+
+```properties
+spring.aop.expose-proxy=true
+```
+
+Again, this is generally **not the preferred design**.
+
+---
+
+# 8. What about protected/package-private methods?
+
+This is where your quoted answer is slightly oversimplified.
+
+Don't memorize:
+
+> "Spring transactions only work on public methods."
+
+Instead remember:
+
+> **With Spring's proxy-based transaction management, the transaction interceptor needs the invocation to pass through the Spring proxy. Public methods invoked through the proxy are the normal and recommended transaction boundary.**
+
+For modern Spring/Spring Boot versions, proxy behavior has evolved and some non-public method scenarios can be supported depending on the proxy/transaction configuration. But **self-invocation remains a fundamental proxy-AOP limitation**.
+
+So in an interview, don't overstate the rule as "private/protected/package-private always silently fail."
+
+---
+
+# 9. What about JDK proxy vs CGLIB?
+
+### JDK Dynamic Proxy
+
+Historically:
+
+```text
+Interface
+    ↑
+Proxy
+    |
+Implementation
+```
+
+Only interface methods are exposed through the proxy.
+
+Example:
+
+```java
+public interface PaymentService {
+    void refund(Long id);
+}
+```
+
+```java
+@Service
+public class PaymentServiceImpl
+        implements PaymentService {
+
+    @Transactional
+    public void refund(Long id) {
+    }
+}
+```
+
+The call:
+
+```java
+paymentService.refund(id);
+```
+
+can go through the proxy.
+
+---
+
+### CGLIB
+
+CGLIB creates a subclass conceptually:
+
+```text
+PaymentServiceProxy extends PaymentService
+```
+
+The proxy overrides/intercepts methods.
+
+A private method:
+
+```java
+private void processRefund()
+```
+
+cannot be overridden.
+
+Therefore it cannot be intercepted in the same way.
+
+Final methods also cannot be overridden, so they present another proxy limitation.
+
+---
+
+# 10. Best production design
+
+For your example, I'd write:
+
+```java
+@Service
+public class PaymentService {
+
+    private final PaymentRepository paymentRepository;
+    private final LedgerRepository ledgerRepository;
+
+    public PaymentService(
+            PaymentRepository paymentRepository,
+            LedgerRepository ledgerRepository) {
+        this.paymentRepository = paymentRepository;
+        this.ledgerRepository = ledgerRepository;
+    }
+
+    @Transactional
+    public void processRefund(Long paymentId) {
+
+        validateRefund(paymentId);
+
+        updatePaymentStatus(paymentId);
+
+        createLedgerEntry(paymentId);
+    }
+
+    private void validateRefund(Long paymentId) {
+        // validation
+    }
+
+    private void updatePaymentStatus(Long paymentId) {
+        paymentRepository.updateStatus(
+                paymentId,
+                "REFUNDED"
+        );
+    }
+
+    private void createLedgerEntry(Long paymentId) {
+        ledgerRepository.createEntry(
+                paymentId,
+                "CREDIT"
+        );
+    }
+}
+```
+
+This gives you:
+
+```text
+               PaymentService Proxy
+                       |
+                       | @Transactional
+                       ↓
+                processRefund()
+                       |
+          +------------+------------+
+          |            |            |
+          ↓            ↓            ↓
+      validate     update DB    ledger DB
+          |            |            |
+          +------------+------------+
+                       |
+                 Commit / Rollback
+```
+
+### The key principle
+
+**Put `@Transactional` on the public service-layer method that represents one business transaction.**
+
+Don't put `@Transactional` on every private method.
+
+---
+
+## Senior interview answer
+
+If the interviewer asks:
+
+> **"What is the solution when @Transactional doesn't work on a private method?"**
+
+A strong answer is:
+
+> "`@Transactional` is implemented through Spring AOP proxies. The important requirement is that the method invocation passes through the Spring proxy. I don't make a private method public just to enable transactions. Instead, I put `@Transactional` on a public service-layer method that defines the transaction boundary and let the private methods execute inside that transaction. If the problem is self-invocation, I move the transactional operation to another Spring bean so the call goes through the proxy. I can technically use self-injection or `AopContext.currentProxy()`, but I prefer separating the service because it is cleaner and easier to maintain."
+
+That answer is much stronger than simply saying **"make the method public."**

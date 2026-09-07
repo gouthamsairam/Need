@@ -5,29 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 public class LeetCode {
-//    @Test
-//    Void  twoSum(){
 
-    /// /        int n = arr.length;
-//        int[] arr = {2, 1, 8, 6, 4, 6, 5, 5};
-//        for (int i = 0; i < n; i++) {
-//
-//            // For each element arr[i], check every
-//            // other element arr[j] that comes after it
-//            for (int j = i + 1; j < n; j++) {
-//
-//                // Check if the sum of the current pair
-//                // equals the target
-//                if (arr[i] + arr[j] == target) {
-//                    System.out.println("true");
-//                }
-//            }
-//        }
-//
-//        // If no pair is found after checking
-//        // all possibilities
-//
-//    }
     @Test
     void maxWater() {
         int[] arr = {2, 1, 8, 6, 4, 6, 5, 5};
@@ -37,16 +15,14 @@ public class LeetCode {
             for (int j = i + 1; j < n; j++) {
 
                 // calculate the amount of water
-                int amount =
-                        Math.min(arr[i], arr[j]) * (j - i);
-
+                int amount = Math.min(arr[i], arr[j]) * (j - i);
+//System.out.print("arr[" + i + "] = " + arr[i] + ", arr[" + j + "] = " + arr[j] + " j" + j + " i" + i + " i-j " + (j - i) + ", amount = " + amount + "\n");
                 // keep track of maximum amount of water
                 res = Math.max(amount, res);
             }
         }
         System.out.println(res);
     }
-
     //    maxprofit stocks
     @Test
     void maxprofit() {
@@ -59,12 +35,9 @@ public class LeetCode {
         }
         System.out.println(maxprofit);
     }
-
     //arrayPairSum
     @Test
     void ArrayPartition() {
-
-
         int[] nums = {6, 2, 6, 5, 1, 2, 7};
         //1225667
         Arrays.sort(nums);
@@ -74,7 +47,6 @@ public class LeetCode {
         }
         System.out.println(a);
     }
-
     /// To Sum
     @Test
     void twoSum() {
@@ -83,11 +55,9 @@ public class LeetCode {
         int n = arr.length;
 
         for (int i = 0; i < n; i++) {
-
             // For each element arr[i], check every
             // other element arr[j] that comes after it
             for (int j = i + 1; j < n; j++) {
-
                 // Check if the sum of the current pair
                 // equals the target
                 if (arr[i] + arr[j] == target) {
@@ -102,8 +72,6 @@ public class LeetCode {
 
     @Test
     void minimumCost() {
-
-
         int[] cost = {6, 5, 7, 9, 2, 2};
 //        225679
         Arrays.sort(cost);
@@ -163,7 +131,6 @@ public class LeetCode {
             System.out.println("yes duplicate array");
         } else {
             System.out.println("No yes duplicate array");
-
         }
     }
 
@@ -199,35 +166,50 @@ public class LeetCode {
     }
     @Test
     public void groupAnagrams() {
-        String txt = "BACDGABCDA";
-        String pat = "ABCD";
-        int n = txt.length(), m = pat.length();
+        String [] strs = {"act", "god", "cat", "dog", "tac","rat","tar"};
 
-        //sortedpat stores the sorted version of pat
-        char[] sortedpatArr = pat.toCharArray();
-        Arrays.sort(sortedpatArr);
-        String sortedpat = new String(sortedpatArr);
+        Map<String, List<String>> map = new HashMap<>();
 
-        // to store the matching indices
-        List<Integer> res = new ArrayList<>();
+        for (String str : strs) {
 
-        for (int i = 0; i <= n - m; i++) {
+            // Convert string to character array
+            char[] chars = str.toCharArray();
 
-            // renamed from temp to curr
-            String curr = txt.substring(i, i + m);
-            char[] currArr = curr.toCharArray();
-            Arrays.sort(currArr);
-            curr = new String(currArr);
+            // Sort characters
+            Arrays.sort(chars);
 
-            //checking if sorted versions are equal
-            if (sortedpat.equals(curr)) {
-                res.add(i);
+            // Create key
+            String key = new String(chars);
+
+            // Add string to corresponding group
+            //1st way
+            map.computeIfAbsent(key, k -> new ArrayList<>())
+                    .add(str);
+            //2nd way
+            if(map.containsKey(key)){
+                map.get(key).add(str);
+            }else{
+                List<String> list = new ArrayList<>();
+                list.add(str);
+                map.put(key,list);
             }
         }
-
-        System.out.print(res);
+        System.out.print(map.values());
     }
-
+    @Test
+    public  void print_TwoDArraywithSorted() {
+        int[][] arr = {{10, 1}, {7, 8}, {1, 5}, {2, 4}, {4, 6}};
+        int[] t = {3, 1, 77, 1};
+        Arrays.sort(arr, (a, b) -> a[0] - b[0]);
+        Arrays.sort(arr, (a, b) -> Integer.compare(a[0], b[0]));
+        Arrays.sort(arr, (a, b) -> Integer.compare(a[0], b[0]));
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[i].length; j++) {
+                System.out.print(arr[i][j]);
+            }
+            System.out.println();
+        }
+    }
     @Test
     public void mergeIntervels() {
         int[][] arr = {{7, 8}, {1, 5}, {2, 4}, {4, 6}};
@@ -235,6 +217,8 @@ public class LeetCode {
         int n = arr.length;
 
         Arrays.sort(arr, (a, b) -> Integer.compare(a[0], b[0]));
+
+
         ArrayList<int[]> res = new ArrayList<>();
 
         // Checking for all possible overlaps
@@ -264,6 +248,7 @@ public class LeetCode {
 public  void rotatedArray(){
         /*Input: nums = [1,2,3,4,5,6,7], k = 3
 Output: [5,6,7,1,2,3,4]
+
 Explanation:
 rotate 1 steps to the right: [7,1,2,3,4,5,6]
 rotate 2 steps to the right: [6,7,1,2,3,4,5]
@@ -300,7 +285,9 @@ Output: [2]*/
     public void rearrangeStringnoTochararactersshouldbeconsective() {
         int[] hash = new int[26];
         String str = "aabbccrr";
-        for (int i = 0; i < str.length(); i++) hash[str.charAt(i) - 'a']++;
+        for (int i = 0; i < str.length(); i++){
+            hash[str.charAt(i) - 'a']++;
+        }
 
         int max = 0, letter = 0;
         for (int i = 0; i < hash.length; i++)
@@ -309,8 +296,10 @@ Output: [2]*/
                 letter = i;
             }
 
-        if (max > (str.length() + 1) / 2) System.out.println(String.valueOf(" "));
-        ;
+        if (max > (str.length() + 1) / 2) {
+            System.out.println(String.valueOf(" "));
+        }
+
 
         char[] res = new char[str.length()];
 
@@ -324,7 +313,9 @@ Output: [2]*/
         // Fill the remaining characters
         for (int i = 0; i < hash.length; i++)
             while (hash[i]-- > 0) {
-                if (idx >= res.length) idx = 1;
+                if (idx >= res.length){
+                    idx = 1;
+                }
 
                 res[idx] = (char) (i + 'a');
                 idx += 2;
@@ -333,29 +324,10 @@ Output: [2]*/
         System.out.println(String.valueOf(res));
 
     }
+@Test
+public void median_of_Two_Sorted_Arrays(){
 
-    @Test
-    public void kthNonRepeatingChar() {
-        String str = "geeksforgeeks";
-        int k = 3;
-        int count = 0;
-        char result = '\0';
-        for (int i = 0; i < str.length(); i++) {
-            boolean repeating = false;
-            for (int j = i + 1; j < str.length(); j++) {
-                if (str.charAt(i) == str.charAt(j)) {
-                    repeating = true;
-                    break;
-                }
-            }
-            if (!repeating) {
-                count++;
-                if (count == k) {
-                    System.out.println(str.charAt(i));
-                }
-            }
-        }
-    }
+}
 
     @Test
     public void minimumdiffrences_BetweenHighestand_lowestScores() {
@@ -390,7 +362,7 @@ Output: [2]*/
     @Test
     public void Coinchange() {
 
-        int amount = 1;
+        int amount = 11;
         int coins[] = {2, 5, 3, 6};
 
 
@@ -446,6 +418,66 @@ Output: [2]*/
                     right--;
                 }
             }
+        }
+    }
+    @Test
+    public void findcommon_prifix(){
+        /*
+        * Input: arr[] = [“geeksforgeeks”, “geeks”, “geek”, “geezer”]
+Output: “gee”
+Explanation: “gee” is the longest common prefix in all the given strings: “geeksforgeeks”, “geeks”, “geeks” and “geezer”.
+
+Input: arr[] = [“apple”, “ape”, “april”]
+Output : “ap”
+Explanation: “ap” is the longest common prefix in all the given strings: “apple”, “ape” and “april”.
+
+Input: arr[] = [“hello”, “world”]
+Output: “”
+Explanation: There’s.md no common prefix in the given strings.*/
+        List<String> arr = Arrays.asList("geeksforgeeks", "geeks", "geek", "geezer");
+        Collections.sort(arr);
+        int r=0;
+        while(arr.get(0).charAt(r)==arr.get(arr.size()-1).charAt(r)){
+            r++;
+        }
+        System.out.println(arr.get(0).substring(0,r));
+        // with for loop
+        int t=0;
+        for(int i=0; i<arr.get(0).length(); i++) {
+            if(arr.get(0).charAt(i)==arr.get(arr.size()-1).charAt(i)) {
+                System.out.print((arr.get(0).charAt(t)));
+
+                t++;
+            }
+        }
+    }
+    @Test
+    public void Gas_Station(){
+
+        int[] gas = {1, 2, 3, 4, 5};
+        int[] cost = {3, 4, 5, 1, 2};
+
+        int totalGas = 0;
+        int totalCost = 0;
+        int tank = 0;
+        int startIndex = 0;
+
+        for (int i = 0; i < gas.length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+            tank += gas[i] - cost[i];
+
+            // If tank is negative, we cannot start from the current index
+            if (tank < 0) {
+                startIndex = i + 1; // Move to the next index
+                tank = 0; // Reset the tank
+            }
+        }
+
+        if (totalGas < totalCost) {
+            System.out.println(-1); // Not possible to complete the circuit
+        } else {
+            System.out.println(startIndex); // Starting index to complete the circuit
         }
     }
     @Test
