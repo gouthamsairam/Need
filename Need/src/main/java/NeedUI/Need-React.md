@@ -4577,3 +4577,3337 @@ Measure again
 ```
 
 That answer demonstrates **senior-level engineering judgment**, rather than simply knowing React APIs.
+Yes. I would prepare you for **modern React interviews**, not just the old “What is JSX?” style.
+
+I checked current 2026 React interview material and React's current documentation. The recurring areas are **Hooks, rendering/reconciliation, state management, performance, async behavior, testing, routing, API integration, React 19 Actions, Server Components, the `use` API, React Compiler, and production scenarios**. ([GreatFrontEnd][1])
+
+Below is a **comprehensive interview bank with interview-ready answers + likely follow-up questions + follow-up answers + scenario questions**.
+
+# React.js Interview Questions & Answers — 2026
+
+## How to use this
+
+For every question, prepare:
+
+```text
+Main Question
+      ↓
+Answer
+      ↓
+Interviewer Follow-up
+      ↓
+Follow-up Answer
+      ↓
+Real-world Scenario
+```
+
+For a senior interview, don't stop at the definition. Explain **why, how, trade-offs, and production usage**.
+
+---
+
+# 1. React Fundamentals
+
+## Q1. What is React?
+
+**Answer:**
+
+React is a JavaScript library for building user interfaces using reusable components.
+
+Its major concepts include:
+
+* Components
+* JSX
+* Props
+* State
+* Hooks
+* One-way data flow
+* Reconciliation
+* Declarative UI
+
+Instead of manually manipulating the DOM, we describe what the UI should look like for a given state, and React determines the required updates.
+
+**Follow-up: Is React a framework?**
+
+**Answer:** React itself is primarily a UI library. Frameworks such as Next.js provide additional capabilities around React, including routing, server rendering, Server Components, and data-loading conventions.
+
+**Scenario:**
+If your application has 100 screens, why use React?
+
+**Answer:** Reusable components, predictable state-driven rendering, ecosystem support, testing, and separation of UI into manageable pieces.
+
+---
+
+## Q2. What is JSX?
+
+**Answer:**
+
+JSX is a syntax extension that lets us describe UI using HTML-like syntax inside JavaScript.
+
+```jsx
+const element = <h1>Hello</h1>;
+```
+
+JSX is transformed during compilation into JavaScript calls representing React elements.
+
+**Follow-up: Can browsers directly execute JSX?**
+
+No. JSX needs to be transformed into JavaScript by a compiler/build tool.
+
+**Follow-up: Is JSX HTML?**
+
+No.
+
+HTML is markup; JSX is JavaScript syntax that describes React elements.
+
+---
+
+# 2. Component Questions
+
+## Q3. What is a component?
+
+A component is a reusable unit of UI and behavior.
+
+```jsx
+function ProductCard({ product }) {
+    return (
+        <div>
+            <h2>{product.name}</h2>
+            <p>{product.price}</p>
+        </div>
+    );
+}
+```
+
+**Follow-up: Why are components useful?**
+
+They provide:
+
+* Reusability
+* Composition
+* Maintainability
+* Separation of concerns
+* Easier testing
+
+---
+
+## Q4. Functional vs class components?
+
+Functional component:
+
+```jsx
+function User() {
+    return <h1>User</h1>;
+}
+```
+
+Class component:
+
+```jsx
+class User extends React.Component {
+    render() {
+        return <h1>User</h1>;
+    }
+}
+```
+
+Modern React development generally favors function components and Hooks.
+
+**Follow-up: Are class components completely irrelevant?**
+
+No. Legacy applications still use them, and concepts such as lifecycle methods and Error Boundaries remain useful to understand.
+
+---
+
+# 3. Props vs State
+
+## Q5. What is the difference between props and state?
+
+| Props                              | State                               |
+| ---------------------------------- | ----------------------------------- |
+| Passed from parent                 | Owned by component                  |
+| Read-only from child's perspective | Can change                          |
+| Used for communication             | Used for component data             |
+| Controlled by parent               | Controlled by component/state owner |
+
+Example:
+
+```jsx
+<Product name="Laptop" />
+```
+
+`name` is a prop.
+
+```jsx
+const [count, setCount] = useState(0);
+```
+
+`count` is state.
+
+**Follow-up: Can a child modify props?**
+
+No. The child should treat props as read-only.
+
+---
+
+# 4. State Updates
+
+## Q6. Why doesn't this immediately show the new value?
+
+```jsx
+setCount(count + 1);
+
+console.log(count);
+```
+
+**Answer:**
+
+React state behaves like a snapshot for the current render. Calling the setter schedules an update; it does not mutate the current render's `count` variable.
+
+**Follow-up: How do you safely update based on previous state?**
+
+```jsx
+setCount(prev => prev + 1);
+```
+
+---
+
+# 5. Multiple State Updates
+
+## Q7. What happens here?
+
+```jsx
+setCount(count + 1);
+setCount(count + 1);
+setCount(count + 1);
+```
+
+The updates may all be based on the same render's `count`.
+
+Prefer:
+
+```jsx
+setCount(prev => prev + 1);
+setCount(prev => prev + 1);
+setCount(prev => prev + 1);
+```
+
+Now each update uses the latest queued state.
+
+**Follow-up: Why?**
+
+Because functional updates receive the previous state value.
+
+---
+
+# 6. Immutability
+
+## Q8. Why shouldn't we mutate React state directly?
+
+Bad:
+
+```jsx
+user.name = "John";
+```
+
+Better:
+
+```jsx
+setUser(prev => ({
+    ...prev,
+    name: "John"
+}));
+```
+
+React applications rely heavily on identity comparisons.
+
+Mutation can cause:
+
+* Incorrect rendering
+* Difficult debugging
+* Broken memoization
+* Unexpected state sharing
+
+**Scenario:** An object changes but UI doesn't update correctly. What do you check?
+
+Check whether the state was mutated directly instead of creating a new object/array.
+
+---
+
+# 7. Virtual DOM
+
+## Q9. What is the Virtual DOM?
+
+The Virtual DOM is a representation of the UI that React uses to determine what needs to change in the actual DOM.
+
+Conceptually:
+
+```text
+State
+ ↓
+React elements
+ ↓
+Reconciliation
+ ↓
+DOM changes
+```
+
+**Follow-up: Does React update the entire DOM?**
+
+No. React calculates the necessary changes and commits the required DOM updates.
+
+---
+
+# 8. Reconciliation
+
+## Q10. What is reconciliation?
+
+Reconciliation is React's process of comparing the new rendered element tree with the previous one to determine what needs to change.
+
+**Follow-up: What role do keys play?**
+
+Keys help React identify elements across renders.
+
+```jsx
+items.map(item => (
+    <Product key={item.id} />
+))
+```
+
+Stable keys help React preserve the identity of list items.
+
+---
+
+# 9. Why not array index as key?
+
+## Q11. Why is this problematic?
+
+```jsx
+items.map((item, index) => (
+    <Product key={index} />
+))
+```
+
+If items are inserted, deleted, or reordered, indices can point to different items.
+
+That can cause incorrect state preservation.
+
+**Scenario:**
+
+You have:
+
+```text
+A
+B
+C
+```
+
+with keys:
+
+```text
+0
+1
+2
+```
+
+Remove A:
+
+```text
+B
+C
+```
+
+Now B gets key 0.
+
+React may interpret B as the previous A.
+
+**Better:**
+
+```jsx
+key={item.id}
+```
+
+---
+
+# 10. Rendering
+
+## Q12. What causes a React component to render?
+
+Common causes:
+
+* Initial render
+* State update
+* Parent render
+* Relevant prop changes
+* Context updates
+* External store updates
+
+**Follow-up: Does every render mean DOM changes?**
+
+No.
+
+React can render/calculates a new result and discover that no DOM change is required.
+
+---
+
+# 11. Render vs Commit
+
+## Q13. Explain render phase and commit phase.
+
+### Render phase
+
+React calculates what the UI should look like.
+
+### Commit phase
+
+React applies the necessary changes to the DOM and related systems.
+
+Conceptually:
+
+```text
+State update
+   ↓
+Render
+   ↓
+Reconciliation
+   ↓
+Commit
+   ↓
+Browser UI
+```
+
+**Scenario:** A component renders but you don't see a DOM change.
+
+That's possible because React can determine that the resulting DOM is equivalent.
+
+---
+
+# 12. Parent Re-render
+
+## Q14. If a parent re-renders, will its child re-render?
+
+Normally, child components can be rendered again when their parent renders.
+
+But optimization techniques such as:
+
+```jsx
+React.memo()
+```
+
+can allow React to skip rendering a child when its props are unchanged.
+
+**Follow-up:** Does `React.memo` guarantee that a child never renders?
+
+No. Context, its own state, or other factors can still cause rendering.
+
+---
+
+# 13. Hooks
+
+## Q15. What are Hooks?
+
+Hooks are functions that allow function components to use React capabilities such as:
+
+* State
+* Effects
+* Context
+* Refs
+* Reducers
+* Transitions
+* Other React features
+
+Examples:
+
+```text
+useState
+useEffect
+useContext
+useReducer
+useRef
+useMemo
+useCallback
+useTransition
+```
+
+---
+
+# 14. Rules of Hooks
+
+## Q16. What are the Rules of Hooks?
+
+Hooks should:
+
+1. Be called at the top level.
+2. Be called from React function components or custom Hooks.
+
+Don't:
+
+```jsx
+if (condition) {
+    useState(0);
+}
+```
+
+Don't:
+
+```jsx
+function normalFunction() {
+    useState(0);
+}
+```
+
+**Follow-up: Why can't Hooks be conditional?**
+
+React relies on a consistent Hook call order between renders.
+
+---
+
+# 15. useState
+
+## Q17. Explain `useState`.
+
+```jsx
+const [count, setCount] = useState(0);
+```
+
+It returns:
+
+```text
+current state
++
+state update function
+```
+
+Calling the setter schedules a state update.
+
+**Follow-up: Does `setCount()` immediately modify `count`?**
+
+No. The current render retains its state snapshot.
+
+---
+
+# 16. useEffect
+
+## Q18. What is `useEffect`?
+
+`useEffect` is used to synchronize a component with external systems.
+
+Examples:
+
+* API subscriptions
+* Browser APIs
+* Event listeners
+* Timers
+* WebSockets
+* Third-party systems
+
+```jsx
+useEffect(() => {
+    document.title = `Count: ${count}`;
+}, [count]);
+```
+
+React's current documentation emphasizes Effects as synchronization mechanisms rather than a generic place to put application logic. ([GreatFrontEnd][1])
+
+**Follow-up: Should you use `useEffect` for every calculation?**
+
+No.
+
+For example:
+
+```jsx
+const total = price * quantity;
+```
+
+doesn't need an Effect.
+
+---
+
+# 17. useEffect Cleanup
+
+## Q19. What is cleanup?
+
+```jsx
+useEffect(() => {
+
+    const id = setInterval(() => {
+        console.log("running");
+    }, 1000);
+
+    return () => {
+        clearInterval(id);
+    };
+
+}, []);
+```
+
+The returned function cleans up the resource.
+
+**Scenario:** What can happen if you forget cleanup?
+
+You can get:
+
+* Memory/resource leaks
+* Duplicate subscriptions
+* Multiple timers
+* Stale listeners
+* Unexpected API behavior
+
+---
+
+# 18. Dependency Array
+
+## Q20. Explain:
+
+```jsx
+useEffect(() => {
+    ...
+});
+```
+
+Runs after every commit.
+
+```jsx
+useEffect(() => {
+    ...
+}, []);
+```
+
+Runs after initial mount in normal production behavior.
+
+```jsx
+useEffect(() => {
+    ...
+}, [userId]);
+```
+
+Runs when `userId` changes.
+
+**Follow-up:** Why does Strict Mode sometimes make an Effect appear to run twice?
+
+Development Strict Mode intentionally performs extra setup/cleanup behavior to expose bugs.
+
+---
+
+# 19. Infinite useEffect Loop
+
+## Q21. Why can this create an infinite loop?
+
+```jsx
+useEffect(() => {
+    setData(transform(data));
+}, [data]);
+```
+
+Because:
+
+```text
+data changes
+ ↓
+effect runs
+ ↓
+setData
+ ↓
+data changes
+ ↓
+effect runs again
+```
+
+**Solution:** Reconsider whether the derived value should be state at all.
+
+---
+
+# 20. Stale Closure
+
+## Q22. What is a stale closure?
+
+A closure can retain values from the render in which it was created.
+
+Example:
+
+```jsx
+useEffect(() => {
+    setInterval(() => {
+        console.log(count);
+    }, 1000);
+}, []);
+```
+
+The callback may continue seeing the value captured by that render.
+
+Solutions depend on the use case:
+
+* Correct dependencies
+* Functional state updates
+* Refs
+* Effect Events where appropriate
+* Restructuring the effect
+
+---
+
+# 21. useRef
+
+## Q23. What is `useRef`?
+
+`useRef` stores a mutable value that persists between renders without causing a render when `.current` changes.
+
+```jsx
+const inputRef = useRef(null);
+```
+
+DOM usage:
+
+```jsx
+<input ref={inputRef} />
+```
+
+Then:
+
+```jsx
+inputRef.current.focus();
+```
+
+**Follow-up: useRef vs useState?**
+
+```text
+useState
+→ changing it schedules rendering
+
+useRef
+→ changing .current does not itself schedule rendering
+```
+
+---
+
+# 22. useMemo
+
+## Q24. What is `useMemo`?
+
+It memoizes a calculated value.
+
+```jsx
+const filteredProducts = useMemo(() => {
+    return products.filter(
+        p => p.price > 50000
+    );
+}, [products]);
+```
+
+Use it when there is a meaningful performance reason.
+
+**Follow-up: Should you use `useMemo` everywhere?**
+
+No.
+
+It has its own memory/comparison cost. Profile first.
+
+---
+
+# 23. useCallback
+
+## Q25. What is `useCallback`?
+
+It memoizes a function reference.
+
+```jsx
+const handleAdd = useCallback(() => {
+    addToCart(product);
+}, [product]);
+```
+
+This can be useful when passing callbacks to memoized children.
+
+**Follow-up: `useMemo` vs `useCallback`?**
+
+```text
+useMemo
+→ memoizes value
+
+useCallback
+→ memoizes function reference
+```
+
+---
+
+# 24. React.memo
+
+## Q26. What is `React.memo`?
+
+It allows React to skip re-rendering a component when its props are considered unchanged.
+
+```jsx
+const Product = React.memo(function Product({
+    product
+}) {
+    return <div>{product.name}</div>;
+});
+```
+
+**Follow-up:** Why doesn't this help?
+
+```jsx
+<Product
+    onClick={() => addToCart(product)}
+/>
+```
+
+Because a new function reference can be created on each parent render.
+
+This is one case where `useCallback` may be useful.
+
+---
+
+# 25. Referential Equality
+
+## Q27. What is referential equality?
+
+For objects/functions:
+
+```javascript
+{} === {}
+```
+
+is:
+
+```text
+false
+```
+
+because they are different references.
+
+React optimization techniques often depend on reference identity.
+
+**Scenario:** `React.memo` doesn't seem to work.
+
+Check whether you're passing newly created:
+
+* Objects
+* Arrays
+* Functions
+
+on every render.
+
+---
+
+# 26. useReducer
+
+## Q28. When would you use `useReducer` instead of `useState`?
+
+Use `useReducer` when state transitions become complex or related.
+
+```jsx
+const [state, dispatch] =
+    useReducer(reducer, initialState);
+```
+
+Example:
+
+```text
+Form
+ ├── loading
+ ├── error
+ ├── data
+ ├── validation
+ └── submission
+```
+
+A reducer can make transitions easier to reason about.
+
+---
+
+# 27. Context
+
+## Q29. What problem does Context solve?
+
+It allows data to be consumed by components without manually passing props through every intermediate component.
+
+Typical examples:
+
+* Theme
+* Locale
+* Authentication information
+* Configuration
+
+**Follow-up:** Does Context replace Redux?
+
+Not necessarily.
+
+Context is a React mechanism for distributing values. Redux is a state-management architecture/library with additional concepts and tooling.
+
+---
+
+# 28. Custom Hooks
+
+## Q30. What is a custom Hook?
+
+A custom Hook is a reusable function whose name starts with `use` and which can use other Hooks.
+
+Example:
+
+```jsx
+function useCounter() {
+
+    const [count, setCount] = useState(0);
+
+    const increment = () => {
+        setCount(prev => prev + 1);
+    };
+
+    return { count, increment };
+}
+```
+
+**Follow-up:** Does a custom Hook share state between components?
+
+No.
+
+It shares **logic**, while each invocation normally has its own state.
+
+---
+
+# 29. useLayoutEffect
+
+## Q31. `useEffect` vs `useLayoutEffect`?
+
+`useEffect` is normally preferred for external synchronization.
+
+`useLayoutEffect` is useful when you need to read layout or make DOM changes synchronously before the browser paints.
+
+Example:
+
+```jsx
+useLayoutEffect(() => {
+    const rect =
+        elementRef.current.getBoundingClientRect();
+}, []);
+```
+
+**Scenario:** Tooltip position flickers after appearing.
+
+You might investigate whether layout measurement needs to happen before paint.
+
+---
+
+# 30. useTransition
+
+## Q32. What is `useTransition`?
+
+It allows certain state updates to be treated as non-urgent.
+
+```jsx
+const [isPending, startTransition] =
+    useTransition();
+
+startTransition(() => {
+    setSearchResults(results);
+});
+```
+
+This can keep urgent interactions responsive.
+
+**Scenario:** Typing in a search box freezes because rendering 20,000 results is expensive.
+
+You could separate the urgent input update from the expensive result update.
+
+---
+
+# 31. useDeferredValue
+
+## Q33. What is `useDeferredValue`?
+
+It allows a value to have a deferred version.
+
+```jsx
+const deferredSearch =
+    useDeferredValue(search);
+```
+
+The input can respond immediately while expensive rendering can use the deferred value.
+
+**Follow-up:** `useTransition` vs `useDeferredValue`?
+
+```text
+useTransition
+→ controls an update
+
+useDeferredValue
+→ creates a deferred version of a value
+```
+
+---
+
+# 32. React 19 — Actions
+
+## Q34. What are Actions in modern React?
+
+React 19 introduced support around Actions for handling async mutations/transitions, including pending state and optimistic/error handling patterns. ([React][2])
+
+They are particularly useful around forms and async updates.
+
+---
+
+# 33. useActionState
+
+## Q35. What is `useActionState`?
+
+It manages the state/result of an Action.
+
+Conceptually:
+
+```jsx
+const [
+    state,
+    action,
+    isPending
+] = useActionState(
+    submitForm,
+    initialState
+);
+```
+
+It can give you:
+
+* Current result
+* Action dispatcher
+* Pending state
+
+React's documentation specifies these three return values. ([React][3])
+
+**Scenario:** A registration form submits to the server.
+
+Instead of manually managing:
+
+```text
+loading
+error
+success
+response
+```
+
+you can use modern Action APIs where appropriate.
+
+---
+
+# 34. useOptimistic
+
+## Q36. What is `useOptimistic`?
+
+It lets you show an expected UI result immediately while an async operation is pending.
+
+Example:
+
+```text
+User clicks Like
+       ↓
+UI immediately shows +1
+       ↓
+Server request
+       ↓
+Success → keep +1
+Failure → revert
+```
+
+React 19 introduced this pattern as a first-class Hook. ([React][2])
+
+**Scenario:** Add-to-cart feels slow because the API takes 500ms.
+
+You can optimistically update the UI while the request completes.
+
+---
+
+# 35. `use`
+
+## Q37. What is the `use` API?
+
+Modern React provides `use` for reading resources such as Promises or context in supported environments.
+
+It works closely with Suspense and modern React async patterns.
+
+**Follow-up:** Is `use` the same as `useEffect`?
+
+No.
+
+`use` is about reading a resource/value during rendering in supported React patterns; `useEffect` is for synchronizing with external systems after commit.
+
+---
+
+# 36. Server Components
+
+## Q38. What are React Server Components?
+
+Server Components are components that render in a server environment separate from the client application.
+
+They can reduce the amount of JavaScript sent to the browser and can access server-side resources through the framework/environment.
+
+React's documentation describes Server Components as a distinct component type that can run at build time or per request. ([React][4])
+
+**Follow-up:** Can a Server Component use `useState`?
+
+Not like a Client Component.
+
+Interactive behavior requiring client state/browser APIs belongs on the client side.
+
+---
+
+# 37. Server vs Client Components
+
+## Q39. Explain Server Component vs Client Component.
+
+```text
+Server Component
+→ server environment
+→ good for data/static work
+→ no client-side interactivity
+
+Client Component
+→ browser/client
+→ state
+→ effects
+→ event handlers
+→ browser APIs
+```
+
+**Scenario:** Product page contains:
+
+```text
+Product description
+Product price
+Add to Cart button
+```
+
+You might keep static/data-oriented parts server-rendered and isolate the interactive Add-to-Cart portion as a Client Component, depending on the framework architecture.
+
+---
+
+# 38. Hydration
+
+## Q40. What is hydration?
+
+Hydration is the process of attaching React behavior to server-rendered HTML on the client.
+
+Conceptually:
+
+```text
+Server
+ ↓
+HTML
+ ↓
+Browser displays HTML
+ ↓
+React JS loads
+ ↓
+Hydration
+ ↓
+Interactive UI
+```
+
+**Scenario:** Server page looks correct but buttons don't respond immediately.
+
+Investigate:
+
+* JavaScript loading
+* Hydration
+* Hydration errors
+* Client/server mismatch
+
+---
+
+# 39. Hydration Mismatch
+
+## Q41. What causes hydration mismatch?
+
+The server-generated output and client-generated output don't match.
+
+Common causes:
+
+```jsx
+Math.random()
+Date/time differences
+Browser-only APIs
+window
+localStorage
+```
+
+used directly during render.
+
+**Solution:** Keep server and client rendering deterministic and move browser-only work to the appropriate client-side lifecycle.
+
+---
+
+# 40. Suspense
+
+## Q42. What is Suspense?
+
+Suspense lets React display fallback UI while something is waiting under supported Suspense-enabled mechanisms.
+
+Example:
+
+```jsx
+<Suspense fallback={<Loading />}>
+    <ProductPage />
+</Suspense>
+```
+
+**Follow-up:** Is Suspense only for lazy loading?
+
+No. It is also used in modern React frameworks and data-loading architectures.
+
+---
+
+# 41. Lazy Loading
+
+## Q43. How do you lazy-load a component?
+
+```jsx
+const Admin =
+    lazy(() => import("./Admin"));
+```
+
+Then:
+
+```jsx
+<Suspense fallback={<Loading />}>
+    <Admin />
+</Suspense>
+```
+
+This helps code splitting.
+
+**Scenario:** Initial JavaScript bundle is 5 MB.
+
+Possible solutions:
+
+* Route-level code splitting
+* Lazy loading
+* Remove unnecessary dependencies
+* Tree shaking
+* Bundle analysis
+* Image optimization
+* Server Components where applicable
+
+---
+
+# 42. Performance Scenario
+
+## Q44. Your React page is slow. How do you debug it?
+
+Don't immediately add `useMemo`.
+
+First:
+
+```text
+1. Reproduce
+2. Profile
+3. Find expensive renders
+4. Identify unnecessary state updates
+5. Check component tree
+6. Check network
+7. Check bundle
+8. Optimize
+9. Measure again
+```
+
+Use:
+
+* React DevTools Profiler
+* Browser Performance tools
+* Network tab
+* Bundle analyzer
+
+**Follow-up:** What optimizations might you consider?
+
+```text
+React.memo
+useMemo
+useCallback
+virtualization
+code splitting
+state colocation
+debouncing
+caching
+server-side rendering
+Server Components
+```
+
+But only where justified.
+
+---
+
+# 43. Large List Scenario
+
+## Q45. You need to render 100,000 products. What do you do?
+
+Don't render all 100,000 DOM nodes.
+
+Use **virtualization/windowing**.
+
+Conceptually:
+
+```text
+100,000 records
+       ↓
+Only ~20 visible rows
+       ↓
+Render those
+       ↓
+Recycle as user scrolls
+```
+
+Libraries such as virtualization libraries can help.
+
+**Follow-up:** What else?
+
+* Server-side pagination
+* Infinite scrolling
+* Search/filter on server
+* Efficient keys
+* Avoid expensive row rendering
+
+---
+
+# 44. Search Scenario
+
+## Q46. Build a product search box that calls an API.
+
+Naive:
+
+```text
+Every keystroke
+ ↓
+API call
+```
+
+Typing:
+
+```text
+l
+la
+lap
+lapt
+lapto
+laptop
+```
+
+could generate six requests.
+
+Better:
+
+```text
+User types
+ ↓
+Debounce
+ ↓
+API request
+ ↓
+Abort previous request
+ ↓
+Show latest result
+```
+
+**Follow-up:** Why abort?
+
+Suppose:
+
+```text
+Request A → "lap"
+Request B → "laptop"
+```
+
+A might return after B and overwrite the newer result.
+
+Abort/cancel stale requests or otherwise guard against stale responses.
+
+---
+
+# 45. API Race Condition
+
+## Q47. How do you prevent stale API responses?
+
+Use `AbortController` or request identity/versioning.
+
+Conceptually:
+
+```text
+Request 1
+Request 2
+Request 3
+
+Only latest request should update UI.
+```
+
+**Scenario:** User searches quickly and sees results for the previous query.
+
+This is likely a race condition.
+
+---
+
+# 46. Authentication Scenario
+
+## Q48. Explain React + Spring Boot JWT authentication.
+
+```text
+React Login
+ ↓
+POST /login
+ ↓
+Spring Boot
+ ↓
+Validate credentials
+ ↓
+Generate JWT
+ ↓
+Return token
+ ↓
+React
+ ↓
+Authorization: Bearer token
+ ↓
+Protected API
+```
+
+**Follow-up:** Where should JWT be generated?
+
+Backend.
+
+**Follow-up:** Where should JWT be validated?
+
+Backend/Spring Security.
+
+The frontend should not be trusted to validate authorization.
+
+---
+
+# 47. JWT Refresh Scenario
+
+## Q49. JWT expires while user is making an API call. What happens?
+
+Typical architecture:
+
+```text
+API request
+ ↓
+401
+ ↓
+Refresh token
+ ↓
+Get new access token
+ ↓
+Retry original request
+```
+
+An Axios interceptor is commonly used for this.
+
+**Senior follow-up:** What if five API calls simultaneously return 401?
+
+Avoid five refresh requests.
+
+Use a coordinated refresh mechanism so concurrent requests wait for the same refresh operation.
+
+---
+
+# 48. localStorage vs Cookie
+
+## Q50. Where should JWT be stored?
+
+There isn't one universal answer; security architecture matters.
+
+A common secure web architecture uses:
+
+* Short-lived access token
+* Secure HttpOnly cookie for sensitive session/refresh information
+* Appropriate CSRF protection
+
+Storing sensitive tokens in `localStorage` exposes them to JavaScript running in the page, so an XSS vulnerability can make them accessible.
+
+**Follow-up:** Is HttpOnly cookie automatically secure?
+
+No.
+
+You still need:
+
+* Secure
+* SameSite configuration
+* CSRF considerations
+* XSS prevention
+* Proper session management
+
+---
+
+# 49. Redux
+
+## Q51. Why would you use Redux?
+
+For complex shared client state where centralized state transitions, debugging, and predictable updates provide value.
+
+Example:
+
+```text
+User
+Cart
+Wishlist
+Orders
+Notifications
+```
+
+**Follow-up:** Should every state be in Redux?
+
+No.
+
+Keep local UI state local when possible.
+
+---
+
+# 50. Redux vs Context
+
+## Q52. Redux vs Context?
+
+Context:
+
+```text
+Mostly value distribution
+```
+
+Redux:
+
+```text
+Centralized state architecture
+Actions
+Reducers
+Middleware
+DevTools
+Selectors
+```
+
+**Scenario:** Theme value changes once per hour.
+
+Context may be sufficient.
+
+A frequently updated, complex application state may benefit from a dedicated state store.
+
+---
+
+# 51. Server State vs Client State
+
+## Q53. What is the difference?
+
+### Client state
+
+```text
+Modal open
+Selected tab
+Theme
+Form UI state
+```
+
+### Server state
+
+```text
+Products
+Orders
+Customer information
+Inventory
+```
+
+Server state has additional problems:
+
+* Cache
+* Refetching
+* Synchronization
+* Stale data
+* Loading
+* Errors
+* Pagination
+
+This is why tools such as TanStack Query or RTK Query can be useful.
+
+---
+
+# 52. Error Boundaries
+
+## Q54. What is an Error Boundary?
+
+An Error Boundary catches certain rendering errors in descendant components and displays fallback UI instead of crashing the entire UI tree.
+
+**Follow-up:** Does it catch every JavaScript error?
+
+No.
+
+For example, traditional Error Boundaries don't catch every event-handler error or arbitrary asynchronous error.
+
+**Scenario:**
+
+Payment component crashes.
+
+You want:
+
+```text
+Payment section
+ ↓
+Error Boundary
+ ↓
+"Payment unavailable. Try again."
+```
+
+instead of destroying the entire application UI.
+
+---
+
+# 53. Forms
+
+## Q55. Controlled vs uncontrolled component?
+
+Controlled:
+
+```jsx
+<input
+    value={name}
+    onChange={e =>
+        setName(e.target.value)
+    }
+/>
+```
+
+React owns the value.
+
+Uncontrolled:
+
+```jsx
+<input ref={inputRef} />
+```
+
+The DOM owns the value.
+
+**Follow-up:** Which should you use?
+
+It depends on requirements.
+
+Controlled inputs are often convenient for validation and dynamic UI behavior.
+
+---
+
+# 54. React Router
+
+## Q56. What is client-side routing?
+
+Instead of requesting a completely new HTML document for every navigation, the React application can change the displayed component based on the URL.
+
+Example:
+
+```text
+/products
+/products/101
+/cart
+/checkout
+```
+
+**Scenario:** User directly opens `/products/101`.
+
+The application/server must be configured so that the route resolves correctly.
+
+---
+
+# 55. Protected Routes
+
+## Q57. How do you implement protected routes?
+
+Conceptually:
+
+```text
+Route
+ ↓
+Check authentication
+ ↓
+Authenticated?
+ ├── YES → Page
+ └── NO → Login
+```
+
+But remember:
+
+> Frontend route protection is a UI concern. Backend authorization must still protect the actual API.
+
+---
+
+# 56. Testing
+
+## Q58. What should you test in React?
+
+Test user-visible behavior rather than implementation details.
+
+Examples:
+
+```text
+User opens login
+ ↓
+Enters credentials
+ ↓
+Clicks Login
+ ↓
+Loading shown
+ ↓
+Success message shown
+```
+
+Tools commonly include:
+
+* React Testing Library
+* Jest/Vitest
+* MSW for API mocking
+* Playwright/Cypress for E2E testing
+
+**Follow-up:** Should you test internal state variables?
+
+Usually not directly. Test behavior.
+
+---
+
+# 57. Scenario: Component Test
+
+## Q59. Login button doesn't work. How do you test it?
+
+Test:
+
+1. Render login form.
+2. Enter username.
+3. Enter password.
+4. Click login.
+5. Mock API.
+6. Verify request/response behavior.
+7. Verify success/error UI.
+
+---
+
+# 58. Scenario: Production Performance
+
+## Q60. Production React application suddenly becomes slow. What do you do?
+
+Answer:
+
+```text
+1. Check monitoring
+2. Reproduce
+3. Check network
+4. Check API latency
+5. Check bundle size
+6. React Profiler
+7. Browser Performance panel
+8. Identify expensive component
+9. Fix root cause
+10. Measure again
+```
+
+Do not say:
+
+> "I'll add useMemo everywhere."
+
+That's generally a weak senior-level answer.
+
+---
+
+# 59. Scenario: Infinite Rendering
+
+## Q61. Application keeps rendering continuously. What do you check?
+
+Check:
+
+```text
+setState during render
+↓
+useEffect dependency loop
+↓
+unstable objects/functions
+↓
+parent-child update loop
+↓
+context update
+↓
+external store subscription
+```
+
+Example:
+
+```jsx
+function App() {
+    setCount(1); // ❌ during render
+}
+```
+
+This can cause repeated rendering.
+
+---
+
+# 60. Scenario: Child Rendering Too Much
+
+## Q62. Child component renders 100 times. What do you investigate?
+
+Check:
+
+```text
+Parent rendering
+Props changing
+Object references
+Array references
+Function references
+Context
+State updates
+External stores
+```
+
+Then profile before optimizing.
+
+Potential solutions:
+
+```text
+React.memo
+useMemo
+useCallback
+state colocation
+component splitting
+```
+
+---
+
+# 61. Scenario: React Page with Huge Table
+
+## Q63. How would you design it?
+
+Use:
+
+```text
+Server pagination
++
+Virtualization
++
+Column optimization
++
+Memoized rows where justified
++
+Debounced filtering
++
+Caching
+```
+
+Don't fetch and render millions of rows into the browser.
+
+---
+
+# 62. Scenario: E-commerce Cart
+
+## Q64. Design cart state.
+
+Possible architecture:
+
+```text
+Cart
+ ├── items
+ ├── quantity
+ ├── subtotal
+ ├── discount
+ ├── tax
+ └── total
+```
+
+Derived values such as:
+
+```text
+subtotal
+total
+```
+
+should generally be calculated from source state rather than duplicated unnecessarily.
+
+---
+
+# 63. Scenario: Add to Cart
+
+## Q65. User clicks Add to Cart. What happens?
+
+```text
+Product
+ ↓
+dispatch/addCart
+ ↓
+Update local/global client state
+ ↓
+UI updates immediately
+ ↓
+API request
+ ↓
+Server confirms
+```
+
+For a better UX:
+
+```text
+Optimistic UI
+ ↓
+API
+ ↓
+Success → retain
+Failure → rollback
+```
+
+React 19's optimistic/action APIs can support this style in appropriate architectures. ([React][3])
+
+---
+
+# 64. Scenario: Search Suggestions
+
+## Q66. Design autocomplete.
+
+Requirements:
+
+```text
+User typing
+↓
+300ms debounce
+↓
+API
+↓
+Cancel stale request
+↓
+Display suggestions
+```
+
+Also handle:
+
+```text
+Loading
+Empty result
+Error
+Keyboard navigation
+Accessibility
+```
+
+---
+
+# 65. Scenario: Infinite Scroll
+
+## Q67. How would you implement infinite scrolling?
+
+Use:
+
+```text
+IntersectionObserver
+       ↓
+Near bottom?
+       ↓
+Fetch next page
+       ↓
+Append results
+```
+
+Consider:
+
+* Duplicate requests
+* Loading state
+* End-of-data
+* Error retry
+* Cache
+* Abort requests
+
+---
+
+# 66. Scenario: File Upload
+
+## Q68. Design file upload.
+
+```text
+Select file
+ ↓
+Validate type/size
+ ↓
+Preview
+ ↓
+Upload
+ ↓
+Progress
+ ↓
+Success/Error
+```
+
+For large files:
+
+* Chunking
+* Retry
+* Resumable uploads
+* Upload cancellation
+
+---
+
+# 67. Scenario: Multi-Step Form
+
+## Q69. How would you design a checkout form?
+
+```text
+Step 1
+Address
+ ↓
+Step 2
+Delivery
+ ↓
+Step 3
+Payment
+ ↓
+Step 4
+Confirmation
+```
+
+State should have a clear owner.
+
+You can use:
+
+```text
+local state
+Context
+reducer
+form library
+server state
+```
+
+depending on complexity.
+
+---
+
+# 68. Scenario: Theme
+
+## Q70. How would you implement dark/light theme?
+
+Context is often sufficient:
+
+```text
+ThemeProvider
+ ↓
+ThemeContext
+ ↓
+Components
+```
+
+Persist the preference if needed.
+
+Consider:
+
+```text
+localStorage
+system preference
+SSR hydration
+accessibility
+```
+
+---
+
+# 69. Scenario: Role-Based UI
+
+## Q71. Admin sees buttons that normal users don't.
+
+You can conditionally render:
+
+```jsx
+{user.role === "ADMIN" && (
+    <DeleteButton />
+)}
+```
+
+But:
+
+> Hiding a button is NOT authorization.
+
+Backend must validate the user's permissions.
+
+---
+
+# 70. Scenario: API Error
+
+## Q72. API returns 500. What should UI do?
+
+Don't show:
+
+```text
+Something went wrong.
+```
+
+everywhere without context.
+
+Handle:
+
+```text
+Loading
+Success
+Known validation error
+Unauthorized
+Forbidden
+Not found
+Server error
+Network failure
+Retry
+```
+
+Use a consistent error strategy.
+
+---
+
+# 71. Scenario: Slow API
+
+## Q73. API takes 10 seconds. What can React do?
+
+Frontend can improve perceived experience with:
+
+```text
+Skeleton UI
+Loading indicators
+Optimistic UI
+Caching
+Pagination
+Prefetching
+Suspense where supported
+```
+
+But React cannot magically make a slow backend faster.
+
+Investigate the backend/API as well.
+
+---
+
+# 72. Scenario: Memory Leak
+
+## Q74. How can React applications leak resources?
+
+Common causes:
+
+```text
+Uncleaned event listeners
+Timers
+Subscriptions
+WebSockets
+Observers
+Uncancelled requests
+Third-party libraries
+```
+
+Use cleanup appropriately.
+
+---
+
+# 73. Scenario: WebSocket
+
+## Q75. How would you integrate WebSocket?
+
+```jsx
+useEffect(() => {
+
+    const socket = new WebSocket(url);
+
+    socket.onmessage = event => {
+        ...
+    };
+
+    return () => {
+        socket.close();
+    };
+
+}, [url]);
+```
+
+Important:
+
+* Reconnect strategy
+* Cleanup
+* Authentication
+* Error handling
+* Message ordering
+* Backpressure where applicable
+
+---
+
+# 74. Scenario: Debounce vs Throttle
+
+## Q76. Difference?
+
+### Debounce
+
+Wait until activity stops.
+
+Good for:
+
+```text
+Search
+Validation
+```
+
+### Throttle
+
+Allow execution at most once within a period.
+
+Good for:
+
+```text
+Scroll
+Resize
+Mouse movement
+```
+
+---
+
+# 75. React Compiler
+
+## Q77. What is React Compiler?
+
+React Compiler is a build-time optimization system that can automatically optimize/memoize React code under its supported assumptions.
+
+This changes how developers think about manual memoization.
+
+**Follow-up:** Does this mean `useMemo` and `useCallback` are obsolete?
+
+No. Don't make that blanket claim. Their necessity depends on compiler configuration, code, compatibility, and the specific optimization.
+
+Current React ecosystem interviews increasingly include the Compiler. ([GreatFrontEnd][1])
+
+---
+
+# 76. Concurrent Rendering
+
+## Q78. What is concurrent rendering?
+
+It allows React to work on rendering without necessarily blocking the browser with one uninterrupted rendering task.
+
+React can prioritize more urgent work.
+
+For example:
+
+```text
+Typing
+ ↓
+High priority
+
+Large result rendering
+ ↓
+Lower priority
+```
+
+This enables APIs such as:
+
+```text
+useTransition
+startTransition
+useDeferredValue
+```
+
+---
+
+# 77. Automatic Batching
+
+## Q79. What is automatic batching?
+
+React can group multiple state updates into fewer renders.
+
+For example:
+
+```jsx
+setName("John");
+setAge(30);
+setLoggedIn(true);
+```
+
+React can process these together.
+
+React 18 expanded automatic batching beyond traditional React event handlers.
+
+**Follow-up:** Why is batching useful?
+
+It reduces unnecessary rendering work.
+
+---
+
+# 78. `flushSync`
+
+## Q80. What is `flushSync`?
+
+It allows you to force React updates to be flushed synchronously in specific cases.
+
+Use it rarely.
+
+If an interviewer asks:
+
+> "Should I use flushSync to fix rendering problems?"
+
+Usually:
+
+**No. First understand why the update needs to be synchronous.**
+
+---
+
+# 79. State Colocation
+
+## Q81. What is state colocation?
+
+Keep state as close as possible to the components that need it.
+
+Bad:
+
+```text
+App
+ ↓
+Global state
+ ↓
+Everything
+```
+
+Better:
+
+```text
+ProductFilter
+ ↓
+filter state
+```
+
+If only the filter needs it, don't make it global.
+
+This often improves performance and maintainability.
+
+---
+
+# 80. Scenario: Prop Drilling
+
+## Q82. You have 7 levels of prop drilling. What do you do?
+
+Possible solutions:
+
+```text
+Lift state differently
+Component composition
+Context
+Redux/Zustand
+Custom Hooks
+```
+
+Don't automatically choose Redux.
+
+First understand the data ownership.
+
+---
+
+# 81. Scenario: Global State Explosion
+
+## Q83. Your Redux store contains everything. Is that good?
+
+No.
+
+Separate:
+
+```text
+Local UI state
+Client application state
+Server state
+URL state
+Form state
+```
+
+Not every piece belongs in Redux.
+
+---
+
+# 82. URL State
+
+## Q84. What should be stored in the URL?
+
+Good examples:
+
+```text
+/products?category=laptop
+/products?page=2
+/search?q=react
+```
+
+Why?
+
+The state becomes:
+
+* Shareable
+* Bookmarkable
+* Browser-history compatible
+* Refreshable
+
+---
+
+# 83. Accessibility
+
+## Q85. How do you make React applications accessible?
+
+Use:
+
+```text
+Semantic HTML
+Labels
+Keyboard navigation
+ARIA where necessary
+Focus management
+Color contrast
+Accessible error messages
+Screen-reader support
+```
+
+Don't replace:
+
+```html
+<button>
+```
+
+with:
+
+```html
+<div onClick={...}>
+```
+
+unless there is a compelling reason and you reproduce all required accessibility behavior.
+
+---
+
+# 84. Scenario: Modal
+
+## Q86. What should a production modal handle?
+
+```text
+Open/close
+Focus trap
+Escape key
+Focus restoration
+Keyboard navigation
+Screen readers
+Backdrop
+Scroll locking
+Portal
+```
+
+This is a common practical interview scenario.
+
+---
+
+# 85. Portals
+
+## Q87. What is a React Portal?
+
+A Portal lets you render a React subtree into another DOM node.
+
+Useful for:
+
+```text
+Modal
+Tooltip
+Dropdown
+Toast
+```
+
+Example:
+
+```jsx
+createPortal(
+    <Modal />,
+    document.body
+);
+```
+
+The component remains part of the React tree even though its DOM is mounted elsewhere.
+
+---
+
+# 86. Error Handling Architecture
+
+## Q88. Design frontend error handling.
+
+A production system might have:
+
+```text
+API layer
+ ↓
+Normalize errors
+ ↓
+Global error handling
+ ↓
+Feature-specific UI
+ ↓
+Error Boundary
+ ↓
+Logging/monitoring
+```
+
+Separate:
+
+```text
+Expected business errors
+```
+
+from:
+
+```text
+Unexpected programming errors
+```
+
+---
+
+# 87. React Architecture
+
+## Q89. How would you structure a large React application?
+
+One possible approach:
+
+```text
+src/
+ ├── app/
+ ├── components/
+ ├── features/
+ │    ├── auth/
+ │    ├── products/
+ │    ├── cart/
+ │    └── orders/
+ ├── pages/
+ ├── hooks/
+ ├── services/
+ ├── utils/
+ ├── routes/
+ └── tests/
+```
+
+Feature-based architecture often scales better than putting everything into one giant components folder.
+
+---
+
+# 88. Scenario: E-commerce Architecture
+
+## Q90. Design a React e-commerce application.
+
+```text
+React
+│
+├── Authentication
+├── Product Catalog
+├── Search
+├── Cart
+├── Wishlist
+├── Checkout
+├── Orders
+└── Profile
+```
+
+State:
+
+```text
+Local State
+ ↓
+UI interactions
+
+Global Client State
+ ↓
+Cart/Auth/UI
+
+Server State
+ ↓
+Products/Orders/Inventory
+
+URL State
+ ↓
+Search/filter/pagination
+```
+
+This separation is more important than blindly choosing one state library.
+
+---
+
+# 89. React + TypeScript
+
+## Q91. Why use TypeScript with React?
+
+Benefits:
+
+* Type safety
+* Better refactoring
+* Better IDE support
+* Better API contracts
+* Fewer runtime mistakes
+
+Example:
+
+```tsx
+interface Product {
+    id: number;
+    name: string;
+    price: number;
+}
+
+function ProductCard({
+    product
+}: {
+    product: Product;
+}) {
+    return <div>{product.name}</div>;
+}
+```
+
+---
+
+# 90. Scenario: API Type Mismatch
+
+## Q92. Backend changes:
+
+```json
+{
+    "product_name": "Laptop"
+}
+```
+
+but frontend expects:
+
+```typescript
+name: string
+```
+
+What do you do?
+
+Don't scatter conversion logic everywhere.
+
+Create a mapping/adapter:
+
+```text
+API DTO
+ ↓
+Mapper
+ ↓
+Frontend model
+ ↓
+Components
+```
+
+This isolates backend contract differences.
+
+---
+
+# 91. Testing Scenario
+
+## Q93. How would you test a product search?
+
+Test behavior:
+
+```text
+Render
+ ↓
+Type "laptop"
+ ↓
+Mock API
+ ↓
+Loading
+ ↓
+Results
+ ↓
+Error
+ ↓
+Empty state
+```
+
+Also test:
+
+* Debouncing
+* Request cancellation
+* Pagination
+* Keyboard accessibility
+
+---
+
+# 92. E2E Testing
+
+## Q94. What should be tested end-to-end?
+
+Critical user journeys:
+
+```text
+Login
+ ↓
+Search product
+ ↓
+Add to cart
+ ↓
+Checkout
+ ↓
+Payment
+ ↓
+Order confirmation
+```
+
+Don't try to cover every tiny component with E2E tests.
+
+---
+
+# 93. Scenario: White Screen
+
+## Q95. Production shows a blank white screen. What do you do?
+
+Investigate:
+
+```text
+Browser console
+Network
+JavaScript bundle
+Runtime exception
+Error Boundary
+Deployment
+Environment variables
+API failures
+Chunk loading
+Routing
+```
+
+Add global monitoring so you don't rely solely on user reports.
+
+---
+
+# 94. Chunk Loading Failure
+
+## Q96. Lazy-loaded page fails after deployment.
+
+Potential reason:
+
+```text
+Old browser has old app
+ ↓
+New deployment removes old chunk
+ ↓
+Browser requests old chunk
+ ↓
+404
+```
+
+Solutions include:
+
+* Deployment strategy
+* Cache strategy
+* Chunk error handling
+* Reload/recovery behavior
+
+---
+
+# 95. Security
+
+## Q97. How do you secure a React application?
+
+Frontend security includes:
+
+```text
+XSS prevention
+CSRF protection where applicable
+Secure authentication
+Input handling
+Dependency security
+Content Security Policy
+Secure cookies
+Avoid exposing secrets
+```
+
+Important:
+
+> Frontend code cannot protect secrets because frontend JavaScript is delivered to the browser.
+
+---
+
+# 96. Environment Variables
+
+## Q98. Can you put database passwords in React environment variables?
+
+**Absolutely not.**
+
+Anything bundled into a client application should be considered potentially visible to users.
+
+Correct:
+
+```text
+React
+ ↓
+Backend API
+ ↓
+Database
+```
+
+Not:
+
+```text
+React
+ ↓
+Database credentials
+ ↓
+Database
+```
+
+---
+
+# 97. React Server Components Scenario
+
+## Q99. Product page contains 20KB product description and one interactive button. How would you optimize it using modern React architecture?
+
+Potential approach:
+
+```text
+Server Component
+ ├── Product data
+ ├── Description
+ └── Price
+       |
+       ↓
+Client Component
+ └── AddToCart
+```
+
+This keeps interactivity isolated to the client side.
+
+Server Components are a major modern React topic. ([React][4])
+
+---
+
+# 98. Server Components vs SSR
+
+## Q100. Are Server Components and SSR the same?
+
+**No.**
+
+SSR describes rendering HTML on the server.
+
+Server Components are a component architecture where components execute in a server environment and contribute to the result sent to the client.
+
+They can work together, but they're different concepts.
+
+---
+
+# 99. Scenario: Senior Architecture Question
+
+## Q101. You have a React application with 500 components and performance is degrading. What would you do?
+
+A strong answer:
+
+```text
+1. Establish performance metrics
+2. Reproduce the problem
+3. Profile rendering
+4. Identify expensive components
+5. Inspect state ownership
+6. Reduce unnecessary global state
+7. Check context updates
+8. Check unstable props
+9. Virtualize large lists
+10. Split bundles
+11. Lazy load routes
+12. Optimize network/data fetching
+13. Use memoization where justified
+14. Consider server rendering/server components
+15. Measure again
+```
+
+This is much stronger than:
+
+> "I'll use useMemo and useCallback."
+
+---
+
+# 100. Scenario: Production E-commerce System
+
+## Q102. Design the frontend architecture for Amazon-like e-commerce.
+
+A strong interview answer:
+
+```text
+                     React / Next.js
+                           |
+       +-------------------+------------------+
+       |                   |                  |
+   Product UI           Cart UI          Account UI
+       |                   |                  |
+       +-------------------+------------------+
+                           |
+                    State Architecture
+                           |
+       +-------------------+------------------+
+       |                   |                  |
+   Local State       Client State       Server State
+       |                   |                  |
+     Modal              Cart/Auth       Products/Orders
+                           |
+                       API Layer
+                           |
+                      Spring Boot
+                           |
+                    Spring Security
+                           |
+                        Database
+```
+
+Then explain:
+
+```text
+URL state
+→ search/filter/page
+
+Local state
+→ modal/form/tab
+
+Client global state
+→ cart/session/UI
+
+Server state
+→ products/orders/inventory
+```
+
+That distinction demonstrates architectural maturity.
+
+---
+
+# 101. Scenario: Interviewer Gives You a Bug
+
+### Question:
+
+> "When I click Add to Cart, the cart count doesn't update. How do you debug?"
+
+### Strong answer:
+
+```text
+1. Verify click handler executes.
+2. Verify dispatch/action executes.
+3. Inspect Redux state.
+4. Check reducer.
+5. Check selector.
+6. Check whether component subscribes to correct state.
+7. Check memoization.
+8. Check whether state is mutated incorrectly.
+9. Check whether derived cart count is stale.
+10. Use React DevTools/Redux DevTools.
+```
+
+---
+
+# 102. Scenario: `useEffect` API bug
+
+### Question:
+
+> "API is being called 10 times. What do you check?"
+
+Answer:
+
+```text
+Check dependency array
+        ↓
+Check state update inside effect
+        ↓
+Check whether dependency changes every render
+        ↓
+Check object/function dependencies
+        ↓
+Check Strict Mode development behavior
+        ↓
+Check component mounting/unmounting
+        ↓
+Check parent rendering/remounting
+```
+
+---
+
+# 103. Scenario: Button becomes slow
+
+### Question:
+
+> "Button click takes two seconds to respond."
+
+Investigate:
+
+```text
+Click handler
+ ↓
+State update
+ ↓
+Render cost
+ ↓
+Large component tree
+ ↓
+Expensive calculation
+ ↓
+Blocking JavaScript
+```
+
+Potential solutions:
+
+```text
+Memoization
+Code splitting
+Transition
+Virtualization
+Component splitting
+Move expensive work
+Web Worker if appropriate
+```
+
+---
+
+# 104. Scenario: Search API overload
+
+### Question:
+
+> "10,000 users search simultaneously and your API is overloaded."
+
+Frontend:
+
+```text
+Debounce
+ ↓
+Cache
+ ↓
+Request deduplication
+ ↓
+Pagination
+ ↓
+Abort stale requests
+```
+
+Backend:
+
+```text
+Caching
+Rate limiting
+Search index
+Horizontal scaling
+CDN where applicable
+```
+
+A senior candidate should not treat frontend optimization as the only solution.
+
+---
+
+# 105. Scenario: State synchronization
+
+### Question:
+
+> "Two components show different cart counts."
+
+Check:
+
+```text
+Multiple sources of truth
+        ↓
+Local cart state
+        +
+Redux cart state
+        +
+Server cart
+```
+
+Choose a clear source of truth.
+
+---
+
+# 106. Scenario: Offline support
+
+### Question:
+
+> "E-commerce application must work when the user temporarily loses network."
+
+Consider:
+
+```text
+Service worker/PWA
+Local persistence
+Cached data
+Optimistic updates
+Retry queue
+Conflict resolution
+Offline indicator
+```
+
+---
+
+# 107. Scenario: Accessibility failure
+
+### Question:
+
+> "QA says the modal cannot be used with keyboard."
+
+Investigate:
+
+```text
+Focus trap
+Tab order
+Escape
+Focus restoration
+ARIA
+Semantic elements
+Screen reader behavior
+```
+
+---
+
+# 108. Scenario: Memory leak
+
+### Question:
+
+> "After navigating between pages for 30 minutes, memory usage keeps increasing."
+
+Investigate:
+
+```text
+Event listeners
+Timers
+WebSockets
+Observers
+Subscriptions
+Third-party libraries
+Detached DOM
+Unbounded caches
+```
+
+Use browser memory profiling.
+
+---
+
+# 109. Scenario: React application crashes
+
+### Question:
+
+> "One widget crashes and the entire page disappears."
+
+Use an Error Boundary around appropriate feature boundaries.
+
+Architecture:
+
+```text
+Application
+ |
+ +-- Header
+ |
+ +-- Product Feature
+ |      |
+ |   Error Boundary
+ |
+ +-- Cart Feature
+ |      |
+ |   Error Boundary
+ |
+ +-- Footer
+```
+
+This allows graceful degradation.
+
+---
+
+# 110. The Most Important Senior-Level Questions
+
+If you have limited time, prioritize these:
+
+```text
+1. Explain React rendering.
+
+2. What causes re-rendering?
+
+3. Explain reconciliation.
+
+4. How do keys affect reconciliation?
+
+5. Explain Fiber.
+
+6. Explain useState deeply.
+
+7. Explain useEffect deeply.
+
+8. What causes an infinite useEffect loop?
+
+9. Explain stale closures.
+
+10. useMemo vs useCallback.
+
+11. React.memo and referential equality.
+
+12. How would you debug unnecessary re-renders?
+
+13. Context vs Redux.
+
+14. Client state vs server state.
+
+15. How would you optimize a large list?
+
+16. How would you implement debounced search?
+
+17. How do you handle API race conditions?
+
+18. How do you implement JWT authentication?
+
+19. How do you handle token refresh?
+
+20. How do you design protected routes?
+
+21. How do you test React applications?
+
+22. What are Error Boundaries?
+
+23. What is Suspense?
+
+24. What is concurrent rendering?
+
+25. What is useTransition?
+
+26. What is useDeferredValue?
+
+27. What are Server Components?
+
+28. Server Components vs SSR.
+
+29. What is hydration?
+
+30. What causes hydration mismatch?
+
+31. What are React 19 Actions?
+
+32. What is useActionState?
+
+33. What is useOptimistic?
+
+34. What is the `use` API?
+
+35. What is React Compiler?
+
+36. How would you design a large React application?
+
+37. How would you debug a production performance problem?
+
+38. How would you design an e-commerce frontend?
+
+39. How would you handle 100,000 records?
+
+40. How would you build a production-grade search?
+```
+
+Current interview guides specifically highlight the shift toward **Hooks, reconciliation, performance, state-management trade-offs, Server Components, Actions, `use`, and the React Compiler**. ([GreatFrontEnd][1])
+
+---
+
+# What interviewers are really looking for
+
+A junior answer:
+
+> "`useMemo` is used for memoization."
+
+A stronger answer:
+
+> "`useMemo` caches a calculated value between renders based on dependencies. I wouldn't use it automatically; I'd use it when the calculation is expensive or when stable identity is important for a downstream optimization. I'd profile first because memoization itself has overhead."
+
+A junior answer:
+
+> "Redux is used for global state."
+
+A stronger answer:
+
+> "I first classify state as local UI state, URL state, client-global state, or server state. I'd use Redux Toolkit when complex shared client state benefits from centralized actions, reducers, selectors and debugging. I wouldn't put every API response into Redux if a server-state library is more appropriate."
+
+A junior answer:
+
+> "React is fast because of Virtual DOM."
+
+A stronger answer:
+
+> "React uses reconciliation to determine the required updates. Performance depends on many factors—component rendering cost, state placement, DOM size, JavaScript execution, network, and scheduling—not simply on the existence of a Virtual DOM."
+
+---
+
+# Your React interview preparation roadmap
+
+For your preparation, I recommend this order:
+
+```text
+LEVEL 1
+JavaScript fundamentals
+        ↓
+React fundamentals
+        ↓
+JSX
+        ↓
+Props / State
+        ↓
+Components
+```
+
+Then:
+
+```text
+LEVEL 2
+useState
+useEffect
+useContext
+useRef
+useReducer
+Custom Hooks
+```
+
+Then:
+
+```text
+LEVEL 3
+Rendering
+Reconciliation
+Keys
+Fiber
+Batching
+Concurrent rendering
+```
+
+Then:
+
+```text
+LEVEL 4
+React.memo
+useMemo
+useCallback
+Performance
+Virtualization
+Lazy loading
+Suspense
+```
+
+Then:
+
+```text
+LEVEL 5
+Redux Toolkit
+Context
+TanStack Query
+API integration
+JWT
+Axios interceptors
+Authentication
+```
+
+Then:
+
+```text
+LEVEL 6
+Testing
+Error Boundaries
+Accessibility
+React Router
+Security
+```
+
+Finally, for **2026 senior-level interviews**:
+
+```text
+LEVEL 7
+React 19
+Actions
+useActionState
+useOptimistic
+use
+Server Components
+Server Functions
+Hydration
+React Compiler
+Concurrency
+```
+
+React's current documentation confirms that Server Components, Server Functions, Actions and the newer form/async APIs are part of the modern React model, so these are worth preparing if the job description mentions React 19, Next.js, or modern full-stack React. ([React][5])
+
+**One important point:** nobody can truthfully provide a guaranteed list of *all questions currently being asked in every company*. Interview questions vary by company, role, interviewer, and codebase. The bank above is designed to cover the **high-frequency concepts plus the production scenarios that current 2026 React interview guides emphasize**. ([GreatFrontEnd][1])
+
+If you're targeting a **Java/Spring Boot + React full-stack role**, the highest-value next step is to turn this into a **mock interview sequence of 100 questions**, where I ask you **one question at a time**, wait for your answer, then give the **ideal answer + interviewer follow-up + score + what you missed**.
+
+[1]: https://www.greatfrontend.com/blog/100-react-interview-questions-straight-from-ex-interviewers?utm_source=chatgpt.com "100+ React Interview Questions Straight from Ex-interviewers (2026) | Blog"
+[2]: https://it.react.dev/blog/2024/12/05/react-19?utm_source=chatgpt.com "React v19 – React"
+[3]: https://react.dev/reference/react/useActionState?utm_source=chatgpt.com "useActionState – React"
+[4]: https://react.dev/reference/rsc/server-components?utm_source=chatgpt.com "Server Components – React"
+[5]: https://react.dev/reference/rsc/server-functions?utm_source=chatgpt.com "Server Functions – React"
