@@ -1,6 +1,4 @@
-Absolutely. For a **Senior Java Developer / Senior Spring Boot Developer**, interviewers usually expect much more than knowing `@RestController` and `application.yml`. They test **Spring Boot internals, auto-configuration, dependency management, configuration, profiles, Actuator, production readiness, testing, database integration, transactions, observability, performance, deployment, Docker/Kubernetes, and troubleshooting**.
 
-One current-version note: the Spring Boot documentation currently lists **Spring Boot 4.1.0 as stable**, alongside maintained 4.0.x and 3.x lines; Boot 4.1 requires Java 17+. ([Home][1]) The questions below are intentionally written to remain useful for both **Spring Boot 3.x and modern Boot 4.x**, while calling out version-sensitive areas where relevant.
 
 # Spring Boot — 60 Senior Developer Interview Questions & Answers
 
