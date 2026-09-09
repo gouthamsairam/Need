@@ -379,6 +379,47 @@ public class ListClass {
             List<Integer> lb =li.stream().reduce((a,b)->a+b));
             System.out.print(lb);
         }*/
+       /* public static void main(String[] args) {
+            System.out.println("Hello World");
+            Integer [] arr = {1,3,4,5,67,8,9,7};
+            //	Arrays.sort(arr,(a,b)->b-a);
+            //	Arrays.sort(arr,(a,b)->b.compareTo(a));
+            //Arrays.sort(arr,(a,b)->Integer.compare(b,a));
+            // Arrays.sort(arr, Comparator.naturalOrder());
+            // Arrays.sort(arr, Comparator.reverseOrder());
+            int [][] arr2D = {{6,5,3},{7,9,8,2},{55,33,22,54},{98,33,54,67,45},{88,66,45,67}};
+		*//*Arrays.sort(arr2D);
+		this will not work for 2D array
+		*//*
+            *//*Arrays.sort(arr2D, (a, b) -> Integer.compare(a[0], b[0]));
+             *//*
+            Arrays.sort(arr2D, (a, b) -> a[0] -b[0]);
+
+            for(int i=0; i<arr2D.length; i++) {
+                for(int j=0; j<arr2D[i].length; j++) {
+                    System.out.print(arr2D[i][j]+",");
+                }
+                System.out.println();
+
+            }
+            Arrays.sort(arr,(a,b)->a.compareTo(b));
+            List<Integer> li = Arrays.asList(22,55,66,4,2,44,1,66);
+            //  	Collections.sort(li);
+            // Collections.sort(li,Comparator.reverseOrder());
+            // Collections.sort(li,Comparator.naturalOrder());
+            // li.sort((a,b)-> Integer.compare(a,b));
+            // li.sort((a, b) -> Integer.compare(b, a));
+            // li.sort((a, b) -> a.compareTo(b));
+            // li.sort((a, b) -> b.compareTo(a));
+
+            // li.stream().forEach(s->{
+            //     System.out.println(li+""+s);
+            // });
+            List<Integer> le =li.stream().map(s->s+10).filter(r->r%2==0).collect(Collectors.toList());
+            List<Integer> lb =li.stream().reduce((a,b)->a+b));
+            System.out.print(lb);
+        }*/
+
 
     }
 }
