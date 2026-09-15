@@ -3,7 +3,2491 @@ Absolutely. For a **Senior Java Developer**, Collections interviews are usually 
 Below is a senior-level scenario-based interview set.
 
 # Java Collections — Senior Developer Scenario-Based Interview Questions & Answers
+**PART 1: Fundamentals — Why, What, Where**
+-------------------------------------------
 
+### **Q1. What is the Java Collections Framework and why do we need it?**
+
+**The Java Collections Framework (JCF) is a unified architecture (interfaces + classes + algorithms) in java.util for representing and manipulating groups of objects.Why we need it:**
+
+**Without Collections (old way)**
+
+**With Collections**
+
+**Fixed-size arrays (int\[\] arr = new int\[10\])**
+
+**Dynamic-size (ArrayList grows automatically)**
+
+**Write your own search, sort, insert logic**
+
+**Built-in sort(), binarySearch(), Collections.unmodifiableList()**
+
+**No standard way to pass groups of objects**
+
+**Standard interfaces (List, Set, Map) as method parameters**
+
+**Type-unsafe (Object\[\] everywhere)**
+
+**Type-safe with generics (List)**
+
+**No thread-safe options out of the box**
+
+**ConcurrentHashMap, CopyOnWriteArrayList, etc.**
+
+**Before collections (Java 1.0):**
+
+_**// Old painful way**_
+
+**Vector v = new Vector();**       _**// synchronized, slow**_
+
+**v.add("hello");**
+
+**String s = (String) v.get(0);**  _**// manual casting, ClassCastException risk**_
+
+**Hashtable ht = new Hashtable();**
+
+**ht.put("key", "value");**
+
+**String val = (String) ht.get("key");** _**// manual casting again**_
+
+**With collections (Java 1.2+):**
+
+**List list = new ArrayList<>();**
+
+**list.add("hello");**
+
+**String s = list.get(0);**  _**// no casting needed, compile-time type safety**_
+
+**Map map = new HashMap<>();**
+
+**map.put("key", "value");**
+
+**String val = map.get("key");**  _**// type-safe**_
+
+### **Q2. Draw and explain the complete Collections hierarchy.**
+
+**Iterable**
+
+**│**
+
+**Collection**
+
+**/     |       \\**
+
+**/       |        \\**
+
+**List    Set    Queue**
+
+**/  |  \\      |   \\       |    \\**
+
+**/   |   \\     |    \\      |     \\**
+
+**ArrayList  |  Vector  |  TreeSet  |   ArrayDeque**
+
+**LinkedList    HashSet   LinkedHashSet**
+
+**PriorityQueue**
+
+**Map  (separate hierarchy, NOT Collection)**
+
+**/    |     \\**
+
+**/     |      \\**
+
+**HashMap  TreeMap  LinkedHashMap**
+
+**|**
+
+**ConcurrentHashMap**
+
+**|**
+
+**Hashtable (legacy)**
+
+**Key interfaces:**
+
+**Interface**
+
+**Purpose**
+
+**Ordering**
+
+**Duplicates**
+
+**Null**
+
+**List**
+
+**Ordered sequence**
+
+**Insertion order**
+
+**Yes**
+
+**Yes**
+
+**Set**
+
+**Unique elements**
+
+**Depends on impl**
+
+**No**
+
+**Depends**
+
+**Queue**
+
+**FIFO processing**
+
+**FIFO / priority**
+
+**Yes**
+
+**Depends**
+
+**Deque**
+
+**Double-ended queue**
+
+**Both ends**
+
+**Yes**
+
+**No (ArrayDeque)**
+
+**Map**
+
+**Key-value pairs**
+
+**Depends on impl**
+
+**Keys: No, Values: Yes**
+
+**Depends**
+
+### **Q3. What is the difference between Collection and Collections?**
+
+**Collection (interface)**
+
+**Collections (utility class)**
+
+**java.util.Collection**
+
+**java.util.Collections**
+
+**Root interface for List, Set, Queue**
+
+**Utility class with static helper methods**
+
+**Defines add(), remove(), size(), etc.**
+
+**Provides sort(), unmodifiableList(), synchronizedList(), etc.**
+
+_**// Collection — the interface**_
+
+**Collection items = new ArrayList<>();**
+
+**items.add("Apple");**
+
+_**// Collections — the utility class**_
+
+**List list = new ArrayList<>(List.of("Banana", "Apple", "Cherry"));**
+
+**Collections.sort(list);**                           _**// \[Apple, Banana, Cherry\]**_
+
+**List safe = Collections.unmodifiableList(list);**  _**// immutable view**_
+
+**List synced = Collections.synchronizedList(list);** _**// thread-safe wrapper**_
+
+**PART 2: List Interface — ArrayList, LinkedList, Vector**
+----------------------------------------------------------
+
+### **Q4. How does ArrayList work internally?**
+
+**ArrayList is backed by a dynamic array (Object\[\] elementData).Internal working:**
+
+**Initial state:  elementData = new Object\[10\]   (default capacity)**
+
+**size = 0**
+
+**add("A"):  elementData\[0\] = "A", size = 1**
+
+**add("B"):  elementData\[1\] = "B", size = 2**
+
+**...**
+
+**add 11th element:**
+
+**1. Check: size == elementData.length? YES**
+
+**2. Grow: newCapacity = oldCapacity + (oldCapacity >> 1)  →  10 + 5 = 15**
+
+**3. Arrays.copyOf(elementData, 15)   ← O(n) copy!**
+
+**4. elementData\[10\] = newElement, size = 11**
+
+**Key operations and time complexity:**
+
+**Operation**
+
+**Time Complexity**
+
+**Why**
+
+**get(index)**
+
+**O(1)**
+
+**Direct array index access**
+
+**add(element) (end)**
+
+**Amortized O(1)**
+
+**Usually O(1), occasionally O(n) when resizing**
+
+**add(index, element)**
+
+**O(n)**
+
+**Must shift all elements after index**
+
+**remove(index)**
+
+**O(n)**
+
+**Must shift all elements after index**
+
+**contains(element)**
+
+**O(n)**
+
+**Linear scan**
+
+**Resizing visualized:**
+
+**Capacity: 10 → 15 → 22 → 33 → 49 → ...   (grows by 50% each time)**
+
+**Formula:  newCapacity = oldCapacity + (oldCapacity >> 1)**
+
+**Real-world scenario: Use ArrayList when you need fast random access by index and mostly add to the end.**
+
+_**// E-commerce: displaying a paginated product list**_
+
+**List products = productRepository.findAll();** _**// ArrayList internally**_
+
+**Product thirdProduct = products.get(2);**               _**// O(1) — fast!**_
+
+### **Q5. How does LinkedList work internally? How is it different from ArrayList?**
+
+**LinkedList is a doubly-linked list. Each element is a Node object:**
+
+_**// Internal Node structure (simplified from JDK source)**_
+
+**private static class Node {**
+
+**E item;**
+
+**Node next;**
+
+**Node prev;**
+
+**}**
+
+**Memory layout:**
+
+**ArrayList:  \[A\]\[B\]\[C\]\[D\]\[E\]          ← contiguous memory block**
+
+**LinkedList: \[prev|A|next\] ↔ \[prev|B|next\] ↔ \[prev|C|next\]  ← scattered in heap**
+
+**Comparison:**
+
+**Operation**
+
+**ArrayList**
+
+**LinkedList**
+
+**get(index)**
+
+**O(1) — array access**
+
+**O(n) — must traverse nodes**
+
+**add(end)**
+
+**O(1) amortized**
+
+**O(1) — update last pointer**
+
+**add(0, elem)**
+
+**O(n) — shift all**
+
+**O(1) — update head pointer**
+
+**remove(0)**
+
+**O(n) — shift all**
+
+**O(1) — update head pointer**
+
+**Memory**
+
+**Less (just array + elements)**
+
+**More (each node = element + 2 pointers = ~3x)**
+
+**Cache performance**
+
+**Excellent (contiguous)**
+
+**Poor (scattered in heap)**
+
+**Iterator.remove()**
+
+**O(n)**
+
+**O(1)**
+
+**When to use LinkedList:**
+
+*   **Frequent insertions/removals at the beginning or middle (using iterator)**
+
+*   **Implementing a Queue or Deque**
+
+
+**When to use ArrayList (almost always):**
+
+*   **Random access by index**
+
+*   **Iterating through elements (cache-friendly)**
+
+*   **Most general-purpose use cases**
+
+
+_**// LinkedList as a Queue (real-world: task processing)**_
+
+**Queue taskQueue = new LinkedList<>();**
+
+**taskQueue.offer(new Task("Send email"));**
+
+**taskQueue.offer(new Task("Generate report"));**
+
+**Task next = taskQueue.poll();** _**// removes and returns head — O(1)**_
+
+### **Q6. What is the difference between ArrayList and Vector?**
+
+**Feature**
+
+**ArrayList**
+
+**Vector**
+
+**Synchronization**
+
+**Not synchronized**
+
+**Synchronized (every method)**
+
+**Performance**
+
+**Fast (no lock overhead)**
+
+**Slow (acquires lock on every operation)**
+
+**Growth**
+
+**Grows by 50% (old + old >> 1)**
+
+**Grows by 100% (doubles)**
+
+**Iterator**
+
+**fail-fast**
+
+**fail-fast (also has legacy Enumeration)**
+
+**Introduced**
+
+**Java 1.2**
+
+**Java 1.0 (legacy)**
+
+**Why you should NEVER use Vector:**
+
+_**// Vector synchronizes EVERY method — even if you're single-threaded!**_
+
+**Vector v = new Vector<>();**  _**// DON'T DO THIS**_
+
+_**// Instead, if you need thread safety:**_
+
+**List safe = Collections.synchronizedList(new ArrayList<>());**
+
+_**// or better:**_
+
+**List concurrent = new CopyOnWriteArrayList<>();**
+
+### **Q7. What is CopyOnWriteArrayList and when should you use it?**
+
+**CopyOnWriteArrayList creates a new copy of the entire array on every write (add/set/remove), but reads happen on the original array without any locking.Internal working:**
+
+**Thread 1 reads: → reads from array reference (no lock, fast)**
+
+**Thread 2 writes: → copies entire array → modifies copy → swaps reference (volatile)**
+
+**Thread 1 reads: → still reads old array (snapshot) — no ConcurrentModificationException**
+
+_**// Perfect for: configurations, listener lists, caches that rarely change**_
+
+**CopyOnWriteArrayList listeners = new CopyOnWriteArrayList<>();**
+
+_**// Multiple threads can iterate safely**_
+
+**listeners.forEach(listener -> listener.onEvent(event));** _**// no lock needed**_
+
+_**// Occasional adds (expensive but rare)**_
+
+**listeners.add(new MyListener());**
+
+**When to use:**
+
+*   **Read-heavy, write-rare scenarios (e.g., list of active listeners, feature flags)**
+
+*   **When you need safe iteration without ConcurrentModificationException**
+
+
+**When NOT to use:**
+
+*   **Frequent writes (each write copies the entire array = O(n))**
+
+*   **Large lists (copy cost is proportional to size)**
+
+
+**PART 3: Set Interface — HashSet, LinkedHashSet, TreeSet**
+-----------------------------------------------------------
+
+### **Q8. How does HashSet work internally?**
+
+**Secret: HashSet is backed by a HashMap internally!**
+
+_**// Actual JDK source (simplified)**_
+
+**public class HashSet {**
+
+**private transient HashMap map;**
+
+**private static final Object PRESENT = new Object();** _**// dummy value**_
+
+**public boolean add(E e) {**
+
+**return map.put(e, PRESENT) == null;**
+
+**}**
+
+**public boolean contains(Object o) {**
+
+**return map.containsKey(o);**
+
+**}**
+
+**public boolean remove(Object o) {**
+
+**return map.remove(o) == PRESENT;**
+
+**}**
+
+**}**
+
+**Every element you add to a HashSet becomes a KEY in the internal HashMap, and the VALUE is a shared dummy object called PRESENT.How uniqueness works:**
+
+**add("Apple"):**
+
+**1. hash("Apple") → bucket index (say 5)**
+
+**2. Check bucket 5: empty → store**
+
+**3. Returns true (new element)**
+
+**add("Apple"):**
+
+**1. hash("Apple") → bucket index 5**
+
+**2. Check bucket 5: found "Apple" via equals()**
+
+**3. Key already exists → overwrite value (same PRESENT)**
+
+**4. Returns false (duplicate)**
+
+**This is why you MUST override both hashCode() and equals() for custom objects in a HashSet:**
+
+**public class Employee {**
+
+**private int id;**
+
+**private String name;**
+
+**@Override**
+
+**public boolean equals(Object o) {**
+
+**if (this == o) return true;**
+
+**if (!(o instanceof Employee e)) return false;**
+
+**return id == e.id;**
+
+**}**
+
+**@Override**
+
+**public int hashCode() {**
+
+**return Integer.hashCode(id);**
+
+**}**
+
+**}**
+
+**Set employees = new HashSet<>();**
+
+**employees.add(new Employee(1, "Alice"));**
+
+**employees.add(new Employee(1, "Alice"));** _**// duplicate — not added**_
+
+**System.out.println(employees.size());** _**// 1**_
+
+**What happens if you override equals() but NOT hashCode()?**
+
+_**// BAD — only equals() overridden**_
+
+**Employee e1 = new Employee(1, "Alice");**
+
+**Employee e2 = new Employee(1, "Alice");**
+
+**e1.equals(e2);** _**// true**_
+
+**e1.hashCode();** _**// 735 (default from Object — memory address based)**_
+
+**e2.hashCode();** _**// 982 (different!)**_
+
+**Set set = new HashSet<>();**
+
+**set.add(e1);**        _**// goes to bucket 735 % 16 = bucket 3**_
+
+**set.add(e2);**        _**// goes to bucket 982 % 16 = bucket 6 — DIFFERENT BUCKET!**_
+
+**set.size();**          _**// 2! — WRONG! Both represent the same employee**_
+
+**Contract: If a.equals(b) is true, then a.hashCode() MUST equal b.hashCode().**
+
+### **Q9. What is the difference between HashSet, LinkedHashSet, and TreeSet?**
+
+**Feature**
+
+**HashSet**
+
+**LinkedHashSet**
+
+**TreeSet**
+
+**Internal structure**
+
+**HashMap**
+
+**LinkedHashMap**
+
+**Red-Black Tree (TreeMap)**
+
+**Ordering**
+
+**No order guaranteed**
+
+**Insertion order**
+
+**Sorted order (natural or Comparator)**
+
+**Null elements**
+
+**1 null allowed**
+
+**1 null allowed**
+
+**No null (throws NPE)**
+
+**add/remove/contains**
+
+**O(1) average**
+
+**O(1) average**
+
+**O(log n)**
+
+**Use case**
+
+**Fast uniqueness check**
+
+**Unique + preserve insertion order**
+
+**Sorted unique elements**
+
+_**// HashSet — no order**_
+
+**Set hash = new HashSet<>();**
+
+**hash.addAll(List.of("Banana", "Apple", "Cherry"));**
+
+**System.out.println(hash);** _**// \[Apple, Cherry, Banana\] — unpredictable order**_
+
+_**// LinkedHashSet — insertion order**_
+
+**Set linked = new LinkedHashSet<>();**
+
+**linked.addAll(List.of("Banana", "Apple", "Cherry"));**
+
+**System.out.println(linked);** _**// \[Banana, Apple, Cherry\] — insertion order!**_
+
+_**// TreeSet — sorted order**_
+
+**Set tree = new TreeSet<>();**
+
+**tree.addAll(List.of("Banana", "Apple", "Cherry"));**
+
+**System.out.println(tree);** _**// \[Apple, Banana, Cherry\] — alphabetically sorted!**_
+
+**Real-world scenario — Removing duplicate orders while keeping arrival order:**
+
+**List incomingOrders = getOrdersFromKafka();** _**// may contain duplicates**_
+
+**Set uniqueOrders = new LinkedHashSet<>(incomingOrders);**
+
+_**// Duplicates removed, processing order preserved**_
+
+**Real-world scenario — Leaderboard (sorted scores):**
+
+**TreeSet leaderboard = new TreeSet<>(Comparator.comparingInt(Player::getScore).reversed());**
+
+**leaderboard.add(new Player("Alice", 950));**
+
+**leaderboard.add(new Player("Bob", 1200));**
+
+**leaderboard.add(new Player("Charlie", 800));**
+
+_**// Iteration: Bob(1200) → Alice(950) → Charlie(800)**_
+
+### **Q10. How does TreeSet maintain sorted order internally?**
+
+**TreeSet is backed by a Red-Black Tree (a self-balancing binary search tree).Red-Black Tree properties:**
+
+1.  **Every node is either RED or BLACK**
+
+2.  **Root is always BLACK**
+
+3.  **No two consecutive RED nodes (parent-child)**
+
+4.  **Every path from root to leaf has the same number of BLACK nodes**
+
+5.  **Guarantees tree height ≤ 2 \* log(n) → O(log n) operations**
+
+
+**\[50 BLACK\]**
+
+**/          \\**
+
+**\[30 RED\]        \[70 RED\]**
+
+**/     \\        /     \\**
+
+**\[20 BLK\] \[40 BLK\] \[60 BLK\] \[80 BLK\]**
+
+**Operations:**
+
+**TreeSet set = new TreeSet<>();**
+
+**set.add(50);**  _**// root**_
+
+**set.add(30);**  _**// left of 50**_
+
+**set.add(70);**  _**// right of 50**_
+
+**set.add(20);**  _**// left of 30 → may trigger rebalancing**_
+
+_**// Powerful NavigableSet methods:**_
+
+**set.first();**          _**// 20 (smallest)**_
+
+**set.last();**           _**// 70 (largest)**_
+
+**set.headSet(50);**      _**// \[20, 30\] (elements < 50)**_
+
+**set.tailSet(50);**      _**// \[50, 70\] (elements >= 50)**_
+
+**set.subSet(25, 65);**   _**// \[30, 50\] (elements in range)**_
+
+**set.floor(45);**        _**// 40 (greatest element <= 45)**_
+
+**set.ceiling(45);**      _**// 50 (smallest element >= 45)**_
+
+**PART 4: Map Interface — HashMap, TreeMap, LinkedHashMap**
+-----------------------------------------------------------
+
+### **Q11. How does HashMap work internally? (Most asked question!)**
+
+**This is the #1 most asked Java interview question. Let's go deep.Internal structure:**
+
+_**// Simplified JDK source**_
+
+**public class HashMap {**
+
+**Node\[\] table;**          _**// array of buckets (default 16)**_
+
+**int size;**                    _**// number of key-value pairs**_
+
+**int threshold;**               _**// capacity \* loadFactor**_
+
+**float loadFactor;**            _**// default 0.75**_
+
+**static class Node {**
+
+**final int hash;**
+
+**final K key;**
+
+**V value;**
+
+**Node next;**          _**// linked list for collisions**_
+
+**}**
+
+**}**
+
+**Step-by-step: map.put("name", "Alice")**
+
+**Step 1: Calculate hash**
+
+**hash = hash("name")**
+
+**// JDK spreads the hash: h ^ (h >>> 16) — reduces collisions**
+
+**// Let's say hash = 3292**
+
+**Step 2: Find bucket index**
+
+**index = hash & (capacity - 1)   // equivalent to hash % capacity, but faster**
+
+**index = 3292 & 15 = 12          // assuming capacity = 16**
+
+**Step 3: Check bucket 12**
+
+**Case A: Bucket is empty → create new Node, place it there**
+
+**Case B: Bucket has nodes → traverse linked list:**
+
+**- If key.equals(existingKey) → update value (overwrite)**
+
+**- If no match → append new Node at end of list**
+
+**Case C: If linked list length >= 8 AND table size >= 64**
+
+**→ convert linked list to RED-BLACK TREE (Java 8+)**
+
+**(search goes from O(n) to O(log n))**
+
+**Step 4: Check if resize needed**
+
+**if (++size > threshold) → resize to double capacity**
+
+**Visual representation:**
+
+**Buckets (table\[\]):**
+
+**\[0\] → null**
+
+**\[1\] → null**
+
+**\[2\] → \[hash|"age"|25|next\] → \[hash|"score"|99|null\]   ← collision chain**
+
+**\[3\] → null**
+
+**...**
+
+**\[12\] → \[hash|"name"|"Alice"|null\]**
+
+**...**
+
+**\[15\] → null**
+
+**Treeification (Java 8+):**
+
+**When bucket has ≥ 8 nodes AND table size ≥ 64:**
+
+**Linked List → Red-Black Tree   (O(n) → O(log n) lookup)**
+
+**When bucket shrinks to ≤ 6 nodes:**
+
+**Red-Black Tree → Linked List   (untreeify)**
+
+**Resizing (rehashing):**
+
+**Old table: capacity 16, threshold 12 (16 \* 0.75)**
+
+**When 13th entry added:**
+
+**1. Create new table of capacity 32**
+
+**2. Rehash ALL entries to new bucket positions**
+
+**3. Some entries move, some stay (depends on new hash bit)**
+
+**This is O(n) — expensive!**
+
+### **Q12. What happens when two keys have the same hashCode in HashMap?**
+
+**This is called a hash collision. HashMap handles it through chaining.**
+
+_**// Two different keys with same hashCode (collision)**_
+
+**map.put(key1, "value1");**  _**// hash(key1) % 16 = 5 → goes to bucket 5**_
+
+**map.put(key2, "value2");**  _**// hash(key2) % 16 = 5 → also bucket 5!**_
+
+_**// Bucket 5 now has a linked list:**_
+
+_**// \[key1|value1\] → \[key2|value2\] → null**_
+
+**How get() works with collisions:**
+
+**map.get(key2):**
+
+**1. hash(key2) % 16 = 5 → go to bucket 5**
+
+**2. Check first node: key1.equals(key2)? NO → go to next**
+
+**3. Check second node: key2.equals(key2)? YES → return "value2"**
+
+**Worst case without treeification: All keys land in same bucket → O(n) for every operation.With treeification (Java 8+): Same bucket but tree structure → O(log n).Interview trick question:**
+
+_**// Can you design a class that causes maximum collisions?**_
+
+**class BadKey {**
+
+**@Override**
+
+**public int hashCode() {**
+
+**return 42;** _**// ALL objects go to same bucket!**_
+
+**}**
+
+**}**
+
+_**// This makes HashMap degrade to O(n) for < 8 entries, O(log n) for >= 8**_
+
+### **Q13. Why is the default capacity 16 and load factor 0.75?**
+
+**Capacity = 16 (must be power of 2):**
+
+*   **Powers of 2 allow the fast bitwise AND operation: hash & (capacity - 1) instead of expensive modulo hash % capacity**
+
+*   **15 in binary = 1111 → bitwise AND distributes evenly**
+
+
+**Load factor = 0.75:**
+
+*   **A trade-off between space and time**
+
+*   **At 0.75, on average each bucket has ≤ 1 entry → most operations are O(1)**
+
+*   **Higher (e.g., 0.9) = more collisions but less memory**
+
+*   **Lower (e.g., 0.5) = fewer collisions but more memory wasted**
+
+
+_**// Custom initial capacity and load factor**_
+
+_**// Pre-size if you know the expected number of entries**_
+
+**Map map = new HashMap<>(1000, 0.75f);**
+
+_**// Avoids multiple resizes when adding ~750 entries**_
+
+_**// Better: use the factory method**_
+
+**Map map = HashMap.newHashMap(1000);**
+
+_**// Java 19+ — automatically calculates capacity for 1000 entries**_
+
+**Rule of thumb: If you know you'll store N entries, initialize with capacity = N / 0.75 + 1 to avoid resizing.**
+
+### **Q14. What is the difference between HashMap, LinkedHashMap, and TreeMap?**
+
+**Feature**
+
+**HashMap**
+
+**LinkedHashMap**
+
+**TreeMap**
+
+**Ordering**
+
+**No order**
+
+**Insertion order (or access order)**
+
+**Sorted by key**
+
+**Internal**
+
+**Array + Linked List/Tree**
+
+**HashMap + Doubly-linked list**
+
+**Red-Black Tree**
+
+**put/get/remove**
+
+**O(1) avg**
+
+**O(1) avg**
+
+**O(log n)**
+
+**Null keys**
+
+**1 null key allowed**
+
+**1 null key allowed**
+
+**No null keys**
+
+**Use case**
+
+**General purpose**
+
+**LRU cache, ordered iteration**
+
+**Range queries, sorted data**
+
+**Map hashMap = new HashMap<>();**
+
+**hashMap.put("Charlie", 3);**
+
+**hashMap.put("Alice", 1);**
+
+**hashMap.put("Bob", 2);**
+
+**System.out.println(hashMap);**    _**// {Bob=2, Alice=1, Charlie=3} — random order**_
+
+**Map linkedMap = new LinkedHashMap<>();**
+
+**linkedMap.put("Charlie", 3);**
+
+**linkedMap.put("Alice", 1);**
+
+**linkedMap.put("Bob", 2);**
+
+**System.out.println(linkedMap);**  _**// {Charlie=3, Alice=1, Bob=2} — insertion order!**_
+
+**Map treeMap = new TreeMap<>();**
+
+**treeMap.put("Charlie", 3);**
+
+**treeMap.put("Alice", 1);**
+
+**treeMap.put("Bob", 2);**
+
+**System.out.println(treeMap);**    _**// {Alice=1, Bob=2, Charlie=3} — sorted!**_
+
+### **Q15. How to implement an LRU Cache using LinkedHashMap?**
+
+**LRU (Least Recently Used) Cache evicts the least recently accessed entry when the cache is full.LinkedHashMap supports this natively with access-order mode:**
+
+**public class LRUCache extends LinkedHashMap {**
+
+**private final int maxSize;**
+
+**public LRUCache(int maxSize) {**
+
+**super(maxSize, 0.75f, true);**  _**// true = access-order (not insertion-order)**_
+
+**this.maxSize = maxSize;**
+
+**}**
+
+**@Override**
+
+**protected boolean removeEldestEntry(Map.Entry eldest) {**
+
+**return size() > maxSize;**  _**// remove oldest when capacity exceeded**_
+
+**}**
+
+**}**
+
+_**// Usage**_
+
+**LRUCache cache = new LRUCache<>(3);**
+
+**cache.put("A", "1");**
+
+**cache.put("B", "2");**
+
+**cache.put("C", "3");**
+
+**cache.get("A");**        _**// access A — moves it to end (most recent)**_
+
+**cache.put("D", "4");**   _**// cache full → evicts B (least recently used)**_
+
+**System.out.println(cache);** _**// {C=3, A=1, D=4}**_
+
+**How it works internally:**
+
+**Doubly-linked list maintains access order:**
+
+**HEAD (oldest) ← → ← → ← → TAIL (newest)**
+
+**After put(A), put(B), put(C):    HEAD → A ↔ B ↔ C ← TAIL**
+
+**After get(A):                     HEAD → B ↔ C ↔ A ← TAIL  (A moved to tail)**
+
+**After put(D):                     HEAD → C ↔ A ↔ D ← TAIL  (B evicted from head)**
+
+**Real-world scenario: Database query cache, session cache, DNS cache.**
+
+### **Q16. What is ConcurrentHashMap and how does it work internally?**
+
+**Problem with HashMap: Not thread-safe. Two threads modifying simultaneously → data corruption, infinite loops (in pre-Java 8).Problem with Collections.synchronizedMap(): Locks the entire map on every operation → poor concurrency.ConcurrentHashMap solution: Fine-grained locking for maximum concurrency.Java 8+ internal design:**
+
+**Array of Nodes (like HashMap), but with:**
+
+**1\. CAS (Compare-And-Swap) for non-contended buckets**
+
+**2\. synchronized on individual bucket head for contended operations**
+
+**3\. No locking for reads (volatile reads)**
+
+_**// Multiple threads can safely read and write**_
+
+**ConcurrentHashMap map = new ConcurrentHashMap<>();**
+
+_**// Atomic operations (crucial for thread safety)**_
+
+**map.putIfAbsent("counter", 0);**
+
+**map.compute("counter", (key, val) -> val + 1);**        _**// atomic read-modify-write**_
+
+**map.merge("counter", 1, Integer::sum);**                 _**// atomic merge**_
+
+**map.computeIfAbsent("users", key -> new ArrayList<>());** _**// lazy init**_
+
+**Comparison of thread-safe map options:**
+
+**Feature**
+
+**synchronizedMap**
+
+**Hashtable**
+
+**ConcurrentHashMap**
+
+**Lock scope**
+
+**Entire map**
+
+**Entire map**
+
+**Per-bucket**
+
+**Read concurrency**
+
+**Blocked by writes**
+
+**Blocked by writes**
+
+**Lock-free reads**
+
+**Null keys/values**
+
+**Depends on backing map**
+
+**No nulls**
+
+**No nulls**
+
+**Performance**
+
+**Poor under contention**
+
+**Poor**
+
+**Excellent**
+
+**Iterator**
+
+**fail-fast**
+
+**fail-fast**
+
+**Weakly consistent (no CME)**
+
+**Real-world scenario — Thread-safe word counter:**
+
+**ConcurrentHashMap wordCount = new ConcurrentHashMap<>();**
+
+_**// Multiple threads processing different files simultaneously**_
+
+**void processWord(String word) {**
+
+**wordCount.computeIfAbsent(word, k -> new LongAdder()).increment();**
+
+**}**
+
+_**// After all threads finish:**_
+
+**wordCount.forEach((word, count) ->**
+
+**System.out.println(word + ": " + count.sum()));**
+
+### **Q17. What is the difference between HashMap and Hashtable?**
+
+**Feature**
+
+**HashMap**
+
+**Hashtable**
+
+**Synchronized**
+
+**No**
+
+**Yes (every method)**
+
+**Null keys**
+
+**1 null key allowed**
+
+**No null keys or values**
+
+**Performance**
+
+**Fast**
+
+**Slow (lock overhead)**
+
+**Iterator**
+
+**fail-fast**
+
+**fail-fast (also has Enumeration)**
+
+**Introduced**
+
+**Java 1.2**
+
+**Java 1.0 (legacy)**
+
+**Superclass**
+
+**AbstractMap**
+
+**Dictionary (legacy)**
+
+**Bottom line: Never use Hashtable. Use HashMap (single-threaded) or ConcurrentHashMap (multi-threaded).**
+
+PART 5: Queue and Deque
+-----------------------
+
+### Here’s a clean, well-structured documentation version of your content, formatted for readability and reuse (like notes, wiki, or interview prep):
+
+📘 Java Queue (Collection Framework) – Documentation
+====================================================
+
+🔹 1. Overview
+--------------
+
+### A Queue in Java is a collection used to store elements before processing, typically following the FIFO (First In, First Out) principle.
+
+### ✔ Key Idea:
+
+*   The first element added is the first one removed.
+
+
+### ✔ Real-life analogy:
+
+*   People standing in a queue → first person in line gets served first.
+
+
+🔹 2. Queue Interface
+---------------------
+
+### The Queue interface is part of the Java Collections Framework.
+
+### public interface Queue extends Collection
+
+🔹 3. Core Operations
+---------------------
+
+### Each operation has two variants:
+
+*   One throws an exception
+
+*   One returns a special value
+
+
+### Operation
+
+### Throws Exception
+
+### Returns Special Value
+
+### Insert
+
+### add()
+
+### offer()
+
+### Remove
+
+### remove()
+
+### poll()
+
+### Examine
+
+### element()
+
+### peek()
+
+🔹 4. Basic Example
+-------------------
+
+### Queue queue = new LinkedList<>();
+
+### queue.add(10);
+
+### queue.add(20);
+
+### queue.add(30);
+
+### System.out.println(queue); // \[10, 20, 30\]
+
+### queue.remove(); // removes 10
+
+### System.out.println(queue); // \[20, 30\]
+
+🔹 5. Method Differences
+------------------------
+
+### ✔ add() vs offer()
+
+### queue.add(10);    // Throws exception if full
+
+### queue.offer(20);  // Returns false if full
+
+### 👉 Prefer offer() in production for safer handling.
+
+### ✔ remove() vs poll()
+
+### queue.remove(); // Throws exception if empty
+
+### queue.poll();   // Returns null if empty
+
+### ✔ element() vs peek()
+
+### queue.element(); // Throws exception if empty
+
+### queue.peek();    // Returns null if empty
+
+🔹 6. Queue Implementations
+---------------------------
+
+### 🟢 1. LinkedList
+
+### Queue q = new LinkedList<>();
+
+*   Maintains FIFO
+
+*   Allows null (not recommended)
+
+
+### 🟢 2. PriorityQueue
+
+### Queue pq = new PriorityQueue<>();
+
+*   Orders elements by priority (min-heap by default)
+
+
+### pq.add(30);
+
+### pq.add(10);
+
+### pq.add(20);
+
+### System.out.println(pq); // \[10, 30, 20\]
+
+### 🟢 3. ArrayDeque
+
+### Queue dq = new ArrayDeque<>();
+
+*   Faster than LinkedList
+
+*   Does not allow nulls
+
+*   Can act as both Queue and Stack
+
+
+### 🟢 4. BlockingQueue (Multithreading)
+
+### Used in concurrent systems.
+
+### Examples:
+
+*   ArrayBlockingQueue
+
+*   LinkedBlockingQueue
+
+
+🔹 7. Types of Queues
+---------------------
+
+### 🔸 FIFO Queue
+
+### Queue q = new LinkedList<>();
+
+### 🔸 Priority Queue
+
+### PriorityQueue pq = new PriorityQueue<>();
+
+*   Processes smallest (or highest priority) element first
+
+
+### 🔸 Deque (Double-ended Queue)
+
+### Deque dq = new ArrayDeque<>();
+
+### dq.addFirst(10);
+
+### dq.addLast(20);
+
+🔹 8. Real-World Use Cases
+--------------------------
+
+### ✅ 1. Messaging Systems
+
+*   Used in systems like Kafka
+
+*   Example:
+
+    *   Producer adds tasks
+
+    *   Consumer processes asynchronously
+
+
+### ✅ 2. Thread Pools / Task Scheduling
+
+### BlockingQueue queue = new LinkedBlockingQueue<>();
+
+*   Used in ExecutorService
+
+*   Handles background tasks
+
+
+### ✅ 3. BFS Algorithm
+
+### Queue q = new LinkedList<>();
+
+*   Used in:
+
+    *   Graph traversal
+
+    *   Shortest path algorithms
+
+
+### ✅ 4. Rate Limiting / Buffering
+
+*   Stores API requests/events before processing
+
+
+### ✅ 5. Job Scheduling
+
+*   Printer queues
+
+*   OS task scheduling
+
+
+🔹 9. Producer-Consumer Example
+-------------------------------
+
+### Queue queue = new LinkedList<>();
+
+### // Producer
+
+### queue.add("Task1");
+
+### queue.add("Task2");
+
+### // Consumer
+
+### while (!queue.isEmpty()) {
+
+###     System.out.println("Processing: " + queue.poll());
+
+### }
+
+🔹 10. PriorityQueue with Custom Comparator
+-------------------------------------------
+
+### PriorityQueue pq = new PriorityQueue<>((a, b) -> b - a);
+
+### pq.add(10);
+
+### pq.add(30);
+
+### pq.add(20);
+
+### while (!pq.isEmpty()) {
+
+###     System.out.println(pq.poll()); // 30, 20, 10
+
+### }
+
+🔹 11. When to Use What?
+------------------------
+
+### Scenario
+
+### Recommended Implementation
+
+### General FIFO
+
+### LinkedList / ArrayDeque
+
+### High performance
+
+### ArrayDeque
+
+### Priority handling
+
+### PriorityQueue
+
+### Multithreading
+
+### BlockingQueue
+
+🔹 12. Summary
+--------------
+
+*   Queue follows FIFO
+
+*   Provides safe vs exception-based methods
+
+*   Key implementations:
+
+    *   LinkedList
+
+    *   PriorityQueue
+
+    *   ArrayDeque
+
+    *   BlockingQueue
+
+*   Widely used in:
+
+    *   Messaging systems
+
+    *   Multithreading
+
+    *   Algorithms (BFS)
+
+    *   System design
+
+
+### **Q18. Explain Queue and Deque interfaces with their implementations.**
+
+**Queue — FIFO (First-In-First-Out):**
+
+_**// Two sets of methods:**_
+
+_**// Throws exception      vs    Returns special value**_
+
+**queue.add(e);            vs    queue.offer(e);**       _**// insert**_
+
+**queue.remove();          vs    queue.poll();**          _**// remove head**_
+
+**queue.element();         vs    queue.peek();**          _**// examine head**_
+
+**Implementations:**
+
+_**// 1. LinkedList as Queue**_
+
+**Queue queue = new LinkedList<>();**
+
+**queue.offer("Task 1");**
+
+**queue.offer("Task 2");**
+
+**queue.poll();** _**// "Task 1"**_
+
+_**// 2. ArrayDeque (faster, preferred for queues and stacks)**_
+
+**Deque stack = new ArrayDeque<>();**
+
+**stack.push("A");**  _**// push onto stack**_
+
+**stack.push("B");**
+
+**stack.pop();**      _**// "B" — LIFO**_
+
+**Deque queue2 = new ArrayDeque<>();**
+
+**queue2.offerLast("A");**  _**// enqueue**_
+
+**queue2.offerLast("B");**
+
+**queue2.pollFirst();**     _**// "A" — FIFO**_
+
+_**// 3. PriorityQueue (elements processed by priority, not insertion order)**_
+
+**PriorityQueue pq = new PriorityQueue<>();**  _**// min-heap**_
+
+**pq.offer(30);**
+
+**pq.offer(10);**
+
+**pq.offer(20);**
+
+**pq.poll();** _**// 10 (smallest first!)**_
+
+_**// Max-heap:**_
+
+**PriorityQueue maxPq = new PriorityQueue<>(Comparator.reverseOrder());**
+
+### **Q19. How does PriorityQueue work internally?**
+
+**PriorityQueue is backed by a binary min-heap (array-based).Heap property: Parent node ≤ both children (for min-heap).**
+
+**Array:  \[10, 20, 30, 25, 35\]**
+
+**Tree representation:**
+
+**10**
+
+**/    \\**
+
+**20      30**
+
+**/  \\**
+
+**25    35**
+
+**Parent of index i = (i - 1) / 2**
+
+**Left child of i  = 2 \* i + 1**
+
+**Right child of i = 2 \* i + 2**
+
+**Operations:**
+
+**Operation**
+
+**Complexity**
+
+**How**
+
+**offer(e)**
+
+**O(log n)**
+
+**Add at end, then "sift up"**
+
+**poll()**
+
+**O(log n)**
+
+**Remove root, move last to root, "sift down"**
+
+**peek()**
+
+**O(1)**
+
+**Return root (index 0)**
+
+**remove(e)**
+
+**O(n)**
+
+**Find element linearly, then sift**
+
+**Real-world scenario — Task scheduler with priorities:**
+
+**record Task(String name, int priority) implements Comparable {**
+
+**public int compareTo(Task other) {**
+
+**return Integer.compare(this.priority, other.priority);** _**// lower number = higher priority**_
+
+**}**
+
+**}**
+
+**PriorityQueue scheduler = new PriorityQueue<>();**
+
+**scheduler.offer(new Task("Low priority backup", 5));**
+
+**scheduler.offer(new Task("CRITICAL: Server down", 1));**
+
+**scheduler.offer(new Task("Medium: Deploy update", 3));**
+
+**while (!scheduler.isEmpty()) {**
+
+**System.out.println(scheduler.poll());**
+
+**}**
+
+_**// Output:**_
+
+_**// Task\[name=CRITICAL: Server down, priority=1\]**_
+
+_**// Task\[name=Medium: Deploy update, priority=3\]**_
+
+_**// Task\[name=Low priority backup, priority=5\]**_
+
+### **Q20. What is the difference between ArrayDeque and LinkedList as a Queue/Stack?**
+
+**Feature**
+
+**ArrayDeque**
+
+**LinkedList**
+
+**Internal**
+
+**Resizable circular array**
+
+**Doubly-linked list**
+
+**Memory**
+
+**Less (no node objects)**
+
+**More (2 pointers per node)**
+
+**Cache**
+
+**Cache-friendly (contiguous)**
+
+**Cache-unfriendly (scattered)**
+
+**Null elements**
+
+**Not allowed**
+
+**Allowed**
+
+**Performance**
+
+**Faster for both queue and stack**
+
+**Slower due to object allocation**
+
+**Use as List**
+
+**Not possible (no random access)**
+
+**Yes (implements List)**
+
+**JDK Javadoc says:** _**"This class is likely to be faster than Stack when used as a stack, and faster than LinkedList when used as a queue."**_
+
+_**// PREFERRED: Use ArrayDeque for stacks and queues**_
+
+**Deque stack = new ArrayDeque<>();**   _**// instead of Stack<>**_
+
+**Queue queue = new ArrayDeque<>();**   _**// instead of LinkedList<>**_
+
+**PART 6: Iterators, Fail-Fast vs Fail-Safe**
+---------------------------------------------
+
+### **Q21. What is fail-fast and fail-safe iteration?**
+
+**Fail-fast: Throws ConcurrentModificationException if the collection is modified during iteration.**
+
+**List list = new ArrayList<>(List.of("A", "B", "C"));**
+
+_**// FAIL-FAST — throws ConcurrentModificationException!**_
+
+**for (String s : list) {**
+
+**if (s.equals("B")) {**
+
+**list.remove(s);**  _**// modifying while iterating → BOOM!**_
+
+**}**
+
+**}**
+
+**How fail-fast works internally:**
+
+_**// ArrayList maintains a modCount field**_
+
+_**// Iterator stores expectedModCount at creation time**_
+
+_**// On every next() call, iterator checks: modCount == expectedModCount?**_
+
+_**// If not → throw ConcurrentModificationException**_
+
+_**// Safe way to remove during iteration:**_
+
+**Iterator it = list.iterator();**
+
+**while (it.hasNext()) {**
+
+**if (it.next().equals("B")) {**
+
+**it.remove();**  _**// uses iterator's remove — updates expectedModCount**_
+
+**}**
+
+**}**
+
+_**// Or with Java 8+:**_
+
+**list.removeIf(s -> s.equals("B"));**  _**// internally uses iterator.remove()**_
+
+**Fail-safe (weakly consistent): Works on a snapshot or copy — never throws CME.**
+
+_**// ConcurrentHashMap — weakly consistent**_
+
+**ConcurrentHashMap map = new ConcurrentHashMap<>();**
+
+**map.put("A", 1);**
+
+**map.put("B", 2);**
+
+**for (Map.Entry entry : map.entrySet()) {**
+
+**map.put("C", 3);**  _**// OK! No exception. Iterator may or may not see "C"**_
+
+**}**
+
+_**// CopyOnWriteArrayList — snapshot**_
+
+**CopyOnWriteArrayList cowList = new CopyOnWriteArrayList<>(List.of("A", "B", "C"));**
+
+**for (String s : cowList) {**
+
+**cowList.add("D");**  _**// OK! Iterator works on snapshot. Won't see "D"**_
+
+**}**
+
+**Collection**
+
+**Iterator Type**
+
+**Throws CME?**
+
+**ArrayList, HashSet, HashMap**
+
+**Fail-fast**
+
+**Yes**
+
+**ConcurrentHashMap**
+
+**Weakly consistent**
+
+**No**
+
+**CopyOnWriteArrayList**
+
+**Snapshot**
+
+**No**
+
+**PART 7: Comparable vs Comparator**
+------------------------------------
+
+### **Q22. What is the difference between Comparable and Comparator?**
+
+**Feature**
+
+**Comparable**
+
+**Comparator**
+
+**Package**
+
+**java.lang**
+
+**java.util**
+
+**Method**
+
+**compareTo(T o)**
+
+**compare(T o1, T o2)**
+
+**Modifies class?**
+
+**Yes (class must implement it)**
+
+**No (external, separate class/lambda)**
+
+**Sorting**
+
+**Natural ordering (single)**
+
+**Custom ordering (multiple)**
+
+**Usage**
+
+**Collections.sort(list)**
+
+**Collections.sort(list, comparator)**
+
+_**// Comparable — natural ordering (built into the class)**_
+
+**public class Employee implements Comparable {**
+
+**private int id;**
+
+**private String name;**
+
+**private double salary;**
+
+**@Override**
+
+**public int compareTo(Employee other) {**
+
+**return Integer.compare(this.id, other.id);** _**// sort by ID naturally**_
+
+**}**
+
+**}**
+
+**List employees = getEmployees();**
+
+**Collections.sort(employees);** _**// uses compareTo — sorts by ID**_
+
+_**// Comparator — external, multiple sort strategies**_
+
+**Comparator byName = Comparator.comparing(Employee::getName);**
+
+**Comparator bySalaryDesc = Comparator.comparingDouble(Employee::getSalary).reversed();**
+
+**Comparator byNameThenSalary = Comparator**
+
+**.comparing(Employee::getName)**
+
+**.thenComparingDouble(Employee::getSalary);**
+
+**employees.sort(byName);**           _**// sort by name**_
+
+**employees.sort(bySalaryDesc);**     _**// sort by salary descending**_
+
+**employees.sort(byNameThenSalary);** _**// sort by name, break ties by salary**_
+
+_**// Null-safe comparator**_
+
+**Comparator nullSafe = Comparator.nullsLast(**
+
+**Comparator.comparing(Employee::getName)**
+
+**);**
+
+**PART 8: Java 8+ Collections Features**
+----------------------------------------
+
+### **Q23. What are the important Java 8+ enhancements to Collections?**
+
+**1\. forEach() method:**
+
+**List names = List.of("Alice", "Bob", "Charlie");**
+
+**names.forEach(name -> System.out.println(name));**
+
+**names.forEach(System.out::println);** _**// method reference**_
+
+**2\. Stream API — transform, filter, aggregate:**
+
+**List orders = getOrders();**
+
+_**// Real-world: total revenue from completed orders**_
+
+**double totalRevenue = orders.stream()**
+
+**.filter(o -> o.getStatus() == Status.COMPLETED)**
+
+**.mapToDouble(Order::getAmount)**
+
+**.sum();**
+
+_**// Group orders by status**_
+
+**Map\> byStatus = orders.stream()**
+
+**.collect(Collectors.groupingBy(Order::getStatus));**
+
+_**// Top 5 highest-value orders**_
+
+**List topOrders = orders.stream()**
+
+**.sorted(Comparator.comparingDouble(Order::getAmount).reversed())**
+
+**.limit(5)**
+
+**.toList();**
+
+**3\. Map enhancements:**
+
+**Map\> userRoles = new HashMap<>();**
+
+_**// computeIfAbsent — lazy initialization**_
+
+**userRoles.computeIfAbsent("alice", k -> new ArrayList<>()).add("ADMIN");**
+
+_**// merge — combine values**_
+
+**Map wordCount = new HashMap<>();**
+
+**for (String word : words) {**
+
+**wordCount.merge(word, 1, Integer::sum);** _**// increment or set to 1**_
+
+**}**
+
+_**// getOrDefault**_
+
+**int count = wordCount.getOrDefault("missing", 0);**
+
+_**// replaceAll**_
+
+**wordCount.replaceAll((key, val) -> val \* 2);**
+
+**4\. Immutable collections (Java 9+):**
+
+**List list = List.of("A", "B", "C");**        _**// immutable**_
+
+**Set set = Set.of("A", "B", "C");**            _**// immutable**_
+
+**Map map = Map.of("A", 1, "B", 2);**  _**// immutable**_
+
+**list.add("D");** _**// throws UnsupportedOperationException!**_
+
+_**// Java 10+**_
+
+**List copy = List.copyOf(mutableList);** _**// immutable copy**_
+
+**5\. toList() (Java 16+):**
+
+_**// Before Java 16**_
+
+**List result = stream.collect(Collectors.toList());**
+
+_**// or**_
+
+**List result = stream.collect(Collectors.toUnmodifiableList());**
+
+_**// Java 16+**_
+
+**List result = stream.toList();** _**// unmodifiable list**_
+
+### **Q24. What are the differences between stream() and parallelStream()?**
+
+**List numbers = IntStream.rangeClosed(1, 1\_000\_000).boxed().toList();**
+
+_**// Sequential stream — single thread**_
+
+**long sum1 = numbers.stream()**
+
+**.filter(n -> n % 2 == 0)**
+
+**.mapToLong(Integer::longValue)**
+
+**.sum();**
+
+_**// Parallel stream — uses ForkJoinPool (multiple threads)**_
+
+**long sum2 = numbers.parallelStream()**
+
+**.filter(n -> n % 2 == 0)**
+
+**.mapToLong(Integer::longValue)**
+
+**.sum();**
+
+**When to use parallelStream():**
+
+*   **Large datasets (100K+ elements)**
+
+*   **CPU-intensive operations (not I/O)**
+
+*   **Operations are stateless and independent**
+
+*   **No shared mutable state**
+
+
+**When NOT to use:**
+
+*   **Small datasets (overhead > benefit)**
+
+*   **I/O operations (threads block, wasted)**
+
+*   **Order matters and operations are interdependent**
+
+*   **Shared mutable state (race conditions)**
+
+
+_**// DANGEROUS — race condition with parallelStream**_
+
+**List results = new ArrayList<>();** _**// not thread-safe!**_
+
+**numbers.parallelStream()**
+
+**.filter(n -> n % 2 == 0)**
+
+**.forEach(results::add);**  _**// UNSAFE — concurrent writes to ArrayList**_
+
+_**// SAFE**_
+
+**List results = numbers.parallelStream()**
+
+**.filter(n -> n % 2 == 0)**
+
+**.toList();** _**// collector handles thread-safety**_
+
+**PART 9: Real-World Scenario-Based Questions**
+-----------------------------------------------
+
+### **Q25. You need to store 10 million user records for fast lookup by user ID. Which collection and why?**
+
+**Answer: HashMap (or ConcurrentHashMap if multi-threaded).Why:**
+
+*   **get(userId) is O(1) average**
+
+*   **10M entries with load factor 0.75 → allocates ~13.3M buckets**
+
+*   **Pre-size to avoid resizing: new HashMap<>(14\_000\_000, 0.75f)**
+
+
+_**// Pre-sized for 10M entries**_
+
+**Map userCache = new HashMap<>(14\_000\_000, 0.75f);**
+
+_**// Or if multi-threaded**_
+
+**Map userCache = new ConcurrentHashMap<>(14\_000\_000, 0.75f, 16);**
+
+_**//                                                                       ^**_
+
+_**//                                                            concurrency level**_
+
+**Memory estimate: ~10M entries × ~80 bytes per entry ≈ 800MB. Consider off-heap solutions (MapDB, Chronicle Map) if memory is a concern.**
+
+### **Q26. How would you find the first non-repeated character in a String using Collections?**
+
+**public char firstNonRepeated(String str) {**
+
+_**// LinkedHashMap maintains insertion order**_
+
+**Map charCount = new LinkedHashMap<>();**
+
+**for (char c : str.toCharArray()) {**
+
+**charCount.merge(c, 1, Integer::sum);**
+
+**}**
+
+**return charCount.entrySet().stream()**
+
+**.filter(e -> e.getValue() == 1)**
+
+**.map(Map.Entry::getKey)**
+
+**.findFirst()**
+
+**.orElseThrow(() -> new IllegalArgumentException("No non-repeated character"));**
+
+**}**
+
+_**// "swiss" → 'w'**_
+
+_**// LinkedHashMap preserves order, so first entry with count 1 is the answer**_
+
+**Why LinkedHashMap? HashMap doesn't preserve order — you'd lose track of which non-repeated character came first.**
+
+### **Q27. How do you make a collection read-only / immutable?**
+
+**Three levels of "unmodifiable":**
+
+_**// Level 1: Unmodifiable VIEW (Java 2+)**_
+
+**List original = new ArrayList<>(List.of("A", "B"));**
+
+**List unmodifiable = Collections.unmodifiableList(original);**
+
+**unmodifiable.add("C");** _**// UnsupportedOperationException!**_
+
+**original.add("C");**      _**// WORKS — and unmodifiable now shows \["A", "B", "C"\]!**_
+
+_**// ↑ This is a VIEW, not a copy!**_
+
+_**// Level 2: Truly immutable COPY (Java 10+)**_
+
+**List immutable = List.copyOf(original);**
+
+**original.add("D");**     _**// original changes**_
+
+**immutable.size();**      _**// still 3 — independent copy**_
+
+_**// Level 3: Immutable from creation (Java 9+)**_
+
+**List list = List.of("A", "B", "C");**         _**// immutable**_
+
+**Map map = Map.of("x", 1, "y", 2);**  _**// immutable**_
+
+**Set set = Set.of("A", "B");**                  _**// immutable**_
+
+### **Q28. What is the difference between Iterator and ListIterator?**
+
+**Feature**
+
+**Iterator**
+
+**ListIterator**
+
+**Direction**
+
+**Forward only**
+
+**Bidirectional (forward + backward)**
+
+**Works on**
+
+**All Collection types**
+
+**Only List**
+
+**Add element**
+
+**No**
+
+**add(E e) — yes**
+
+**Set element**
+
+**No**
+
+**set(E e) — replace current**
+
+**Get index**
+
+**No**
+
+**nextIndex(), previousIndex()**
+
+**List list = new ArrayList<>(List.of("A", "B", "C", "D"));**
+
+**ListIterator it = list.listIterator(list.size());** _**// start at end**_
+
+**while (it.hasPrevious()) {**
+
+**String s = it.previous();**
+
+**System.out.print(s + " ");**  _**// D C B A — reverse iteration!**_
+
+**}**
+
+### **Q29. What is an IdentityHashMap and when would you use it?**
+
+**Regular HashMap: Uses equals() for key comparison.IdentityHashMap: Uses reference equality (==) instead of equals().**
+
+**String s1 = new String("hello");**
+
+**String s2 = new String("hello");**
+
+_**// Regular HashMap**_
+
+**Map hashMap = new HashMap<>();**
+
+**hashMap.put(s1, 1);**
+
+**hashMap.put(s2, 2);**
+
+**System.out.println(hashMap.size());** _**// 1 — because s1.equals(s2)**_
+
+_**// IdentityHashMap**_
+
+**Map identityMap = new IdentityHashMap<>();**
+
+**identityMap.put(s1, 1);**
+
+**identityMap.put(s2, 2);**
+
+**System.out.println(identityMap.size());** _**// 2 — because s1 != s2 (different objects)**_
+
+**Use case: Serialization frameworks, object graph traversal (track visited objects by reference, not equality).**
+
+### **Q30. What is an EnumSet and EnumMap? Why are they special?**
+
+**EnumSet — A Set implementation optimized for enums, using a bit vector internally.EnumMap — A Map implementation with enum keys, using a simple array internally.**
+
+**public enum Permission { READ, WRITE, EXECUTE, DELETE, ADMIN }**
+
+_**// EnumSet — stored as a single long (bit flags), incredibly fast**_
+
+**Set userPerms = EnumSet.of(Permission.READ, Permission.WRITE);**
+
+**Set allPerms = EnumSet.allOf(Permission.class);**
+
+**Set noPerms = EnumSet.noneOf(Permission.class);**
+
+_**// Check permission — O(1) bitwise operation**_
+
+**if (userPerms.contains(Permission.WRITE)) {** _**/\* ... \*/**_ **}**
+
+_**// EnumMap — array-backed, no hashing needed**_
+
+**Map descriptions = new EnumMap<>(Permission.class);**
+
+**descriptions.put(Permission.READ, "Can read resources");**
+
+**descriptions.put(Permission.ADMIN, "Full access");**
+
+**Why use them?**
+
+*   **EnumSet is 10-100x faster than HashSet for enums (bit operations vs hashing)**
+
+*   **EnumMap is faster and more memory-efficient than HashMap for enum keys**
+
+*   **Both are type-safe and prevent accidental mixing of enum types**
+
+
+**PART 10: Tricky Interview Questions**
+---------------------------------------
+
+### **Q31. What happens if you use a mutable object as a HashMap key and then modify it?**
+
+**List key = new ArrayList<>();**
+
+**key.add("hello");**
+
+**Map, String> map = new HashMap<>();**
+
+**map.put(key, "value");**
+
+**System.out.println(map.get(key));** _**// "value" — works fine**_
+
+**key.add("world");** _**// MUTATE THE KEY!**_
+
+**System.out.println(map.get(key));** _**// null! — KEY IS LOST FOREVER**_
+
+**System.out.println(map.size());**   _**// 1 — entry exists but unreachable**_
+
+**Why? The hashCode changed after insertion. The entry sits in the old bucket, but the new hashCode points to a different bucket.Rule: HashMap keys should be immutable (String, Integer, records, etc.) or at minimum, hashCode() and equals() should depend only on immutable fields.**
+
+### **Q32. What is the difference between remove() of Collection, Iterator, and Map?**
+
+_**// Collection.remove(Object) — removes by value, uses equals()**_
+
+**List list = new ArrayList<>(List.of(1, 2, 3));**
+
+**list.remove(Integer.valueOf(2));** _**// removes element 2 (by value)**_
+
+_**// GOTCHA with autoboxing!**_
+
+**list.remove(1);**           _**// removes element at INDEX 1, not value 1!**_
+
+**list.remove(Integer.valueOf(1));** _**// removes value 1**_
+
+_**// Iterator.remove() — removes current element during iteration (safe)**_
+
+**Iterator it = list.iterator();**
+
+**while (it.hasNext()) {**
+
+**if (it.next() == 3) it.remove();**
+
+**}**
+
+_**// Map.remove(key) — removes entry by key**_
+
+**Map map = new HashMap<>();**
+
+**map.remove("key");**
+
+_**// Map.remove(key, value) — conditional remove (Java 8+)**_
+
+**map.remove("key", 42);** _**// only removes if key maps to 42**_
+
+### **Q33. How does Collections.sort() work internally?**
+
+**Java uses TimSort (hybrid of merge sort + insertion sort), invented by Tim Peters.How TimSort works:**
+
+**1\. Divide data into "runs" (naturally sorted subsequences)**
+
+**2\. If a run is too short (< minRun), extend it using INSERTION SORT**
+
+**3\. Merge runs using MERGE SORT with galloping optimization**
+
+**Example: \[3, 1, 2, 5, 8, 4, 6, 7\]**
+
+**→ Detect runs: \[1, 2, 3, 5, 8\] and \[4, 6, 7\]**
+
+**→ Merge: \[1, 2, 3, 4, 5, 6, 7, 8\]**
+
+**Property**
+
+**Value**
+
+**Best case**
+
+**O(n) — already sorted**
+
+**Average**
+
+**O(n log n)**
+
+**Worst case**
+
+**O(n log n)**
+
+**Space**
+
+**O(n)**
+
+**Stable**
+
+**Yes (equal elements maintain relative order)**
+
+_**// For primitives, Java uses Dual-Pivot Quicksort (faster, not stable)**_
+
+**int\[\] arr = {3, 1, 4, 1, 5};**
+
+**Arrays.sort(arr);** _**// Dual-Pivot Quicksort**_
+
+_**// For objects, Java uses TimSort (stable)**_
+
+**String\[\] arr = {"Banana", "Apple", "Cherry"};**
+
+**Arrays.sort(arr);** _**// TimSort**_
+
+### **Q34. What is the difference between Collections.synchronizedMap() and ConcurrentHashMap?**
+
+_**// synchronizedMap — wraps every method in synchronized(mutex)**_
+
+**Map syncMap = Collections.synchronizedMap(new HashMap<>());**
+
+_**// Problem: compound operations are NOT atomic**_
+
+**if (!syncMap.containsKey("key")) {**  _**// another thread can sneak in here!**_
+
+**syncMap.put("key", "value");**     _**// race condition!**_
+
+**}**
+
+_**// You must manually synchronize compound operations:**_
+
+**synchronized (syncMap) {**
+
+**if (!syncMap.containsKey("key")) {**
+
+**syncMap.put("key", "value");**
+
+**}**
+
+**}**
+
+_**// ConcurrentHashMap — built-in atomic compound operations**_
+
+**ConcurrentHashMap concMap = new ConcurrentHashMap<>();**
+
+**concMap.putIfAbsent("key", "value");** _**// atomic!**_
+
+**concMap.computeIfAbsent("key", k -> expensiveComputation());** _**// atomic!**_
+
+**Feature**
+
+**synchronizedMap**
+
+**ConcurrentHashMap**
+
+**Lock granularity**
+
+**Entire map**
+
+**Per-bucket**
+
+**Concurrent reads**
+
+**Blocked**
+
+**Lock-free**
+
+**Atomic compound ops**
+
+**No (manual sync needed)**
+
+**Yes (putIfAbsent, compute, etc.)**
+
+**Iterator**
+
+**Fail-fast**
+
+**Weakly consistent**
+
+**Null keys/values**
+
+**Depends on wrapped map**
+
+**Not allowed**
+
+### **Q35. How would you convert between different collection types?**
+
+_**// List ↔ Set (remove duplicates)**_
+
+**List list = List.of("A", "B", "A", "C", "B");**
+
+**Set set = new LinkedHashSet<>(list);**     _**// \[A, B, C\] — order preserved, deduped**_
+
+**List deduped = new ArrayList<>(set);**      _**// back to list**_
+
+_**// List ↔ Array**_
+
+**String\[\] array = list.toArray(new String\[0\]);**
+
+**List fromArray = List.of(array);**          _**// immutable**_
+
+**List fromArray2 = new ArrayList<>(Arrays.asList(array));** _**// mutable**_
+
+_**// Map → Set of entries, keys, values**_
+
+**Map map = Map.of("A", 1, "B", 2, "C", 3);**
+
+**Set keys = map.keySet();**
+
+**Collection values = map.values();**
+
+**Set\> entries = map.entrySet();**
+
+_**// Two Lists → Map (Java 8+)**_
+
+**List keys2 = List.of("name", "age", "city");**
+
+**List values2 = List.of("Alice", "30", "NYC");**
+
+**Map zipped = IntStream.range(0, keys2.size())**
+
+**.boxed()**
+
+**.collect(Collectors.toMap(keys2::get, values2::get));**
+
+_**// {name=Alice, age=30, city=NYC}**_
+
+_**// Stream to Map**_
+
+**Map userMap = users.stream()**
 ## 1. You have 10 million records. You need fast random access by index. Which collection would you choose?
 
 **Answer:** `ArrayList`.

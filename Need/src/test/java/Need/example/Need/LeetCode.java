@@ -253,6 +253,29 @@ Explanation:
 rotate 1 steps to the right: [7,1,2,3,4,5,6]
 rotate 2 steps to the right: [6,7,1,2,3,4,5]
 rotate 3 steps to the right: [5,6,7,1,2,3,4]*/
+
+
+    int arr [] = {1,2,3,4,5,6,7};
+    int k=3;
+
+    for(int i=0;i<k;i++){
+        int frist =arr[0];
+        for(int j=0;j<arr.length-1;j++){
+            arr[j]=arr[j+1];
+        }
+        arr[arr.length-1]=frist;
+    }
+    System.out.println("left rotate"+Arrays.toString(arr));
+    int arr1 [] = {1,2,3,4,5,6,7};
+    for(int i=0;i<k;i++){
+        int last = arr1[arr1.length-1];
+        for(int j=arr1.length-1;j>0;j--){
+          arr1[j]=arr1[j-1];
+        }
+        arr1[0]=last;
+   }
+    System.out.println("right rotate"+Arrays.toString(arr1));
+
 }
 
     @Test
@@ -266,7 +289,21 @@ Example 2:
 Input: nums = [-1,1,0,-3,3]
 Output: [0,0,9,0,0]
 * */
-
+int arr [] = {1,2,3,4,5};
+int a = 0;
+int output [] = new int  [arr.length];
+for(int i=0;i<arr.length;i++){
+    int b = 0;
+   if(a==i){
+       a++;
+       continue;
+   }else{
+      b = b*arr[i];
+       output[i]=b;
+       a++;
+   }
+}
+        System.out.print(Arrays.toString(output));
 
     }
     @Test
