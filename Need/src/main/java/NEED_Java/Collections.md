@@ -38,17 +38,17 @@ Below is a senior-level scenario-based interview set.
 
 _**// Old painful way**_
 
-**Vector v = new Vector();**       _**// synchronized, slow**_
+**Vector v = new Vector();**_**// synchronized, slow**_
 
 **v.add("hello");**
 
-**String s = (String) v.get(0);**  _**// manual casting, ClassCastException risk**_
+**String s = (String) v.get(0);**_**// manual casting, ClassCastException risk**_
 
 **Hashtable ht = new Hashtable();**
 
 **ht.put("key", "value");**
 
-**String val = (String) ht.get("key");** _**// manual casting again**_
+**String val = (String) ht.get("key");**_**// manual casting again**_
 
 **With collections (Java 1.2+):**
 
@@ -56,13 +56,13 @@ _**// Old painful way**_
 
 **list.add("hello");**
 
-**String s = list.get(0);**  _**// no casting needed, compile-time type safety**_
+**String s = list.get(0);**_**// no casting needed, compile-time type safety**_
 
 **Map map = new HashMap<>();**
 
 **map.put("key", "value");**
 
-**String val = map.get("key");**  _**// type-safe**_
+**String val = map.get("key");**_**// type-safe**_
 
 ### **Q2. Draw and explain the complete Collections hierarchy.**
 
@@ -72,29 +72,29 @@ _**// Old painful way**_
 
 **Collection**
 
-**/     |       \\**
+**/ | \\**
 
-**/       |        \\**
+**/ | \\**
 
-**List    Set    Queue**
+**List Set Queue**
 
-**/  |  \\      |   \\       |    \\**
+**/ | \\ | \\ | \\**
 
-**/   |   \\     |    \\      |     \\**
+**/ | \\ | \\ | \\**
 
-**ArrayList  |  Vector  |  TreeSet  |   ArrayDeque**
+**ArrayList | Vector | TreeSet | ArrayDeque**
 
-**LinkedList    HashSet   LinkedHashSet**
+**LinkedList HashSet LinkedHashSet**
 
 **PriorityQueue**
 
-**Map  (separate hierarchy, NOT Collection)**
+**Map (separate hierarchy, NOT Collection)**
 
-**/    |     \\**
+**/ | \\**
 
-**/     |      \\**
+**/ | \\**
 
-**HashMap  TreeMap  LinkedHashMap**
+**HashMap TreeMap LinkedHashMap**
 
 **|**
 
@@ -194,11 +194,11 @@ _**// Collections — the utility class**_
 
 **List list = new ArrayList<>(List.of("Banana", "Apple", "Cherry"));**
 
-**Collections.sort(list);**                           _**// \[Apple, Banana, Cherry\]**_
+**Collections.sort(list);**_**// \[Apple, Banana, Cherry\]**_
 
-**List safe = Collections.unmodifiableList(list);**  _**// immutable view**_
+**List safe = Collections.unmodifiableList(list);**_**// immutable view**_
 
-**List synced = Collections.synchronizedList(list);** _**// thread-safe wrapper**_
+**List synced = Collections.synchronizedList(list);**_**// thread-safe wrapper**_
 
 **PART 2: List Interface — ArrayList, LinkedList, Vector**
 ----------------------------------------------------------
@@ -207,13 +207,13 @@ _**// Collections — the utility class**_
 
 **ArrayList is backed by a dynamic array (Object\[\] elementData).Internal working:**
 
-**Initial state:  elementData = new Object\[10\]   (default capacity)**
+**Initial state: elementData = new Object\[10\] (default capacity)**
 
 **size = 0**
 
-**add("A"):  elementData\[0\] = "A", size = 1**
+**add("A"): elementData\[0\] = "A", size = 1**
 
-**add("B"):  elementData\[1\] = "B", size = 2**
+**add("B"): elementData\[1\] = "B", size = 2**
 
 **...**
 
@@ -221,9 +221,9 @@ _**// Collections — the utility class**_
 
 **1. Check: size == elementData.length? YES**
 
-**2. Grow: newCapacity = oldCapacity + (oldCapacity >> 1)  →  10 + 5 = 15**
+**2. Grow: newCapacity = oldCapacity + (oldCapacity >> 1) → 10 + 5 = 15**
 
-**3. Arrays.copyOf(elementData, 15)   ← O(n) copy!**
+**3. Arrays.copyOf(elementData, 15) ← O(n) copy!**
 
 **4. elementData\[10\] = newElement, size = 11**
 
@@ -267,17 +267,17 @@ _**// Collections — the utility class**_
 
 **Resizing visualized:**
 
-**Capacity: 10 → 15 → 22 → 33 → 49 → ...   (grows by 50% each time)**
+**Capacity: 10 → 15 → 22 → 33 → 49 → ... (grows by 50% each time)**
 
-**Formula:  newCapacity = oldCapacity + (oldCapacity >> 1)**
+**Formula: newCapacity = oldCapacity + (oldCapacity >> 1)**
 
 **Real-world scenario: Use ArrayList when you need fast random access by index and mostly add to the end.**
 
 _**// E-commerce: displaying a paginated product list**_
 
-**List products = productRepository.findAll();** _**// ArrayList internally**_
+**List products = productRepository.findAll();**_**// ArrayList internally**_
 
-**Product thirdProduct = products.get(2);**               _**// O(1) — fast!**_
+**Product thirdProduct = products.get(2);**_**// O(1) — fast!**_
 
 ### **Q5. How does LinkedList work internally? How is it different from ArrayList?**
 
@@ -297,9 +297,9 @@ _**// Internal Node structure (simplified from JDK source)**_
 
 **Memory layout:**
 
-**ArrayList:  \[A\]\[B\]\[C\]\[D\]\[E\]          ← contiguous memory block**
+**ArrayList: \[A\]\[B\]\[C\]\[D\]\[E\] ← contiguous memory block**
 
-**LinkedList: \[prev|A|next\] ↔ \[prev|B|next\] ↔ \[prev|C|next\]  ← scattered in heap**
+**LinkedList: \[prev|A|next\] ↔ \[prev|B|next\] ↔ \[prev|C|next\] ← scattered in heap**
 
 **Comparison:**
 
@@ -353,19 +353,17 @@ _**// Internal Node structure (simplified from JDK source)**_
 
 **When to use LinkedList:**
 
-*   **Frequent insertions/removals at the beginning or middle (using iterator)**
+***Frequent insertions/removals at the beginning or middle (using iterator)**
 
-*   **Implementing a Queue or Deque**
-
+***Implementing a Queue or Deque**
 
 **When to use ArrayList (almost always):**
 
-*   **Random access by index**
+***Random access by index**
 
-*   **Iterating through elements (cache-friendly)**
+***Iterating through elements (cache-friendly)**
 
-*   **Most general-purpose use cases**
-
+***Most general-purpose use cases**
 
 _**// LinkedList as a Queue (real-world: task processing)**_
 
@@ -375,7 +373,7 @@ _**// LinkedList as a Queue (real-world: task processing)**_
 
 **taskQueue.offer(new Task("Generate report"));**
 
-**Task next = taskQueue.poll();** _**// removes and returns head — O(1)**_
+**Task next = taskQueue.poll();**_**// removes and returns head — O(1)**_
 
 ### **Q6. What is the difference between ArrayList and Vector?**
 
@@ -419,7 +417,7 @@ _**// LinkedList as a Queue (real-world: task processing)**_
 
 _**// Vector synchronizes EVERY method — even if you're single-threaded!**_
 
-**Vector v = new Vector<>();**  _**// DON'T DO THIS**_
+**Vector v = new Vector<>();**_**// DON'T DO THIS**_
 
 _**// Instead, if you need thread safety:**_
 
@@ -445,7 +443,7 @@ _**// Perfect for: configurations, listener lists, caches that rarely change**_
 
 _**// Multiple threads can iterate safely**_
 
-**listeners.forEach(listener -> listener.onEvent(event));** _**// no lock needed**_
+**listeners.forEach(listener -> listener.onEvent(event));**_**// no lock needed**_
 
 _**// Occasional adds (expensive but rare)**_
 
@@ -453,17 +451,15 @@ _**// Occasional adds (expensive but rare)**_
 
 **When to use:**
 
-*   **Read-heavy, write-rare scenarios (e.g., list of active listeners, feature flags)**
+***Read-heavy, write-rare scenarios (e.g., list of active listeners, feature flags)**
 
-*   **When you need safe iteration without ConcurrentModificationException**
-
+***When you need safe iteration without ConcurrentModificationException**
 
 **When NOT to use:**
 
-*   **Frequent writes (each write copies the entire array = O(n))**
+***Frequent writes (each write copies the entire array = O(n))**
 
-*   **Large lists (copy cost is proportional to size)**
-
+***Large lists (copy cost is proportional to size)**
 
 **PART 3: Set Interface — HashSet, LinkedHashSet, TreeSet**
 -----------------------------------------------------------
@@ -478,7 +474,7 @@ _**// Actual JDK source (simplified)**_
 
 **private transient HashMap map;**
 
-**private static final Object PRESENT = new Object();** _**// dummy value**_
+**private static final Object PRESENT = new Object();**_**// dummy value**_
 
 **public boolean add(E e) {**
 
@@ -554,9 +550,9 @@ _**// Actual JDK source (simplified)**_
 
 **employees.add(new Employee(1, "Alice"));**
 
-**employees.add(new Employee(1, "Alice"));** _**// duplicate — not added**_
+**employees.add(new Employee(1, "Alice"));**_**// duplicate — not added**_
 
-**System.out.println(employees.size());** _**// 1**_
+**System.out.println(employees.size());**_**// 1**_
 
 **What happens if you override equals() but NOT hashCode()?**
 
@@ -566,19 +562,19 @@ _**// BAD — only equals() overridden**_
 
 **Employee e2 = new Employee(1, "Alice");**
 
-**e1.equals(e2);** _**// true**_
+**e1.equals(e2);**_**// true**_
 
-**e1.hashCode();** _**// 735 (default from Object — memory address based)**_
+**e1.hashCode();**_**// 735 (default from Object — memory address based)**_
 
-**e2.hashCode();** _**// 982 (different!)**_
+**e2.hashCode();**_**// 982 (different!)**_
 
 **Set set = new HashSet<>();**
 
-**set.add(e1);**        _**// goes to bucket 735 % 16 = bucket 3**_
+**set.add(e1);**_**// goes to bucket 735 % 16 = bucket 3**_
 
-**set.add(e2);**        _**// goes to bucket 982 % 16 = bucket 6 — DIFFERENT BUCKET!**_
+**set.add(e2);**_**// goes to bucket 982 % 16 = bucket 6 — DIFFERENT BUCKET!**_
 
-**set.size();**          _**// 2! — WRONG! Both represent the same employee**_
+**set.size();**_**// 2! — WRONG! Both represent the same employee**_
 
 **Contract: If a.equals(b) is true, then a.hashCode() MUST equal b.hashCode().**
 
@@ -638,7 +634,7 @@ _**// HashSet — no order**_
 
 **hash.addAll(List.of("Banana", "Apple", "Cherry"));**
 
-**System.out.println(hash);** _**// \[Apple, Cherry, Banana\] — unpredictable order**_
+**System.out.println(hash);**_**// \[Apple, Cherry, Banana\] — unpredictable order**_
 
 _**// LinkedHashSet — insertion order**_
 
@@ -646,7 +642,7 @@ _**// LinkedHashSet — insertion order**_
 
 **linked.addAll(List.of("Banana", "Apple", "Cherry"));**
 
-**System.out.println(linked);** _**// \[Banana, Apple, Cherry\] — insertion order!**_
+**System.out.println(linked);**_**// \[Banana, Apple, Cherry\] — insertion order!**_
 
 _**// TreeSet — sorted order**_
 
@@ -654,11 +650,11 @@ _**// TreeSet — sorted order**_
 
 **tree.addAll(List.of("Banana", "Apple", "Cherry"));**
 
-**System.out.println(tree);** _**// \[Apple, Banana, Cherry\] — alphabetically sorted!**_
+**System.out.println(tree);**_**// \[Apple, Banana, Cherry\] — alphabetically sorted!**_
 
 **Real-world scenario — Removing duplicate orders while keeping arrival order:**
 
-**List incomingOrders = getOrdersFromKafka();** _**// may contain duplicates**_
+**List incomingOrders = getOrdersFromKafka();**_**// may contain duplicates**_
 
 **Set uniqueOrders = new LinkedHashSet<>(incomingOrders);**
 
@@ -680,24 +676,23 @@ _**// Iteration: Bob(1200) → Alice(950) → Charlie(800)**_
 
 **TreeSet is backed by a Red-Black Tree (a self-balancing binary search tree).Red-Black Tree properties:**
 
-1.  **Every node is either RED or BLACK**
+1.**Every node is either RED or BLACK**
 
-2.  **Root is always BLACK**
+2.**Root is always BLACK**
 
-3.  **No two consecutive RED nodes (parent-child)**
+3.**No two consecutive RED nodes (parent-child)**
 
-4.  **Every path from root to leaf has the same number of BLACK nodes**
+4.**Every path from root to leaf has the same number of BLACK nodes**
 
-5.  **Guarantees tree height ≤ 2 \* log(n) → O(log n) operations**
-
+5.**Guarantees tree height ≤ 2 \* log(n) → O(log n) operations**
 
 **\[50 BLACK\]**
 
-**/          \\**
+**/ \\**
 
-**\[30 RED\]        \[70 RED\]**
+**\[30 RED\] \[70 RED\]**
 
-**/     \\        /     \\**
+**/ \\ / \\**
 
 **\[20 BLK\] \[40 BLK\] \[60 BLK\] \[80 BLK\]**
 
@@ -705,29 +700,29 @@ _**// Iteration: Bob(1200) → Alice(950) → Charlie(800)**_
 
 **TreeSet set = new TreeSet<>();**
 
-**set.add(50);**  _**// root**_
+**set.add(50);**_**// root**_
 
-**set.add(30);**  _**// left of 50**_
+**set.add(30);**_**// left of 50**_
 
-**set.add(70);**  _**// right of 50**_
+**set.add(70);**_**// right of 50**_
 
-**set.add(20);**  _**// left of 30 → may trigger rebalancing**_
+**set.add(20);**_**// left of 30 → may trigger rebalancing**_
 
 _**// Powerful NavigableSet methods:**_
 
-**set.first();**          _**// 20 (smallest)**_
+**set.first();**_**// 20 (smallest)**_
 
-**set.last();**           _**// 70 (largest)**_
+**set.last();**_**// 70 (largest)**_
 
-**set.headSet(50);**      _**// \[20, 30\] (elements < 50)**_
+**set.headSet(50);**_**// \[20, 30\] (elements < 50)**_
 
-**set.tailSet(50);**      _**// \[50, 70\] (elements >= 50)**_
+**set.tailSet(50);**_**// \[50, 70\] (elements >= 50)**_
 
-**set.subSet(25, 65);**   _**// \[30, 50\] (elements in range)**_
+**set.subSet(25, 65);**_**// \[30, 50\] (elements in range)**_
 
-**set.floor(45);**        _**// 40 (greatest element <= 45)**_
+**set.floor(45);**_**// 40 (greatest element <= 45)**_
 
-**set.ceiling(45);**      _**// 50 (smallest element >= 45)**_
+**set.ceiling(45);**_**// 50 (smallest element >= 45)**_
 
 **PART 4: Map Interface — HashMap, TreeMap, LinkedHashMap**
 -----------------------------------------------------------
@@ -740,13 +735,13 @@ _**// Simplified JDK source**_
 
 **public class HashMap {**
 
-**Node\[\] table;**          _**// array of buckets (default 16)**_
+**Node\[\] table;**_**// array of buckets (default 16)**_
 
-**int size;**                    _**// number of key-value pairs**_
+**int size;**_**// number of key-value pairs**_
 
-**int threshold;**               _**// capacity \* loadFactor**_
+**int threshold;**_**// capacity \* loadFactor**_
 
-**float loadFactor;**            _**// default 0.75**_
+**float loadFactor;**_**// default 0.75**_
 
 **static class Node {**
 
@@ -756,7 +751,7 @@ _**// Simplified JDK source**_
 
 **V value;**
 
-**Node next;**          _**// linked list for collisions**_
+**Node next;**_**// linked list for collisions**_
 
 **}**
 
@@ -774,9 +769,9 @@ _**// Simplified JDK source**_
 
 **Step 2: Find bucket index**
 
-**index = hash & (capacity - 1)   // equivalent to hash % capacity, but faster**
+**index = hash & (capacity - 1) // equivalent to hash % capacity, but faster**
 
-**index = 3292 & 15 = 12          // assuming capacity = 16**
+**index = 3292 & 15 = 12 // assuming capacity = 16**
 
 **Step 3: Check bucket 12**
 
@@ -806,7 +801,7 @@ _**// Simplified JDK source**_
 
 **\[1\] → null**
 
-**\[2\] → \[hash|"age"|25|next\] → \[hash|"score"|99|null\]   ← collision chain**
+**\[2\] → \[hash|"age"|25|next\] → \[hash|"score"|99|null\] ← collision chain**
 
 **\[3\] → null**
 
@@ -822,11 +817,11 @@ _**// Simplified JDK source**_
 
 **When bucket has ≥ 8 nodes AND table size ≥ 64:**
 
-**Linked List → Red-Black Tree   (O(n) → O(log n) lookup)**
+**Linked List → Red-Black Tree (O(n) → O(log n) lookup)**
 
 **When bucket shrinks to ≤ 6 nodes:**
 
-**Red-Black Tree → Linked List   (untreeify)**
+**Red-Black Tree → Linked List (untreeify)**
 
 **Resizing (rehashing):**
 
@@ -848,9 +843,9 @@ _**// Simplified JDK source**_
 
 _**// Two different keys with same hashCode (collision)**_
 
-**map.put(key1, "value1");**  _**// hash(key1) % 16 = 5 → goes to bucket 5**_
+**map.put(key1, "value1");**_**// hash(key1) % 16 = 5 → goes to bucket 5**_
 
-**map.put(key2, "value2");**  _**// hash(key2) % 16 = 5 → also bucket 5!**_
+**map.put(key2, "value2");**_**// hash(key2) % 16 = 5 → also bucket 5!**_
 
 _**// Bucket 5 now has a linked list:**_
 
@@ -876,7 +871,7 @@ _**// Can you design a class that causes maximum collisions?**_
 
 **public int hashCode() {**
 
-**return 42;** _**// ALL objects go to same bucket!**_
+**return 42;**_**// ALL objects go to same bucket!**_
 
 **}**
 
@@ -888,21 +883,19 @@ _**// This makes HashMap degrade to O(n) for < 8 entries, O(log n) for >= 8**_
 
 **Capacity = 16 (must be power of 2):**
 
-*   **Powers of 2 allow the fast bitwise AND operation: hash & (capacity - 1) instead of expensive modulo hash % capacity**
+***Powers of 2 allow the fast bitwise AND operation: hash & (capacity - 1) instead of expensive modulo hash % capacity**
 
-*   **15 in binary = 1111 → bitwise AND distributes evenly**
-
+***15 in binary = 1111 → bitwise AND distributes evenly**
 
 **Load factor = 0.75:**
 
-*   **A trade-off between space and time**
+***A trade-off between space and time**
 
-*   **At 0.75, on average each bucket has ≤ 1 entry → most operations are O(1)**
+***At 0.75, on average each bucket has ≤ 1 entry → most operations are O(1)**
 
-*   **Higher (e.g., 0.9) = more collisions but less memory**
+***Higher (e.g., 0.9) = more collisions but less memory**
 
-*   **Lower (e.g., 0.5) = fewer collisions but more memory wasted**
-
+***Lower (e.g., 0.5) = fewer collisions but more memory wasted**
 
 _**// Custom initial capacity and load factor**_
 
@@ -978,7 +971,7 @@ _**// Java 19+ — automatically calculates capacity for 1000 entries**_
 
 **hashMap.put("Bob", 2);**
 
-**System.out.println(hashMap);**    _**// {Bob=2, Alice=1, Charlie=3} — random order**_
+**System.out.println(hashMap);**_**// {Bob=2, Alice=1, Charlie=3} — random order**_
 
 **Map linkedMap = new LinkedHashMap<>();**
 
@@ -988,7 +981,7 @@ _**// Java 19+ — automatically calculates capacity for 1000 entries**_
 
 **linkedMap.put("Bob", 2);**
 
-**System.out.println(linkedMap);**  _**// {Charlie=3, Alice=1, Bob=2} — insertion order!**_
+**System.out.println(linkedMap);**_**// {Charlie=3, Alice=1, Bob=2} — insertion order!**_
 
 **Map treeMap = new TreeMap<>();**
 
@@ -998,7 +991,7 @@ _**// Java 19+ — automatically calculates capacity for 1000 entries**_
 
 **treeMap.put("Bob", 2);**
 
-**System.out.println(treeMap);**    _**// {Alice=1, Bob=2, Charlie=3} — sorted!**_
+**System.out.println(treeMap);**_**// {Alice=1, Bob=2, Charlie=3} — sorted!**_
 
 ### **Q15. How to implement an LRU Cache using LinkedHashMap?**
 
@@ -1010,7 +1003,7 @@ _**// Java 19+ — automatically calculates capacity for 1000 entries**_
 
 **public LRUCache(int maxSize) {**
 
-**super(maxSize, 0.75f, true);**  _**// true = access-order (not insertion-order)**_
+**super(maxSize, 0.75f, true);**_**// true = access-order (not insertion-order)**_
 
 **this.maxSize = maxSize;**
 
@@ -1020,7 +1013,7 @@ _**// Java 19+ — automatically calculates capacity for 1000 entries**_
 
 **protected boolean removeEldestEntry(Map.Entry eldest) {**
 
-**return size() > maxSize;**  _**// remove oldest when capacity exceeded**_
+**return size() > maxSize;**_**// remove oldest when capacity exceeded**_
 
 **}**
 
@@ -1036,11 +1029,11 @@ _**// Usage**_
 
 **cache.put("C", "3");**
 
-**cache.get("A");**        _**// access A — moves it to end (most recent)**_
+**cache.get("A");**_**// access A — moves it to end (most recent)**_
 
-**cache.put("D", "4");**   _**// cache full → evicts B (least recently used)**_
+**cache.put("D", "4");**_**// cache full → evicts B (least recently used)**_
 
-**System.out.println(cache);** _**// {C=3, A=1, D=4}**_
+**System.out.println(cache);**_**// {C=3, A=1, D=4}**_
 
 **How it works internally:**
 
@@ -1048,11 +1041,11 @@ _**// Usage**_
 
 **HEAD (oldest) ← → ← → ← → TAIL (newest)**
 
-**After put(A), put(B), put(C):    HEAD → A ↔ B ↔ C ← TAIL**
+**After put(A), put(B), put(C): HEAD → A ↔ B ↔ C ← TAIL**
 
-**After get(A):                     HEAD → B ↔ C ↔ A ← TAIL  (A moved to tail)**
+**After get(A): HEAD → B ↔ C ↔ A ← TAIL (A moved to tail)**
 
-**After put(D):                     HEAD → C ↔ A ↔ D ← TAIL  (B evicted from head)**
+**After put(D): HEAD → C ↔ A ↔ D ← TAIL (B evicted from head)**
 
 **Real-world scenario: Database query cache, session cache, DNS cache.**
 
@@ -1076,11 +1069,11 @@ _**// Atomic operations (crucial for thread safety)**_
 
 **map.putIfAbsent("counter", 0);**
 
-**map.compute("counter", (key, val) -> val + 1);**        _**// atomic read-modify-write**_
+**map.compute("counter", (key, val) -> val + 1);**_**// atomic read-modify-write**_
 
-**map.merge("counter", 1, Integer::sum);**                 _**// atomic merge**_
+**map.merge("counter", 1, Integer::sum);**_**// atomic merge**_
 
-**map.computeIfAbsent("users", key -> new ArrayList<>());** _**// lazy init**_
+**map.computeIfAbsent("users", key -> new ArrayList<>());**_**// lazy init**_
 
 **Comparison of thread-safe map options:**
 
@@ -1211,13 +1204,11 @@ PART 5: Queue and Deque
 
 ### ✔ Key Idea:
 
-*   The first element added is the first one removed.
-
+* The first element added is the first one removed.
 
 ### ✔ Real-life analogy:
 
-*   People standing in a queue → first person in line gets served first.
-
+* People standing in a queue → first person in line gets served first.
 
 🔹 2. Queue Interface
 ---------------------
@@ -1231,10 +1222,9 @@ PART 5: Queue and Deque
 
 ### Each operation has two variants:
 
-*   One throws an exception
+* One throws an exception
 
-*   One returns a special value
-
+* One returns a special value
 
 ### Operation
 
@@ -1282,9 +1272,9 @@ PART 5: Queue and Deque
 
 ### ✔ add() vs offer()
 
-### queue.add(10);    // Throws exception if full
+### queue.add(10); // Throws exception if full
 
-### queue.offer(20);  // Returns false if full
+### queue.offer(20); // Returns false if full
 
 ### 👉 Prefer offer() in production for safer handling.
 
@@ -1292,13 +1282,13 @@ PART 5: Queue and Deque
 
 ### queue.remove(); // Throws exception if empty
 
-### queue.poll();   // Returns null if empty
+### queue.poll(); // Returns null if empty
 
 ### ✔ element() vs peek()
 
 ### queue.element(); // Throws exception if empty
 
-### queue.peek();    // Returns null if empty
+### queue.peek(); // Returns null if empty
 
 🔹 6. Queue Implementations
 ---------------------------
@@ -1307,17 +1297,15 @@ PART 5: Queue and Deque
 
 ### Queue q = new LinkedList<>();
 
-*   Maintains FIFO
+* Maintains FIFO
 
-*   Allows null (not recommended)
-
+* Allows null (not recommended)
 
 ### 🟢 2. PriorityQueue
 
 ### Queue pq = new PriorityQueue<>();
 
-*   Orders elements by priority (min-heap by default)
-
+* Orders elements by priority (min-heap by default)
 
 ### pq.add(30);
 
@@ -1331,12 +1319,11 @@ PART 5: Queue and Deque
 
 ### Queue dq = new ArrayDeque<>();
 
-*   Faster than LinkedList
+* Faster than LinkedList
 
-*   Does not allow nulls
+* Does not allow nulls
 
-*   Can act as both Queue and Stack
-
+* Can act as both Queue and Stack
 
 ### 🟢 4. BlockingQueue (Multithreading)
 
@@ -1344,10 +1331,9 @@ PART 5: Queue and Deque
 
 ### Examples:
 
-*   ArrayBlockingQueue
+* ArrayBlockingQueue
 
-*   LinkedBlockingQueue
-
+* LinkedBlockingQueue
 
 🔹 7. Types of Queues
 ---------------------
@@ -1360,8 +1346,7 @@ PART 5: Queue and Deque
 
 ### PriorityQueue pq = new PriorityQueue<>();
 
-*   Processes smallest (or highest priority) element first
-
+* Processes smallest (or highest priority) element first
 
 ### 🔸 Deque (Double-ended Queue)
 
@@ -1376,46 +1361,41 @@ PART 5: Queue and Deque
 
 ### ✅ 1. Messaging Systems
 
-*   Used in systems like Kafka
+* Used in systems like Kafka
 
-*   Example:
+* Example:
 
-    *   Producer adds tasks
+* Producer adds tasks
 
-    *   Consumer processes asynchronously
-
+* Consumer processes asynchronously
 
 ### ✅ 2. Thread Pools / Task Scheduling
 
 ### BlockingQueue queue = new LinkedBlockingQueue<>();
 
-*   Used in ExecutorService
+* Used in ExecutorService
 
-*   Handles background tasks
-
+* Handles background tasks
 
 ### ✅ 3. BFS Algorithm
 
 ### Queue q = new LinkedList<>();
 
-*   Used in:
+* Used in:
 
-    *   Graph traversal
+* Graph traversal
 
-    *   Shortest path algorithms
-
+* Shortest path algorithms
 
 ### ✅ 4. Rate Limiting / Buffering
 
-*   Stores API requests/events before processing
-
+* Stores API requests/events before processing
 
 ### ✅ 5. Job Scheduling
 
-*   Printer queues
+* Printer queues
 
-*   OS task scheduling
-
+* OS task scheduling
 
 🔹 9. Producer-Consumer Example
 -------------------------------
@@ -1432,7 +1412,7 @@ PART 5: Queue and Deque
 
 ### while (!queue.isEmpty()) {
 
-###     System.out.println("Processing: " + queue.poll());
+### System.out.println("Processing: " + queue.poll());
 
 ### }
 
@@ -1449,7 +1429,7 @@ PART 5: Queue and Deque
 
 ### while (!pq.isEmpty()) {
 
-###     System.out.println(pq.poll()); // 30, 20, 10
+### System.out.println(pq.poll()); // 30, 20, 10
 
 ### }
 
@@ -1479,30 +1459,29 @@ PART 5: Queue and Deque
 🔹 12. Summary
 --------------
 
-*   Queue follows FIFO
+* Queue follows FIFO
 
-*   Provides safe vs exception-based methods
+* Provides safe vs exception-based methods
 
-*   Key implementations:
+* Key implementations:
 
-    *   LinkedList
+* LinkedList
 
-    *   PriorityQueue
+* PriorityQueue
 
-    *   ArrayDeque
+* ArrayDeque
 
-    *   BlockingQueue
+* BlockingQueue
 
-*   Widely used in:
+* Widely used in:
 
-    *   Messaging systems
+* Messaging systems
 
-    *   Multithreading
+* Multithreading
 
-    *   Algorithms (BFS)
+* Algorithms (BFS)
 
-    *   System design
-
+* System design
 
 ### **Q18. Explain Queue and Deque interfaces with their implementations.**
 
@@ -1510,13 +1489,13 @@ PART 5: Queue and Deque
 
 _**// Two sets of methods:**_
 
-_**// Throws exception      vs    Returns special value**_
+_**// Throws exception vs Returns special value**_
 
-**queue.add(e);            vs    queue.offer(e);**       _**// insert**_
+**queue.add(e); vs queue.offer(e);**_**// insert**_
 
-**queue.remove();          vs    queue.poll();**          _**// remove head**_
+**queue.remove(); vs queue.poll();**_**// remove head**_
 
-**queue.element();         vs    queue.peek();**          _**// examine head**_
+**queue.element(); vs queue.peek();**_**// examine head**_
 
 **Implementations:**
 
@@ -1528,29 +1507,29 @@ _**// 1. LinkedList as Queue**_
 
 **queue.offer("Task 2");**
 
-**queue.poll();** _**// "Task 1"**_
+**queue.poll();**_**// "Task 1"**_
 
 _**// 2. ArrayDeque (faster, preferred for queues and stacks)**_
 
 **Deque stack = new ArrayDeque<>();**
 
-**stack.push("A");**  _**// push onto stack**_
+**stack.push("A");**_**// push onto stack**_
 
 **stack.push("B");**
 
-**stack.pop();**      _**// "B" — LIFO**_
+**stack.pop();**_**// "B" — LIFO**_
 
 **Deque queue2 = new ArrayDeque<>();**
 
-**queue2.offerLast("A");**  _**// enqueue**_
+**queue2.offerLast("A");**_**// enqueue**_
 
 **queue2.offerLast("B");**
 
-**queue2.pollFirst();**     _**// "A" — FIFO**_
+**queue2.pollFirst();**_**// "A" — FIFO**_
 
 _**// 3. PriorityQueue (elements processed by priority, not insertion order)**_
 
-**PriorityQueue pq = new PriorityQueue<>();**  _**// min-heap**_
+**PriorityQueue pq = new PriorityQueue<>();**_**// min-heap**_
 
 **pq.offer(30);**
 
@@ -1558,7 +1537,7 @@ _**// 3. PriorityQueue (elements processed by priority, not insertion order)**_
 
 **pq.offer(20);**
 
-**pq.poll();** _**// 10 (smallest first!)**_
+**pq.poll();**_**// 10 (smallest first!)**_
 
 _**// Max-heap:**_
 
@@ -1568,23 +1547,23 @@ _**// Max-heap:**_
 
 **PriorityQueue is backed by a binary min-heap (array-based).Heap property: Parent node ≤ both children (for min-heap).**
 
-**Array:  \[10, 20, 30, 25, 35\]**
+**Array: \[10, 20, 30, 25, 35\]**
 
 **Tree representation:**
 
 **10**
 
-**/    \\**
+**/ \\**
 
-**20      30**
+**20 30**
 
-**/  \\**
+**/ \\**
 
-**25    35**
+**25 35**
 
 **Parent of index i = (i - 1) / 2**
 
-**Left child of i  = 2 \* i + 1**
+**Left child of i = 2 \* i + 1**
 
 **Right child of i = 2 \* i + 2**
 
@@ -1626,7 +1605,7 @@ _**// Max-heap:**_
 
 **public int compareTo(Task other) {**
 
-**return Integer.compare(this.priority, other.priority);** _**// lower number = higher priority**_
+**return Integer.compare(this.priority, other.priority);**_**// lower number = higher priority**_
 
 **}**
 
@@ -1698,13 +1677,13 @@ _**// Task\[name=Low priority backup, priority=5\]**_
 
 **Yes (implements List)**
 
-**JDK Javadoc says:** _**"This class is likely to be faster than Stack when used as a stack, and faster than LinkedList when used as a queue."**_
+**JDK Javadoc says:**_**"This class is likely to be faster than Stack when used as a stack, and faster than LinkedList when used as a queue."**_
 
 _**// PREFERRED: Use ArrayDeque for stacks and queues**_
 
-**Deque stack = new ArrayDeque<>();**   _**// instead of Stack<>**_
+**Deque stack = new ArrayDeque<>();**_**// instead of Stack<>**_
 
-**Queue queue = new ArrayDeque<>();**   _**// instead of LinkedList<>**_
+**Queue queue = new ArrayDeque<>();**_**// instead of LinkedList<>**_
 
 **PART 6: Iterators, Fail-Fast vs Fail-Safe**
 ---------------------------------------------
@@ -1721,7 +1700,7 @@ _**// FAIL-FAST — throws ConcurrentModificationException!**_
 
 **if (s.equals("B")) {**
 
-**list.remove(s);**  _**// modifying while iterating → BOOM!**_
+**list.remove(s);**_**// modifying while iterating → BOOM!**_
 
 **}**
 
@@ -1745,7 +1724,7 @@ _**// Safe way to remove during iteration:**_
 
 **if (it.next().equals("B")) {**
 
-**it.remove();**  _**// uses iterator's remove — updates expectedModCount**_
+**it.remove();**_**// uses iterator's remove — updates expectedModCount**_
 
 **}**
 
@@ -1753,7 +1732,7 @@ _**// Safe way to remove during iteration:**_
 
 _**// Or with Java 8+:**_
 
-**list.removeIf(s -> s.equals("B"));**  _**// internally uses iterator.remove()**_
+**list.removeIf(s -> s.equals("B"));**_**// internally uses iterator.remove()**_
 
 **Fail-safe (weakly consistent): Works on a snapshot or copy — never throws CME.**
 
@@ -1767,7 +1746,7 @@ _**// ConcurrentHashMap — weakly consistent**_
 
 **for (Map.Entry entry : map.entrySet()) {**
 
-**map.put("C", 3);**  _**// OK! No exception. Iterator may or may not see "C"**_
+**map.put("C", 3);**_**// OK! No exception. Iterator may or may not see "C"**_
 
 **}**
 
@@ -1777,7 +1756,7 @@ _**// CopyOnWriteArrayList — snapshot**_
 
 **for (String s : cowList) {**
 
-**cowList.add("D");**  _**// OK! Iterator works on snapshot. Won't see "D"**_
+**cowList.add("D");**_**// OK! Iterator works on snapshot. Won't see "D"**_
 
 **}**
 
@@ -1860,7 +1839,7 @@ _**// Comparable — natural ordering (built into the class)**_
 
 **public int compareTo(Employee other) {**
 
-**return Integer.compare(this.id, other.id);** _**// sort by ID naturally**_
+**return Integer.compare(this.id, other.id);**_**// sort by ID naturally**_
 
 **}**
 
@@ -1868,7 +1847,7 @@ _**// Comparable — natural ordering (built into the class)**_
 
 **List employees = getEmployees();**
 
-**Collections.sort(employees);** _**// uses compareTo — sorts by ID**_
+**Collections.sort(employees);**_**// uses compareTo — sorts by ID**_
 
 _**// Comparator — external, multiple sort strategies**_
 
@@ -1882,11 +1861,11 @@ _**// Comparator — external, multiple sort strategies**_
 
 **.thenComparingDouble(Employee::getSalary);**
 
-**employees.sort(byName);**           _**// sort by name**_
+**employees.sort(byName);**_**// sort by name**_
 
-**employees.sort(bySalaryDesc);**     _**// sort by salary descending**_
+**employees.sort(bySalaryDesc);**_**// sort by salary descending**_
 
-**employees.sort(byNameThenSalary);** _**// sort by name, break ties by salary**_
+**employees.sort(byNameThenSalary);**_**// sort by name, break ties by salary**_
 
 _**// Null-safe comparator**_
 
@@ -1907,7 +1886,7 @@ _**// Null-safe comparator**_
 
 **names.forEach(name -> System.out.println(name));**
 
-**names.forEach(System.out::println);** _**// method reference**_
+**names.forEach(System.out::println);**_**// method reference**_
 
 **2\. Stream API — transform, filter, aggregate:**
 
@@ -1953,7 +1932,7 @@ _**// merge — combine values**_
 
 **for (String word : words) {**
 
-**wordCount.merge(word, 1, Integer::sum);** _**// increment or set to 1**_
+**wordCount.merge(word, 1, Integer::sum);**_**// increment or set to 1**_
 
 **}**
 
@@ -1967,17 +1946,17 @@ _**// replaceAll**_
 
 **4\. Immutable collections (Java 9+):**
 
-**List list = List.of("A", "B", "C");**        _**// immutable**_
+**List list = List.of("A", "B", "C");**_**// immutable**_
 
-**Set set = Set.of("A", "B", "C");**            _**// immutable**_
+**Set set = Set.of("A", "B", "C");**_**// immutable**_
 
-**Map map = Map.of("A", 1, "B", 2);**  _**// immutable**_
+**Map map = Map.of("A", 1, "B", 2);**_**// immutable**_
 
-**list.add("D");** _**// throws UnsupportedOperationException!**_
+**list.add("D");**_**// throws UnsupportedOperationException!**_
 
 _**// Java 10+**_
 
-**List copy = List.copyOf(mutableList);** _**// immutable copy**_
+**List copy = List.copyOf(mutableList);**_**// immutable copy**_
 
 **5\. toList() (Java 16+):**
 
@@ -1991,7 +1970,7 @@ _**// or**_
 
 _**// Java 16+**_
 
-**List result = stream.toList();** _**// unmodifiable list**_
+**List result = stream.toList();**_**// unmodifiable list**_
 
 ### **Q24. What are the differences between stream() and parallelStream()?**
 
@@ -2019,35 +1998,33 @@ _**// Parallel stream — uses ForkJoinPool (multiple threads)**_
 
 **When to use parallelStream():**
 
-*   **Large datasets (100K+ elements)**
+***Large datasets (100K+ elements)**
 
-*   **CPU-intensive operations (not I/O)**
+***CPU-intensive operations (not I/O)**
 
-*   **Operations are stateless and independent**
+***Operations are stateless and independent**
 
-*   **No shared mutable state**
-
+***No shared mutable state**
 
 **When NOT to use:**
 
-*   **Small datasets (overhead > benefit)**
+***Small datasets (overhead > benefit)**
 
-*   **I/O operations (threads block, wasted)**
+***I/O operations (threads block, wasted)**
 
-*   **Order matters and operations are interdependent**
+***Order matters and operations are interdependent**
 
-*   **Shared mutable state (race conditions)**
-
+***Shared mutable state (race conditions)**
 
 _**// DANGEROUS — race condition with parallelStream**_
 
-**List results = new ArrayList<>();** _**// not thread-safe!**_
+**List results = new ArrayList<>();**_**// not thread-safe!**_
 
 **numbers.parallelStream()**
 
 **.filter(n -> n % 2 == 0)**
 
-**.forEach(results::add);**  _**// UNSAFE — concurrent writes to ArrayList**_
+**.forEach(results::add);**_**// UNSAFE — concurrent writes to ArrayList**_
 
 _**// SAFE**_
 
@@ -2055,7 +2032,7 @@ _**// SAFE**_
 
 **.filter(n -> n % 2 == 0)**
 
-**.toList();** _**// collector handles thread-safety**_
+**.toList();**_**// collector handles thread-safety**_
 
 **PART 9: Real-World Scenario-Based Questions**
 -----------------------------------------------
@@ -2064,12 +2041,11 @@ _**// SAFE**_
 
 **Answer: HashMap (or ConcurrentHashMap if multi-threaded).Why:**
 
-*   **get(userId) is O(1) average**
+***get(userId) is O(1) average**
 
-*   **10M entries with load factor 0.75 → allocates ~13.3M buckets**
+***10M entries with load factor 0.75 → allocates ~13.3M buckets**
 
-*   **Pre-size to avoid resizing: new HashMap<>(14\_000\_000, 0.75f)**
-
+***Pre-size to avoid resizing: new HashMap<>(14\_000\_000, 0.75f)**
 
 _**// Pre-sized for 10M entries**_
 
@@ -2079,9 +2055,9 @@ _**// Or if multi-threaded**_
 
 **Map userCache = new ConcurrentHashMap<>(14\_000\_000, 0.75f, 16);**
 
-_**//                                                                       ^**_
+_**// ^**_
 
-_**//                                                            concurrency level**_
+_**// concurrency level**_
 
 **Memory estimate: ~10M entries × ~80 bytes per entry ≈ 800MB. Consider off-heap solutions (MapDB, Chronicle Map) if memory is a concern.**
 
@@ -2127,9 +2103,9 @@ _**// Level 1: Unmodifiable VIEW (Java 2+)**_
 
 **List unmodifiable = Collections.unmodifiableList(original);**
 
-**unmodifiable.add("C");** _**// UnsupportedOperationException!**_
+**unmodifiable.add("C");**_**// UnsupportedOperationException!**_
 
-**original.add("C");**      _**// WORKS — and unmodifiable now shows \["A", "B", "C"\]!**_
+**original.add("C");**_**// WORKS — and unmodifiable now shows \["A", "B", "C"\]!**_
 
 _**// ↑ This is a VIEW, not a copy!**_
 
@@ -2137,18 +2113,17 @@ _**// Level 2: Truly immutable COPY (Java 10+)**_
 
 **List immutable = List.copyOf(original);**
 
-**original.add("D");**     _**// original changes**_
+**original.add("D");**_**// original changes**_
 
-**immutable.size();**      _**// still 3 — independent copy**_
+**immutable.size();**_**// still 3 — independent copy**_
 
 _**// Level 3: Immutable from creation (Java 9+)**_
 
-**List list = List.of("A", "B", "C");**         _**// immutable**_
+**List list = List.of("A", "B", "C");**_**// immutable**_
 
-**Map map = Map.of("x", 1, "y", 2);**  _**// immutable**_
+**Map map = Map.of("x", 1, "y", 2);**_**// immutable**_
 
-**Set set = Set.of("A", "B");**                  _**// immutable**_
-
+**Set set = Set.of("A", "B");**_**// immutable**_
 ### **Q28. What is the difference between Iterator and ListIterator?**
 
 **Feature**
@@ -2189,13 +2164,13 @@ _**// Level 3: Immutable from creation (Java 9+)**_
 
 **List list = new ArrayList<>(List.of("A", "B", "C", "D"));**
 
-**ListIterator it = list.listIterator(list.size());** _**// start at end**_
+**ListIterator it = list.listIterator(list.size());**_**// start at end**_
 
 **while (it.hasPrevious()) {**
 
 **String s = it.previous();**
 
-**System.out.print(s + " ");**  _**// D C B A — reverse iteration!**_
+**System.out.print(s + " ");**_**// D C B A — reverse iteration!**_
 
 **}**
 
@@ -2215,7 +2190,7 @@ _**// Regular HashMap**_
 
 **hashMap.put(s2, 2);**
 
-**System.out.println(hashMap.size());** _**// 1 — because s1.equals(s2)**_
+**System.out.println(hashMap.size());**_**// 1 — because s1.equals(s2)**_
 
 _**// IdentityHashMap**_
 
@@ -2225,7 +2200,7 @@ _**// IdentityHashMap**_
 
 **identityMap.put(s2, 2);**
 
-**System.out.println(identityMap.size());** _**// 2 — because s1 != s2 (different objects)**_
+**System.out.println(identityMap.size());**_**// 2 — because s1 != s2 (different objects)**_
 
 **Use case: Serialization frameworks, object graph traversal (track visited objects by reference, not equality).**
 
@@ -2245,7 +2220,7 @@ _**// EnumSet — stored as a single long (bit flags), incredibly fast**_
 
 _**// Check permission — O(1) bitwise operation**_
 
-**if (userPerms.contains(Permission.WRITE)) {** _**/\* ... \*/**_ **}**
+**if (userPerms.contains(Permission.WRITE)) {**_**/\* ... \*/**_ **}**
 
 _**// EnumMap — array-backed, no hashing needed**_
 
@@ -2257,12 +2232,11 @@ _**// EnumMap — array-backed, no hashing needed**_
 
 **Why use them?**
 
-*   **EnumSet is 10-100x faster than HashSet for enums (bit operations vs hashing)**
+***EnumSet is 10-100x faster than HashSet for enums (bit operations vs hashing)**
 
-*   **EnumMap is faster and more memory-efficient than HashMap for enum keys**
+***EnumMap is faster and more memory-efficient than HashMap for enum keys**
 
-*   **Both are type-safe and prevent accidental mixing of enum types**
-
+***Both are type-safe and prevent accidental mixing of enum types**
 
 **PART 10: Tricky Interview Questions**
 ---------------------------------------
@@ -2277,13 +2251,13 @@ _**// EnumMap — array-backed, no hashing needed**_
 
 **map.put(key, "value");**
 
-**System.out.println(map.get(key));** _**// "value" — works fine**_
+**System.out.println(map.get(key));**_**// "value" — works fine**_
 
-**key.add("world");** _**// MUTATE THE KEY!**_
+**key.add("world");**_**// MUTATE THE KEY!**_
 
-**System.out.println(map.get(key));** _**// null! — KEY IS LOST FOREVER**_
+**System.out.println(map.get(key));**_**// null! — KEY IS LOST FOREVER**_
 
-**System.out.println(map.size());**   _**// 1 — entry exists but unreachable**_
+**System.out.println(map.size());**_**// 1 — entry exists but unreachable**_
 
 **Why? The hashCode changed after insertion. The entry sits in the old bucket, but the new hashCode points to a different bucket.Rule: HashMap keys should be immutable (String, Integer, records, etc.) or at minimum, hashCode() and equals() should depend only on immutable fields.**
 
@@ -2293,13 +2267,13 @@ _**// Collection.remove(Object) — removes by value, uses equals()**_
 
 **List list = new ArrayList<>(List.of(1, 2, 3));**
 
-**list.remove(Integer.valueOf(2));** _**// removes element 2 (by value)**_
+**list.remove(Integer.valueOf(2));**_**// removes element 2 (by value)**_
 
 _**// GOTCHA with autoboxing!**_
 
-**list.remove(1);**           _**// removes element at INDEX 1, not value 1!**_
+**list.remove(1);**_**// removes element at INDEX 1, not value 1!**_
 
-**list.remove(Integer.valueOf(1));** _**// removes value 1**_
+**list.remove(Integer.valueOf(1));**_**// removes value 1**_
 
 _**// Iterator.remove() — removes current element during iteration (safe)**_
 
@@ -2319,7 +2293,7 @@ _**// Map.remove(key) — removes entry by key**_
 
 _**// Map.remove(key, value) — conditional remove (Java 8+)**_
 
-**map.remove("key", 42);** _**// only removes if key maps to 42**_
+**map.remove("key", 42);**_**// only removes if key maps to 42**_
 
 ### **Q33. How does Collections.sort() work internally?**
 
@@ -2365,13 +2339,13 @@ _**// For primitives, Java uses Dual-Pivot Quicksort (faster, not stable)**_
 
 **int\[\] arr = {3, 1, 4, 1, 5};**
 
-**Arrays.sort(arr);** _**// Dual-Pivot Quicksort**_
+**Arrays.sort(arr);**_**// Dual-Pivot Quicksort**_
 
 _**// For objects, Java uses TimSort (stable)**_
 
 **String\[\] arr = {"Banana", "Apple", "Cherry"};**
 
-**Arrays.sort(arr);** _**// TimSort**_
+**Arrays.sort(arr);**_**// TimSort**_
 
 ### **Q34. What is the difference between Collections.synchronizedMap() and ConcurrentHashMap?**
 
@@ -2381,9 +2355,9 @@ _**// synchronizedMap — wraps every method in synchronized(mutex)**_
 
 _**// Problem: compound operations are NOT atomic**_
 
-**if (!syncMap.containsKey("key")) {**  _**// another thread can sneak in here!**_
+**if (!syncMap.containsKey("key")) {**_**// another thread can sneak in here!**_
 
-**syncMap.put("key", "value");**     _**// race condition!**_
+**syncMap.put("key", "value");**_**// race condition!**_
 
 **}**
 
@@ -2403,9 +2377,9 @@ _**// ConcurrentHashMap — built-in atomic compound operations**_
 
 **ConcurrentHashMap concMap = new ConcurrentHashMap<>();**
 
-**concMap.putIfAbsent("key", "value");** _**// atomic!**_
+**concMap.putIfAbsent("key", "value");**_**// atomic!**_
 
-**concMap.computeIfAbsent("key", k -> expensiveComputation());** _**// atomic!**_
+**concMap.computeIfAbsent("key", k -> expensiveComputation());**_**// atomic!**_
 
 **Feature**
 
@@ -2449,17 +2423,17 @@ _**// List ↔ Set (remove duplicates)**_
 
 **List list = List.of("A", "B", "A", "C", "B");**
 
-**Set set = new LinkedHashSet<>(list);**     _**// \[A, B, C\] — order preserved, deduped**_
+**Set set = new LinkedHashSet<>(list);**_**// \[A, B, C\] — order preserved, deduped**_
 
-**List deduped = new ArrayList<>(set);**      _**// back to list**_
+**List deduped = new ArrayList<>(set);**_**// back to list**_
 
 _**// List ↔ Array**_
 
 **String\[\] array = list.toArray(new String\[0\]);**
 
-**List fromArray = List.of(array);**          _**// immutable**_
+**List fromArray = List.of(array);**_**// immutable**_
 
-**List fromArray2 = new ArrayList<>(Arrays.asList(array));** _**// mutable**_
+**List fromArray2 = new ArrayList<>(Arrays.asList(array));**_**// mutable**_
 
 _**// Map → Set of entries, keys, values**_
 
@@ -2582,7 +2556,7 @@ Duplicates are not allowed.
 Average complexity:
 
 ```text
-add()    → O(1)
+add() → O(1)
 remove() → O(1)
 contains() → O(1)
 ```
@@ -2616,8 +2590,8 @@ Output:
 Typical complexity:
 
 ```text
-add()      → O(log n)
-remove()   → O(log n)
+add() → O(log n)
+remove() → O(log n)
 contains() → O(log n)
 ```
 
@@ -2646,11 +2620,11 @@ Output:
 
 Difference:
 
-| Collection    | Unique | Ordering                      |
+| Collection | Unique | Ordering |
 | ------------- | ------ | ----------------------------- |
-| HashSet       | Yes    | No guaranteed iteration order |
-| LinkedHashSet | Yes    | Insertion order               |
-| TreeSet       | Yes    | Sorted order                  |
+| HashSet | Yes | No guaranteed iteration order |
+| LinkedHashSet | Yes | Insertion order |
+| TreeSet | Yes | Sorted order |
 
 ---
 
@@ -2671,7 +2645,7 @@ Average:
 
 ```text
 put() → O(1)
-get()  → O(1)
+get() → O(1)
 ```
 
 ---
@@ -2700,7 +2674,7 @@ Typical operations:
 
 ```text
 put() → O(log n)
-get()  → O(log n)
+get() → O(log n)
 ```
 
 ---
@@ -2727,7 +2701,7 @@ Iteration follows insertion order.
 
 ```java
 LinkedHashMap<Integer, String> cache =
-        new LinkedHashMap<>(16, 0.75f, true);
+ new LinkedHashMap<>(16, 0.75f, true);
 ```
 
 The third constructor parameter:
@@ -2747,19 +2721,19 @@ A common senior interview question.
 ```java
 class LRUCache<K, V> extends LinkedHashMap<K, V> {
 
-    private final int capacity;
+ private final int capacity;
 
-    public LRUCache(int capacity) {
-        super(16, 0.75f, true);
-        this.capacity = capacity;
-    }
+ public LRUCache(int capacity) {
+ super(16, 0.75f, true);
+ this.capacity = capacity;
+ }
 
-    @Override
-    protected boolean removeEldestEntry(
-            Map.Entry<K, V> eldest) {
+ @Override
+ protected boolean removeEldestEntry(
+ Map.Entry<K, V> eldest) {
 
-        return size() > capacity;
-    }
+ return size() > capacity;
+ }
 }
 ```
 
@@ -2817,7 +2791,7 @@ You can:
 
 ```java
 Map<Integer, String> map =
-    Collections.synchronizedMap(new HashMap<>());
+ Collections.synchronizedMap(new HashMap<>());
 ```
 
 But the concurrency characteristics differ from `ConcurrentHashMap`.
@@ -2826,9 +2800,9 @@ For example, iteration requires external synchronization:
 
 ```java
 synchronized (map) {
-    for (String value : map.values()) {
-        System.out.println(value);
-    }
+ for (String value : map.values()) {
+ System.out.println(value);
+ }
 }
 ```
 
@@ -2842,7 +2816,7 @@ synchronized (map) {
 
 ```java
 ConcurrentHashMap<String, Integer> map =
-        new ConcurrentHashMap<>();
+ new ConcurrentHashMap<>();
 ```
 
 It supports concurrent operations without locking the entire map for ordinary operations.
@@ -2887,7 +2861,7 @@ Example:
 
 ```java
 List<String> users =
-        new CopyOnWriteArrayList<>();
+ new CopyOnWriteArrayList<>();
 ```
 
 Excellent for relatively stable configuration/listener lists where reads are frequent.
@@ -2910,7 +2884,7 @@ Example:
 
 ```java
 CopyOnWriteArrayList<String> list =
-        new CopyOnWriteArrayList<>();
+ new CopyOnWriteArrayList<>();
 ```
 
 Readers can iterate without locking the collection in the same way a synchronized list requires.
@@ -2929,7 +2903,7 @@ For example:
 
 ```java
 BlockingQueue<String> queue =
-        new LinkedBlockingQueue<>();
+ new LinkedBlockingQueue<>();
 ```
 
 Producer:
@@ -2958,7 +2932,7 @@ ArrayBlockingQueue
 
 ```java
 BlockingQueue<String> queue =
-        new ArrayBlockingQueue<>(100);
+ new ArrayBlockingQueue<>(100);
 ```
 
 Now the queue has a fixed capacity.
@@ -2979,7 +2953,7 @@ Example:
 
 ```java
 PriorityQueue<Integer> queue =
-        new PriorityQueue<>();
+ new PriorityQueue<>();
 
 queue.add(50);
 queue.add(10);
@@ -3002,9 +2976,9 @@ The smallest element has highest priority by default.
 
 ```java
 PriorityQueue<Employee> queue =
-    new PriorityQueue<>(
-        Comparator.comparing(Employee::getSalary).reversed()
-    );
+ new PriorityQueue<>(
+ Comparator.comparing(Employee::getSalary).reversed()
+ );
 ```
 
 Then:
@@ -3069,7 +3043,7 @@ For custom objects:
 
 ```java
 class Employee {
-    int id;
+ int id;
 }
 ```
 
@@ -3202,12 +3176,12 @@ Example:
 ```java
 class Employee {
 
-    private int id;
+ private int id;
 
-    @Override
-    public boolean equals(Object obj) {
-        // implementation
-    }
+ @Override
+ public boolean equals(Object obj) {
+ // implementation
+ }
 }
 ```
 
@@ -3239,10 +3213,10 @@ Simple approach:
 
 ```java
 List<Integer> list =
-        Arrays.asList(10, 20, 10, 30, 20);
+ Arrays.asList(10, 20, 10, 30, 20);
 
 List<Integer> result =
-        new ArrayList<>(new LinkedHashSet<>(list));
+ new ArrayList<>(new LinkedHashSet<>(list));
 ```
 
 Result:
@@ -3259,7 +3233,7 @@ Result:
 
 ```java
 List<Integer> result =
-        new ArrayList<>(new HashSet<>(list));
+ new ArrayList<>(new HashSet<>(list));
 ```
 
 But don't rely on the iteration order of `HashSet`.
@@ -3274,17 +3248,17 @@ You can use `LinkedHashMap`.
 String input = "swiss";
 
 Map<Character, Integer> map =
-        new LinkedHashMap<>();
+ new LinkedHashMap<>();
 
 for (char c : input.toCharArray()) {
-    map.put(c, map.getOrDefault(c, 0) + 1);
+ map.put(c, map.getOrDefault(c, 0) + 1);
 }
 
 for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-    if (entry.getValue() == 1) {
-        System.out.println(entry.getKey());
-        break;
-    }
+ if (entry.getValue() == 1) {
+ System.out.println(entry.getKey());
+ break;
+ }
 }
 ```
 
@@ -3308,10 +3282,10 @@ frequency + insertion order
 
 ```java
 Map<String, Integer> frequency =
-        new HashMap<>();
+ new HashMap<>();
 
 for (String word : words) {
-    frequency.merge(word, 1, Integer::sum);
+ frequency.merge(word, 1, Integer::sum);
 }
 ```
 
@@ -3319,8 +3293,8 @@ Or:
 
 ```java
 frequency.put(
-    word,
-    frequency.getOrDefault(word, 0) + 1
+ word,
+ frequency.getOrDefault(word, 0) + 1
 );
 ```
 
@@ -3332,25 +3306,25 @@ A senior Java developer should know `computeIfAbsent()`.
 
 ```java
 Map<String, List<Employee>> employeesByDept =
-        new HashMap<>();
+ new HashMap<>();
 
 for (Employee employee : employees) {
 
-    employeesByDept
-        .computeIfAbsent(
-            employee.getDepartment(),
-            k -> new ArrayList<>()
-        )
-        .add(employee);
+ employeesByDept
+ .computeIfAbsent(
+ employee.getDepartment(),
+ k -> new ArrayList<>()
+ )
+ .add(employee);
 }
 ```
 
 Result conceptually:
 
 ```text
-IT       → [Employee1, Employee2]
-HR       → [Employee3]
-Finance  → [Employee4, Employee5]
+IT → [Employee1, Employee2]
+HR → [Employee3]
+Finance → [Employee4, Employee5]
 ```
 
 ---
@@ -3361,7 +3335,7 @@ Consider:
 
 ```java
 if (!map.containsKey(key)) {
-    map.put(key, value);
+ map.put(key, value);
 }
 ```
 
@@ -3395,7 +3369,7 @@ Example:
 
 ```java
 Map<Object, String> map =
-        new WeakHashMap<>();
+ new WeakHashMap<>();
 ```
 
 It can be useful for certain cache-like or metadata scenarios where keys should not prevent garbage collection.
@@ -3414,9 +3388,9 @@ Use `TreeSet` with a `Comparator`.
 
 ```java
 Set<Employee> employees =
-    new TreeSet<>(
-        Comparator.comparing(Employee::getSalary)
-    );
+ new TreeSet<>(
+ Comparator.comparing(Employee::getSalary)
+ );
 ```
 
 ### Important trap
@@ -3459,17 +3433,17 @@ Conceptually:
 
 ```java
 PriorityQueue<Employee> minHeap =
-    new PriorityQueue<>(
-        Comparator.comparing(Employee::getSalary)
-    );
+ new PriorityQueue<>(
+ Comparator.comparing(Employee::getSalary)
+ );
 
 for (Employee employee : employees) {
 
-    minHeap.offer(employee);
+ minHeap.offer(employee);
 
-    if (minHeap.size() > 10) {
-        minHeap.poll();
-    }
+ if (minHeap.size() > 10) {
+ minHeap.poll();
+ }
 }
 ```
 
@@ -3518,7 +3492,7 @@ Convert to:
 
 ```java
 Set<Integer> idSet =
-        new HashSet<>(ids);
+ new HashSet<>(ids);
 ```
 
 Now average membership lookup becomes:
@@ -3545,7 +3519,7 @@ For example:
 
 ```java
 NavigableMap<Integer, Employee> employees =
-        new TreeMap<>();
+ new TreeMap<>();
 ```
 
 Then APIs such as:
@@ -3566,7 +3540,7 @@ Estimate the required capacity and initialize the map appropriately.
 
 ```java
 Map<Integer, Employee> map =
-        new HashMap<>(1_000_000);
+ new HashMap<>(1_000_000);
 ```
 
 But remember the constructor's capacity interacts with the load factor and resize threshold; blindly choosing a number is not always optimal.
@@ -3605,7 +3579,7 @@ For example:
 
 ```java
 List<String> names =
-        List.of("John", "David", "Alex");
+ List.of("John", "David", "Alex");
 ```
 
 Attempting:
@@ -3650,7 +3624,7 @@ ConcurrentSkipListMap
 
 ```java
 ConcurrentSkipListMap<Integer, Employee> map =
-        new ConcurrentSkipListMap<>();
+ new ConcurrentSkipListMap<>();
 ```
 
 It provides concurrent sorted-map behavior.
@@ -3667,7 +3641,7 @@ ConcurrentSkipListSet
 
 ```java
 Set<Integer> set =
-        new ConcurrentSkipListSet<>();
+ new ConcurrentSkipListSet<>();
 ```
 
 Useful when you need both:
@@ -3706,9 +3680,9 @@ then:
 
 ```java
 numbers.stream()
-       .filter(n -> n > 100)
-       .map(n -> n * 2)
-       .toList();
+ .filter(n -> n > 100)
+ .map(n -> n * 2)
+ .toList();
 ```
 
 The choice depends on readability, performance, parallelism, allocation, and workload.
@@ -3762,7 +3736,7 @@ Example:
 
 ```java
 Set<String> set =
-        new LinkedHashSet<>();
+ new LinkedHashSet<>();
 ```
 
 This is one of the most common collection design decisions.
@@ -3779,7 +3753,7 @@ LinkedHashMap
 
 ```java
 Map<Integer, Employee> map =
-        new LinkedHashMap<>();
+ new LinkedHashMap<>();
 ```
 
 ---
@@ -3844,7 +3818,7 @@ If prefix/range querying is important, a sorted structure can be useful:
 
 ```java
 NavigableSet<String> suggestions =
-        new TreeSet<>();
+ new TreeSet<>();
 ```
 
 For very large-scale autocomplete, however, a trie/search index is often more appropriate than a Java collection alone.
@@ -3857,7 +3831,7 @@ For very large-scale autocomplete, however, a trie/search index is often more ap
 Map<String, List<Order>> orders = new HashMap<>();
 
 if (!orders.containsKey(customerId)) {
-    orders.put(customerId, new ArrayList<>());
+ orders.put(customerId, new ArrayList<>());
 }
 
 orders.get(customerId).add(order);
@@ -3869,11 +3843,11 @@ Use:
 
 ```java
 orders
-    .computeIfAbsent(
-        customerId,
-        k -> new ArrayList<>()
-    )
-    .add(order);
+ .computeIfAbsent(
+ customerId,
+ k -> new ArrayList<>()
+ )
+ .add(order);
 ```
 
 This is cleaner and avoids repeating the lookup logic.
@@ -3906,7 +3880,6 @@ map.putIfAbsent("A", 30);
 doesn't replace `20`.
 
 ---
-
 # 52. Scenario: You need to increment a counter in a ConcurrentHashMap.
 
 A naive implementation:
@@ -3927,7 +3900,7 @@ For example:
 
 ```java
 ConcurrentHashMap<String, Integer> counts =
-        new ConcurrentHashMap<>();
+ new ConcurrentHashMap<>();
 
 counts.merge("JAVA", 1, Integer::sum);
 ```
@@ -3948,11 +3921,11 @@ Example:
 
 ```java
 ConcurrentHashMap<String, LongAdder> counts =
-        new ConcurrentHashMap<>();
+ new ConcurrentHashMap<>();
 
 counts.computeIfAbsent(
-    "JAVA",
-    k -> new LongAdder()
+"JAVA",
+ k -> new LongAdder()
 ).increment();
 ```
 
@@ -3979,21 +3952,21 @@ CopyOnWriteArrayList
 
 A senior developer should think in terms of **requirements**, not memorization.
 
-| Requirement                 | Choice                  |
+| Requirement | Choice |
 | --------------------------- | ----------------------- |
-| Fast indexed access         | `ArrayList`             |
-| Unique elements             | `HashSet`               |
-| Unique + insertion order    | `LinkedHashSet`         |
-| Unique + sorted             | `TreeSet`               |
-| Key-value lookup            | `HashMap`               |
-| Key-value + insertion order | `LinkedHashMap`         |
-| Key-value + sorted keys     | `TreeMap`               |
-| Stack/deque                 | `ArrayDeque`            |
-| Priority processing         | `PriorityQueue`         |
-| Concurrent Map              | `ConcurrentHashMap`     |
-| Read-heavy concurrent List  | `CopyOnWriteArrayList`  |
-| Blocking producer-consumer  | `BlockingQueue`         |
-| Concurrent sorted Map       | `ConcurrentSkipListMap` |
+| Fast indexed access | `ArrayList` |
+| Unique elements | `HashSet` |
+| Unique + insertion order | `LinkedHashSet` |
+| Unique + sorted | `TreeSet` |
+| Key-value lookup | `HashMap` |
+| Key-value + insertion order | `LinkedHashMap` |
+| Key-value + sorted keys | `TreeMap` |
+| Stack/deque | `ArrayDeque` |
+| Priority processing | `PriorityQueue` |
+| Concurrent Map | `ConcurrentHashMap` |
+| Read-heavy concurrent List | `CopyOnWriteArrayList` |
+| Blocking producer-consumer | `BlockingQueue` |
+| Concurrent sorted Map | `ConcurrentSkipListMap` |
 
 ---
 
@@ -4054,3 +4027,894 @@ If you're preparing specifically for a **Senior Java Developer interview**, I wo
 40. Implement LRU cache.
 
 **For a Senior interview, don't just answer "use HashMap." Explain *why*, the expected complexity, memory implications, thread-safety, ordering requirements, and what happens under high load.** That's usually what separates a senior-level answer from a basic Collections answer.
+
+---
+
+# Production and Current-Industry Appendix
+
+The complete supplied Java Collections interview material above is preserved. This appendix adds modern Java guidance and production context so that each collection choice can be explained in terms of correctness, memory, concurrency, observability and operational risk.
+
+# Appendix A1. The Collection Choice Decision Tree
+
+Start with the requirement, not the class name:
+
+```text
+What data shape do you need?
+ |
+ +-- key -> value -------------------- Map
+ +-- unique values ------------------- Set
+ +-- ordered/repeated values --------- List
+ +-- producer/consumer flow ---------- Queue or BlockingQueue
+ +-- double-ended flow --------------- Deque
+ `-- enum keys/values ---------------- EnumMap or EnumSet
+
+Then ask:
+ |
+ +-- Must insertion or sorted order be preserved?
+ +-- Are reads and writes concurrent?
+ +-- Is the data bounded?
+ +-- Is random access required?
+ +-- Is the collection owned or merely viewed?
+ +-- What is the expected size and access pattern?
+ `-- What happens when the collection is full or empty?
+```
+
+Examples:
+
+```text
+Unique feature flags -> EnumSet or Set
+User id lookup -> HashMap or ConcurrentHashMap
+Stable API response order -> List or LinkedHashMap
+Priority work scheduling -> PriorityBlockingQueue
+FIFO producer/consumer -> ArrayBlockingQueue or LinkedBlockingQueue
+Recent-access cache -> bounded cache with eviction policy
+```
+
+The best senior answer states the invariant first: uniqueness, ordering, boundedness, thread safety, or lookup complexity.
+
+# Appendix A2. Modern Java Collection Vocabulary
+
+In current Java versions, distinguish these terms precisely:
+
+```text
+Mutable -> the object can be changed
+Immutable -> the object itself cannot be changed after construction
+Unmodifiable -> this reference cannot mutate; the backing object may change
+Snapshot -> an independent copy at a point in time
+View -> a live projection backed by another collection
+Thread-safe -> concurrent access follows the class's documented guarantees
+```
+
+Examples:
+
+```java
+List<String> mutable = new ArrayList<>(List.of("A", "B"));
+List<String> unmodifiableView = Collections.unmodifiableList(mutable);
+List<String> immutableSnapshot = List.copyOf(mutable);
+
+mutable.add("C");
+// unmodifiableView now observes C; immutableSnapshot does not.
+```
+
+Do not describe `Collections.unmodifiableList` as a deep immutable copy. It is a read-only wrapper around the original list.
+
+# Appendix A3. Choosing `List`, `Set` and `Map` as API Types
+
+Declare the narrowest interface that communicates the contract:
+
+```java
+public List<Order> findOrders(CustomerId customerId) {
+ return repository.findByCustomerId(customerId);
+}
+```
+
+The caller needs list semantics, not the implementation detail that the result currently uses `ArrayList`.
+
+Return immutable or unmodifiable results when callers must not alter service-owned state:
+
+```java
+public List<String> supportedRegions() {
+ return List.of("US", "CA", "GB");
+}
+```
+
+For a dynamically built result:
+
+```java
+return List.copyOf(regions);
+```
+
+This prevents callers from accidentally mutating internal state and makes ownership easier to reason about.
+
+# Appendix A4. `ArrayList` Capacity and Memory
+
+`ArrayList` provides fast indexed access because it stores references in a contiguous backing array. Its practical strengths are cache locality and low per-element overhead compared with node-based structures.
+
+```java
+List<Order> orders = new ArrayList<>(expectedOrderCount);
+```
+
+Pre-sizing is useful when the approximate size is known because it reduces growth copies. It is not a reason to allocate an enormous capacity without evidence. Oversized arrays retain memory and can increase garbage-collection pressure.
+
+Use `ArrayList` when:
+
+- Reads by index are common.
+- Iteration is common.
+- Appends dominate mutations.
+- The collection is local to one thread or externally synchronized.
+
+Use a `Deque` or queue abstraction for queue operations rather than repeatedly inserting at index zero.
+
+# Appendix A5. Why `LinkedList` Is Usually Not the Default
+
+Although linked-list insertion can be constant time after a node is known, an application usually first has to find the position. That traversal is linear. Each node also carries link fields and is separately allocated, which hurts memory locality.
+
+Prefer:
+
+```java
+Deque<Task> tasks = new ArrayDeque<>();
+```
+
+for an in-memory stack or deque. Prefer `ArrayList` for most general-purpose lists. Choose `LinkedList` only when its node and deque semantics are actually useful and measurements support it.
+
+# Appendix A6. `ArrayDeque` for Local Queues and Stacks
+
+`ArrayDeque` is commonly the best general-purpose non-concurrent deque:
+
+```java
+Deque<String> stack = new ArrayDeque<>();
+stack.push("first");
+String item = stack.pop();
+
+Deque<String> queue = new ArrayDeque<>();
+queue.addLast("first");
+String next = queue.removeFirst();
+```
+
+It does not accept `null`, which removes ambiguity between an empty result and a stored null element. It is not a replacement for a blocking queue when threads need to wait for work.
+
+# Appendix A7. Ordered Collections and API Determinism
+
+Order is part of correctness when consumers compare output, generate reports, paginate results or sign payloads.
+
+```text
+HashMap -> no order contract
+LinkedHashMap -> predictable insertion/access order
+TreeMap -> comparator/key sorted order
+HashSet -> no order contract
+LinkedHashSet -> insertion order
+TreeSet -> sorted order
+```
+
+Never rely on the current iteration order of `HashMap` or `HashSet`, even if tests happen to pass repeatedly. If output order matters, encode it in the type or sort explicitly.
+
+# Appendix A8. Equality and Hashing Contract
+
+For a key or set element:
+
+```text
+If a.equals(b) is true, a.hashCode() == b.hashCode() must be true.
+```
+
+The reverse is not required: different objects may share a hash code. A correct `equals`/`hashCode` implementation must also be:
+
+- Consistent while the relevant state remains unchanged.
+- Symmetric.
+- Transitive.
+- Non-null-safe according to the method contract.
+
+Prefer immutable key state. Java records provide value-based `equals` and `hashCode` for their components, which makes them useful for many value keys:
+
+```java
+public record CustomerKey(String tenantId, long customerId) {
+}
+
+Map<CustomerKey, Customer> customers = new HashMap<>();
+```
+
+Do not use fields that can change while an object is stored as a map key or set element.
+
+# Appendix A9. Mutable Keys: A Production Failure
+
+This code is dangerous:
+
+```java
+final class UserKey {
+ private String username;
+
+ // equals and hashCode use username
+}
+
+Map<UserKey, String> sessions = new HashMap<>();
+UserKey key = new UserKey("alice");
+sessions.put(key, "session-1");
+key.setUsername("bob");
+```
+
+After mutation, the map entry may remain in the bucket selected by the old hash code while lookup uses the new hash code. The entry appears to have disappeared. The map was not corrupted by randomness; the key violated the map's contract.
+
+Safer alternatives:
+
+```text
+Use String, UUID, Integer or a record key
+Copy mutable input into an immutable value
+Remove and reinsert after a key change
+Keep mutable state out of equality/hash fields
+```
+
+# Appendix A10. `HashMap` Capacity and Load
+
+When sizing a hash map, reason about expected entries, load factor, memory and growth cost:
+
+```java
+Map<String, User> users = new HashMap<>(expectedUsers);
+```
+
+The constructor's capacity is an implementation input, not a guarantee that exactly that many entries fit without resizing. Account for the load factor and the implementation's table sizing. Modern JDK internals are implementation details; do not build application correctness around bucket counts or treeification thresholds.
+
+For very large maps, measure:
+
+```text
+Entry count
+Key/value object size
+Table and node overhead
+Resize pauses/copying
+Heap occupancy
+GC pause and allocation rate
+```
+
+# Appendix A11. `TreeMap` and Comparator Correctness
+
+`TreeMap` uses ordering to locate keys. If a comparator returns zero for two values, the map treats them as the same key even if `equals` says otherwise.
+
+```java
+Comparator<Employee> byDepartmentThenId =
+ Comparator.comparing(Employee::department)
+ .thenComparingLong(Employee::id);
+```
+
+A comparator must be transitive and consistent enough for the collection's intended semantics. Never subtract integers to compare because overflow can produce incorrect ordering:
+
+```java
+// Avoid: return a.getPriority() - b.getPriority();
+Comparator<Task> safe = Comparator.comparingInt(Task::priority);
+```
+
+# Appendix A12. `EnumSet` and `EnumMap`
+
+When the domain key is an enum, use the specialized collection where it fits:
+
+```java
+enum Permission { READ, WRITE, DELETE }
+
+EnumSet<Permission> permissions = EnumSet.of(Permission.READ, Permission.WRITE);
+EnumMap<Permission, String> descriptions = new EnumMap<>(Permission.class);
+```
+
+They communicate that keys or values come from a fixed enum domain and can be more compact and efficient than general-purpose hash collections. They do not replace a database or distributed permission store.
+
+# Appendix A13. Immutable Construction Patterns
+
+Use factory methods for small fixed collections:
+
+```java
+Set<String> roles = Set.of("READER", "WRITER");
+Map<String, Integer> limits = Map.of(
+"standard", 100,
+"premium", 1000);
+```
+
+For a conditional builder, construct a mutable collection locally and publish a snapshot:
+
+```java
+List<String> result = new ArrayList<>();
+if (includePrimary) {
+ result.add("primary");
+}
+if (includeBackup) {
+ result.add("backup");
+}
+return List.copyOf(result);
+```
+
+This creates a clear ownership boundary. Remember that collection immutability is shallow: referenced elements can still be mutable.
+
+# Appendix A14. Null Policy
+
+Nulls make collection APIs harder to reason about:
+
+```text
+Does null mean missing?
+Does null mean an explicit value?
+Can a key be null but not a value?
+Will a stream operation throw later?
+```
+
+Establish a domain policy:
+
+- Reject null with validation where it is invalid.
+- Use `Optional` for a single possibly absent return value, not as every collection element or field by default.
+- Use empty collections for “no results” when that is the API contract.
+- Document whether a map permits null keys or values.
+
+`ConcurrentHashMap` deliberately does not allow null keys or values because a null result would be ambiguous with the absence of a mapping during concurrent operations.
+
+# Appendix A15. Streams: Readability Before Cleverness
+
+Streams are useful for declarative transformations:
+
+```java
+Map<String, BigDecimal> totalsByCustomer = orders.stream()
+ .collect(Collectors.groupingBy(
+ Order::customerId,
+ Collectors.mapping(
+ Order::total,
+ Collectors.reducing(BigDecimal.ZERO, BigDecimal::add))));
+```
+
+For production code, review:
+
+```text
+Does the pipeline express the business rule clearly?
+Can it handle nulls and empty input?
+Is the collection size bounded?
+Does it preserve required ordering?
+Is the collector safe for parallel execution?
+Would a loop be easier to debug?
+```
+
+Do not use streams to hide multiple database calls, network calls or unbounded memory accumulation.
+
+# Appendix A16. `toList()` and Collector Mutability
+
+Be precise about result ownership:
+
+```java
+List<String> result = stream.toList();
+```
+
+The result is unmodifiable according to the Stream API contract. If a mutable `ArrayList` is required by the surrounding code:
+
+```java
+List<String> mutable = stream.collect(Collectors.toCollection(ArrayList::new));
+```
+
+For an immutable snapshot of an existing collection:
+
+```java
+List<String> snapshot = List.copyOf(existing);
+```
+
+Choose intentionally instead of relying on a particular JDK implementation class.
+
+# Appendix A17. Parallel Streams and Shared State
+
+This is unsafe:
+
+```java
+List<Result> results = new ArrayList<>();
+input.parallelStream().forEach(item -> results.add(process(item)));
+```
+
+The `ArrayList` is not safe for concurrent mutation. Prefer a collector designed for the stream or, better, a sequential pipeline if the work is not a measured CPU-bound operation:
+
+```java
+List<Result> results = input.parallelStream()
+ .map(this::process)
+ .toList();
+```
+
+Parallel streams use the common fork-join pool by default. Blocking database or HTTP work can starve unrelated tasks. Use explicit executors and bounded concurrency for blocking workloads.
+
+# Appendix A18. `ConcurrentHashMap` Compound Operations
+
+A thread-safe map does not automatically make a multi-step workflow atomic:
+
+```java
+if (!map.containsKey(key)) {
+ map.put(key, value);
+}
+```
+
+Two threads can both observe absence. Use an atomic map operation:
+
+```java
+map.putIfAbsent(key, value);
+
+map.computeIfAbsent(key, ignored -> new AtomicLong())
+ .incrementAndGet();
+
+map.merge(word, 1L, Long::sum);
+```
+
+Keep mapping functions short and side-effect aware. A mapping function may execute during a map operation and can create contention or recursion problems if it performs unrelated work.
+
+# Appendix A19. Choosing a Concurrent Collection
+
+```text
+ConcurrentHashMap -> concurrent key/value lookup and updates
+CopyOnWriteArrayList -> many reads, very few writes, snapshot iteration
+BlockingQueue -> producer/consumer handoff with waiting
+ConcurrentLinkedQueue -> non-blocking concurrent queue
+ConcurrentSkipListMap -> concurrent sorted map requirements
+Collections.synchronized* -> simple monitor wrapper for small/simple cases
+```
+
+Do not choose a concurrent collection merely because the application uses multiple threads. First identify ownership and the operation that must be atomic. A single-threaded collection behind a message partition or actor may be both faster and easier to reason about.
+
+# Appendix A20. Safe Publication and Collection Ownership
+
+Thread safety includes how a collection becomes visible, not just which class is used.
+
+```text
+Construct fully
+ -> publish through a safe mechanism
+ -> never mutate without the documented synchronization policy
+```
+
+Safer patterns include:
+
+- Store immutable snapshots in a `volatile` field.
+- Publish through a thread-safe queue or concurrent map.
+- Guard both reads and writes with the same lock.
+- Use an actor/executor that owns all mutations.
+
+Wrapping an already-mutating `ArrayList` with `Collections.unmodifiableList` protects only the wrapper's mutation methods. It does not make concurrent backing-list mutation safe.
+
+# Appendix A21. `CopyOnWriteArrayList` Trade-Off
+
+`CopyOnWriteArrayList` is suitable when reads vastly outnumber writes and readers can use snapshots:
+
+```java
+private final CopyOnWriteArrayList<Listener> listeners =
+ new CopyOnWriteArrayList<>();
+```
+
+Every structural write copies the backing array. Therefore it is useful for listener registries or configuration snapshots, but dangerous for frequent writes or very large lists. It also does not make the listener objects themselves thread-safe.
+
+# Appendix A22. Bounded Queues and Backpressure
+
+An unbounded queue can turn a downstream outage into an out-of-memory failure. Prefer a bounded queue when work arrival can exceed processing capacity:
+
+```java
+BlockingQueue<Task> queue = new ArrayBlockingQueue<>(10_000);
+```
+
+When full, define the policy:
+
+```text
+Reject immediately
+Block briefly
+Drop oldest or newest according to business rules
+Persist to durable messaging
+Apply upstream rate limiting
+```
+
+Never silently drop business-critical work. Record queue depth, enqueue latency, rejection count, processing age and oldest item age.
+
+# Appendix A23. LRU Cache: Local Correctness Is Not Distributed Correctness
+
+An access-ordered `LinkedHashMap` can implement a local bounded cache, but production design also needs:
+
+```text
+Maximum entries or weight
+Expiration policy
+Concurrent access policy
+Negative-cache policy
+Stampede protection
+Invalidation strategy
+Metrics
+```
+
+For multi-instance applications, each process has a different local cache. Use Caffeine for a mature in-process cache when appropriate, and use Redis or another distributed cache only when its consistency, latency and failure model are acceptable.
+
+A cache is an optimization, not the source of truth. Decide what happens when it is empty, stale, unavailable or polluted.
+
+# Appendix A24. Cache Stampede and Single-Flight Loading
+
+If many requests observe the same expired entry, they can all call the database simultaneously:
+
+```text
+One popular key expires
+ -> 1,000 requests miss
+ -> 1,000 database loads
+ -> database saturation
+```
+
+Mitigations include:
+
+- Jittered expiration.
+- Background refresh.
+- Request coalescing/single-flight loading.
+- Bounded loader concurrency.
+- Stale-while-revalidate where acceptable.
+- A circuit breaker around the source.
+
+Measure hit rate and load latency; a cache with a high hit rate but stale or incorrect values is not a successful design.
+
+# Appendix A25. Memory and Garbage Collection Review
+
+For a large collection, count more than element values:
+
+```text
+Collection object
+Backing array/table
+Entry or node objects
+Key objects
+Value objects
+Object headers and references
+Temporary copies during resize or stream collection
+```
+
+Common memory failures include:
+
+- Reading a whole file or result set into a list when streaming is possible.
+- Keeping a request-scoped map in a singleton.
+- Caching without bounds or expiry.
+- Creating multiple copies during mapping and sorting.
+- Accumulating failed messages indefinitely.
+
+Use heap dumps, allocation profiling, collection-size metrics and realistic load tests. Do not infer memory behaviour from Big-O notation alone.
+
+# Appendix A26. Collection Size Is a Capacity Contract
+
+For every long-lived collection, answer:
+
+```text
+What is the maximum size?
+Who removes entries?
+What is the expiry policy?
+What happens when it is full?
+How is size observed?
+What happens after restart?
+```
+
+An in-memory map without these answers is often an accidental cache, queue or database. Make that choice explicit.
+
+# Appendix A27. Database and ORM Boundaries
+
+Do not automatically convert every database result into a large in-memory collection. For large datasets:
+
+```text
+Paginate by a stable key
+Stream with a bounded fetch size
+Use a projection
+Aggregate in the database
+Process in bounded batches
+```
+
+For pagination, keyset pagination is often more stable than a very large offset:
+
+```sql
+SELECT id, created_at, status
+FROM orders
+WHERE (created_at, id) > (:lastCreatedAt, :lastId)
+ORDER BY created_at, id
+FETCH FIRST 100 ROWS ONLY;
+```
+
+The exact syntax depends on the database. The important design point is to use a deterministic, indexed continuation key.
+
+# Appendix A28. Serialization and Collection Contracts
+
+Collection choice can change serialized API behaviour:
+
+```text
+List -> ordered JSON array
+Set -> uniqueness intent, but ordering must still be defined if clients care
+Map -> JSON object with key restrictions
+TreeMap -> deterministic key order if that is part of the contract
+```
+
+Do not expose an internal `HashSet` and promise stable response order. Convert to an explicitly ordered DTO when the wire contract requires deterministic output.
+
+Also define how duplicate input values, nulls, missing keys and empty collections are represented. Contract tests should assert the actual JSON shape.
+
+# Appendix A29. Security and Data Exposure
+
+Collections often aggregate sensitive data. Review:
+
+- Whether a map key exposes an account, tenant or internal identifier.
+- Whether debug logging prints complete lists or maps.
+- Whether an exception includes collection contents.
+- Whether cached values cross tenant boundaries.
+- Whether a collection can be controlled by untrusted input.
+- Whether a user can request an unbounded page size or group cardinality.
+
+Bound input sizes and authorize data before aggregation. Never assume that an in-memory collection is private if it is logged, serialized, cached or exposed through metrics.
+
+# Appendix A30. Observability for Collection-Heavy Code
+
+Useful metrics include:
+
+```text
+Collection size distribution
+Queue depth and oldest item age
+Cache hit/miss/eviction rate
+Map load or lookup latency
+Batch size and processing time
+Rejected work count
+Deduplication count
+Memory and GC pressure
+```
+
+Avoid high-cardinality metric labels such as raw user IDs or arbitrary map keys. Use bounded categories, sampled logs and trace attributes that respect privacy requirements.
+
+# Appendix A31. Testing Collection Behaviour
+
+Test the contract, not only the happy-path implementation:
+
+```text
+Empty input
+One element
+Duplicate values
+Duplicate keys
+Null policy
+Very large input
+Required order
+Unmodifiable result
+Concurrent updates
+Mutable-key regression
+Queue full and empty behaviour
+Cache expiry and eviction
+```
+
+Property-based tests are useful for equality and ordering invariants:
+
+```text
+Comparator ordering is transitive
+Set size equals the number of distinct values
+Map lookup returns the value for every inserted immutable key
+Encode/decode preserves collection semantics
+```
+
+For concurrent structures, use stress tests and race-aware tooling where available. A test that passes once does not prove a concurrent algorithm is safe.
+
+# Appendix A32. Benchmarking Collections Correctly
+
+Use JMH for microbenchmarks rather than timing a loop with `System.nanoTime()` in a normal application. A useful benchmark controls:
+
+```text
+JDK version and JVM flags
+Warm-up iterations
+Measurement iterations
+Input size and distribution
+Blackholes to prevent dead-code elimination
+Allocation and GC measurement
+Single-threaded versus concurrent workload
+```
+
+Benchmark the operation that matters. `ArrayList` versus `LinkedList` with ten elements says little about a production workload with millions of objects and a memory-constrained heap.
+
+# Appendix A33. Java 21 and Later Collection Features
+
+Modern Java includes APIs that make ordering and immutable construction clearer. In Java 21, `SequencedCollection`, `SequencedSet` and `SequencedMap` express access to encounter order where the implementation supports it:
+
+```java
+SequencedSet<String> regions = new LinkedHashSet<>();
+regions.add("US");
+regions.add("CA");
+
+String first = regions.getFirst();
+String last = regions.getLast();
+SequencedSet<String> reverse = regions.reversed();
+```
+
+Use the APIs supported by the project's target JDK and build tool. Do not introduce a newer API merely because the local IDE supports it; production runtime, compiler release and deployment images must agree.
+
+# Appendix A34. Virtual Threads Do Not Remove Collection Constraints
+
+Virtual threads make it cheaper to have many waiting tasks, but they do not make an unbounded collection safe:
+
+```text
+More virtual-thread tasks
+ -> more outstanding work
+ -> more queued objects and downstream calls
+ -> possible memory/database saturation
+```
+
+Use bounded queues, semaphores, rate limits and connection pools. Measure the entire pipeline. Thread scalability and data-structure capacity are separate concerns.
+
+# Appendix A35. Senior Scenario: Design a Thread-Safe Frequency Counter
+
+Requirement: many threads count words and reads may happen while counting.
+
+```java
+ConcurrentHashMap<String, LongAdder> counts = new ConcurrentHashMap<>();
+
+void record(String word) {
+ counts.computeIfAbsent(word, ignored -> new LongAdder())
+ .increment();
+}
+
+long count(String word) {
+ LongAdder counter = counts.get(word);
+ return counter == null ? 0L : counter.sum();
+}
+```
+
+Interview explanation:
+
+> I use a concurrent map for key publication and `LongAdder` for high-contention increments. The result is appropriate for a frequently updated approximate snapshot, not for a transactionally exact total at every instant. If exact read-after-write semantics are required, I would define the consistency requirement first and may choose a different design.
+
+Also ask whether the key space is bounded. A frequency map over untrusted input can become a memory leak unless entries expire, are sampled or are aggregated in bounded windows.
+
+# Appendix A36. Senior Scenario: Deduplicate Events Safely
+
+Requirement: event delivery is at least once and the consumer must avoid repeating a business effect.
+
+```text
+Receive event
+ -> validate event ID and tenant
+ -> atomically claim event ID in durable storage
+ -> execute idempotent business operation
+ -> record completion
+ -> acknowledge message
+```
+
+An in-memory `HashSet` is insufficient because it disappears on restart and is different in every replica. Use a database unique constraint, durable key-value conditional write or another store with a defined retention period.
+
+The senior answer also covers expiry, replay, partial failure and what happens when the claim succeeds but the process stops before completion.
+
+# Appendix A37. Senior Scenario: Bounded Top-K Results
+
+Requirement: find the largest `k` values without sorting millions of elements.
+
+```java
+PriorityQueue<Integer> smallest = new PriorityQueue<>(k);
+
+for (int value : values) {
+ smallest.offer(value);
+ if (smallest.size() > k) {
+ smallest.poll();
+ }
+}
+```
+
+This maintains the smallest of the retained values at the head and uses $O(n \log k)$ time and $O(k)$ additional space for a bounded `k`. Validate `k`, define duplicate behaviour and decide how ties are ordered. For distributed data, compute local top-k values and merge bounded candidates rather than shipping every item to one node.
+
+# Appendix A38. Senior Scenario: Safe List-to-Map Conversion
+
+Never assume keys are unique unless the domain guarantees it:
+
+```java
+Map<Long, Employee> byId = employees.stream()
+ .collect(Collectors.toMap(
+ Employee::id,
+ Function.identity(),
+ (first, second) -> first,
+ LinkedHashMap::new));
+```
+
+The merge policy must be a business decision:
+
+```text
+Reject duplicates
+Keep first
+Keep last
+Combine values
+Group into Map<Key, List<Value>>
+```
+
+Using `toMap` without a merge function can fail at runtime when duplicate keys occur. Using “keep last” silently can be just as dangerous if duplicates indicate corrupt input.
+
+# Appendix A39. Senior Scenario: Local LRU Cache Review
+
+```java
+final class LruCache<K, V> extends LinkedHashMap<K, V> {
+ private final int capacity;
+
+ LruCache(int capacity) {
+ super(capacity, 0.75f, true);
+ if (capacity < 1) {
+ throw new IllegalArgumentException("capacity must be positive");
+ }
+ this.capacity = capacity;
+ }
+
+ @Override
+ protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
+ return size() > capacity;
+ }
+}
+```
+
+This is a useful interview implementation, but a production review asks more:
+
+- Is it thread-safe?
+- Does capacity mean entries or weighted bytes?
+- Is TTL required as well as LRU?
+- How are stale values invalidated?
+- What is the stampede policy?
+- What metrics and hit-rate alerts exist?
+- Should a proven cache library be used instead?
+
+Correct code in isolation is not automatically a production-ready cache.
+
+# Appendix A40. Common Collection Mistakes in Production
+
+- Using `HashMap` order as an undocumented API contract.
+- Calling `containsKey` and `put` separately when an atomic operation is required.
+- Using mutable objects as keys.
+- Returning a mutable internal list from a service.
+- Calling `parallelStream()` for blocking I/O.
+- Using an unbounded queue for a durable workload.
+- Building a whole dataset in memory to paginate it.
+- Creating a cache with no maximum size or expiry.
+- Treating `unmodifiableList` as a deep immutable copy.
+- Logging complete collections containing personal or secret data.
+- Choosing `LinkedList` because insertion is theoretically constant time.
+- Sorting a million values when only top-k is required.
+- Ignoring duplicate keys during list-to-map conversion.
+- Assuming a concurrent collection makes the contained objects thread-safe.
+- Comparing microbenchmark results across different JDKs without controlling the environment.
+
+# Appendix A41. A Strong Senior Interview Answer Template
+
+For any collection question, answer in this order:
+
+```text
+1. State the requirement and invariant.
+2. Choose the interface and implementation.
+3. Explain expected time and space complexity.
+4. Explain ordering and equality semantics.
+5. Explain thread-safety and atomicity.
+6. Explain capacity, memory and failure behaviour.
+7. Give a small example.
+8. Name the production metric or test you would add.
+```
+
+Example:
+
+> I would use `LinkedHashMap` for a deterministic insertion-ordered lookup result. If I need access order and a strict entry bound, it can support a local LRU design. It is not thread-safe by itself, and it does not solve distributed cache consistency. I would define duplicate-key behaviour, protect or confine access, add hit/eviction metrics and test eviction, concurrency and restart behaviour.
+
+# Appendix A42. Final Production Checklist
+
+### Correctness
+
+- Collection interfaces describe the intended contract.
+- Equality, hash code and comparator rules are valid.
+- Duplicate, null, empty and ordering behaviour is explicit.
+- Mutable keys are prohibited or safely copied.
+
+### Performance
+
+- Expected size and access pattern drive the implementation.
+- Large inputs are bounded, paginated or streamed.
+- Queries and transformations avoid accidental copies.
+- Benchmark claims use realistic data and a controlled JDK.
+
+### Concurrency
+
+- Ownership and publication are defined.
+- Compound operations use atomic APIs or a clear lock.
+- Queues have capacity and backpressure.
+- Concurrent collections are not mistaken for thread-safe element objects.
+
+### Reliability
+
+- Caches have capacity, expiry, invalidation and stampede policies.
+- Event deduplication is durable when business effects require it.
+- Restart, replay, failure and overload behaviour are tested.
+- Collection size, queue age and cache health are observable.
+
+### Security
+
+- Input cardinality and page size are bounded.
+- Sensitive values are not logged or cached across authorization boundaries.
+- Tenant and ownership checks happen before aggregation.
+
+# Appendix A43. Final Collections Mindset
+
+```text
+Requirement
+ -> collection contract
+ -> equality/order semantics
+ -> capacity and memory model
+ -> concurrency and ownership
+ -> failure and overload policy
+ -> tests and measurements
+ -> observable production behaviour
+```
+
+The senior-level answer is not “use `HashMap`.” It is: “Here is the invariant, here is why this collection preserves it, here is the complexity and memory cost, here is what happens under concurrency and overload, and here is how I will test and observe it in production.”

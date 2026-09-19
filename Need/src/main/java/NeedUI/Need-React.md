@@ -45,19 +45,19 @@ For example:
 
 ```text
 React
-   ↓
+ ↓
 UI
 
 React Router
-   ↓
+ ↓
 Routing
 
 Redux / Zustand
-   ↓
+ ↓
 Global State
 
 Axios / Fetch
-   ↓
+ ↓
 API communication
 ```
 
@@ -152,13 +152,13 @@ Example:
 
 ```jsx
 function User() {
-    const name = "John";
+ const name = "John";
 
-    return (
-        <div className="user">
-            <h1>{name}</h1>
-        </div>
-    );
+ return (
+ <div className="user">
+ <h1>{name}</h1>
+ </div>
+ );
 }
 ```
 
@@ -184,13 +184,13 @@ Conceptually:
 
 ```text
 State changes
-     ↓
+ ↓
 React creates new element tree
-     ↓
+ ↓
 Reconciliation
-     ↓
+ ↓
 Determine required DOM changes
-     ↓
+ ↓
 Browser DOM updated
 ```
 
@@ -224,7 +224,7 @@ Example:
 
 ```jsx
 users.map(user => (
-    <User key={user.id} user={user} />
+ <User key={user.id} user={user} />
 ))
 ```
 
@@ -249,7 +249,7 @@ Example:
 
 ```jsx
 function Welcome() {
-    return <h1>Welcome</h1>;
+ return <h1>Welcome</h1>;
 }
 ```
 
@@ -282,11 +282,11 @@ Example:
 
 ```jsx
 function User({ name }) {
-    return <h1>{name}</h1>;
+ return <h1>{name}</h1>;
 }
 
 function App() {
-    return <User name="John" />;
+ return <User name="John" />;
 }
 ```
 
@@ -313,11 +313,11 @@ If the child needs to request a change, the parent can pass a callback.
 ```jsx
 function Parent() {
 
-    const handleUpdate = () => {
-        console.log("Updated");
-    };
+ const handleUpdate = () => {
+ console.log("Updated");
+ };
 
-    return <Child onUpdate={handleUpdate} />;
+ return <Child onUpdate={handleUpdate} />;
 }
 ```
 
@@ -347,12 +347,12 @@ React schedules an update and the component can render with the new state.
 
 ### Follow-up: What is the difference between props and state?
 
-| Props                  | State                                 |
+| Props | State |
 | ---------------------- | ------------------------------------- |
-| Passed by parent       | Managed by component                  |
-| Read-only              | Updated through state setter/dispatch |
-| Used for communication | Used for changing UI/data             |
-| External input         | Internal component data               |
+| Passed by parent | Managed by component |
+| Read-only | Updated through state setter/dispatch |
+| Used for communication | Used for changing UI/data |
+| External input | Internal component data |
 
 ---
 
@@ -371,9 +371,9 @@ const [count, setCount] = useState(0);
 Here:
 
 ```text
-count     → current state
-setCount  → state update function
-0         → initial value
+count → current state
+setCount → state update function
+0 → initial value
 ```
 
 ### Follow-up: Why should we use the functional form of state update?
@@ -417,8 +417,8 @@ Instead:
 
 ```jsx
 setUser({
-    ...user,
-    name: "John"
+ ...user,
+ name: "John"
 });
 ```
 
@@ -442,7 +442,7 @@ Remove:
 
 ```jsx
 setUsers(prev =>
-    prev.filter(user => user.id !== id)
+ prev.filter(user => user.id !== id)
 );
 ```
 
@@ -450,11 +450,11 @@ Update:
 
 ```jsx
 setUsers(prev =>
-    prev.map(user =>
-        user.id === id
-            ? { ...user, name: "John" }
-            : user
-    )
+ prev.map(user =>
+ user.id === id
+ ? { ...user, name: "John" }
+ : user
+ )
 );
 ```
 
@@ -469,15 +469,15 @@ Example:
 ```jsx
 function App() {
 
-    const handleClick = () => {
-        console.log("Clicked");
-    };
+ const handleClick = () => {
+ console.log("Clicked");
+ };
 
-    return (
-        <button onClick={handleClick}>
-            Click
-        </button>
-    );
+ return (
+ <button onClick={handleClick}>
+ Click
+ </button>
+ );
 }
 ```
 
@@ -499,7 +499,7 @@ onClick={handleClick()}
 
 ```jsx
 <button onClick={() => handleClick(id)}>
-    Delete
+ Delete
 </button>
 ```
 
@@ -513,9 +513,9 @@ Using ternary:
 
 ```jsx
 {
-    isLoggedIn
-        ? <Dashboard />
-        : <Login />
+ isLoggedIn
+ ? <Dashboard />
+ : <Login />
 }
 ```
 
@@ -523,7 +523,7 @@ Using `&&`:
 
 ```jsx
 {
-    isAdmin && <AdminPanel />
+ isAdmin && <AdminPanel />
 }
 ```
 
@@ -559,10 +559,10 @@ Example:
 
 ```jsx
 users.map(user => (
-    <User
-        key={user.id}
-        user={user}
-    />
+ <User
+key={user.id}
+user={user}
+ />
 ))
 ```
 
@@ -608,7 +608,7 @@ Example:
 
 ```jsx
 useEffect(() => {
-    console.log("Component rendered");
+ console.log("Component rendered");
 }, []);
 ```
 
@@ -616,7 +616,7 @@ useEffect(() => {
 
 ```jsx
 useEffect(() => {
-    console.log("Effect");
+ console.log("Effect");
 }, [userId]);
 ```
 
@@ -626,7 +626,7 @@ The effect is re-run when the dependency values change.
 
 ```jsx
 useEffect(() => {
-    loadData();
+ loadData();
 }, []);
 ```
 
@@ -650,15 +650,15 @@ Example:
 ```jsx
 useEffect(() => {
 
-    const handler = () => {
-        console.log(window.scrollY);
-    };
+ const handler = () => {
+ console.log(window.scrollY);
+ };
 
-    window.addEventListener("scroll", handler);
+ window.addEventListener("scroll", handler);
 
-    return () => {
-        window.removeEventListener("scroll", handler);
-    };
+ return () => {
+ window.removeEventListener("scroll", handler);
+ };
 
 }, []);
 ```
@@ -688,7 +688,7 @@ Example:
 
 ```jsx
 useLayoutEffect(() => {
-    // measure DOM
+ // measure DOM
 });
 ```
 
@@ -740,7 +740,7 @@ does not itself cause a render.
 
 ```jsx
 const result = useMemo(() => {
-    return expensiveCalculation(data);
+ return expensiveCalculation(data);
 }, [data]);
 ```
 
@@ -748,6 +748,9 @@ const result = useMemo(() => {
 
 No.
 
+It has its own overhead. Use it when memoization provides a meaningful performance benefit.
+
+---
 It has its own overhead. Use it when memoization provides a meaningful performance benefit.
 
 ---
@@ -760,7 +763,7 @@ It has its own overhead. Use it when memoization provides a meaningful performan
 
 ```jsx
 const handleClick = useCallback(() => {
-    console.log("Clicked");
+ console.log("Clicked");
 }, []);
 ```
 
@@ -800,7 +803,7 @@ Example:
 
 ```jsx
 const User = React.memo(function User({ name }) {
-    return <h1>{name}</h1>;
+ return <h1>{name}</h1>;
 });
 ```
 
@@ -832,7 +835,7 @@ Provider:
 
 ```jsx
 <UserContext.Provider value={user}>
-    <Dashboard />
+ <Dashboard />
 </UserContext.Provider>
 ```
 
@@ -898,8 +901,8 @@ A controlled input gets its value from React state.
 const [name, setName] = useState("");
 
 <input
-    value={name}
-    onChange={e => setName(e.target.value)}
+value={name}
+onChange={e => setName(e.target.value)}
 />
 ```
 
@@ -966,7 +969,7 @@ Incorrect:
 
 ```jsx
 if (isLoggedIn) {
-    useEffect(...);
+ useEffect(...);
 }
 ```
 
@@ -974,9 +977,9 @@ Correct:
 
 ```jsx
 useEffect(() => {
-    if (isLoggedIn) {
-        // logic
-    }
+ if (isLoggedIn) {
+ // logic
+ }
 }, [isLoggedIn]);
 ```
 
@@ -993,15 +996,15 @@ Example:
 ```jsx
 function useFetch(url) {
 
-    const [data, setData] = useState(null);
+ const [data, setData] = useState(null);
 
-    useEffect(() => {
-        fetch(url)
-            .then(res => res.json())
-            .then(setData);
-    }, [url]);
+ useEffect(() => {
+ fetch(url)
+ .then(res => res.json())
+ .then(setData);
+ }, [url]);
 
-    return data;
+ return data;
 }
 ```
 
@@ -1044,17 +1047,17 @@ Reducer:
 ```jsx
 function reducer(state, action) {
 
-    switch (action.type) {
+ switch (action.type) {
 
-        case "increment":
-            return {
-                ...state,
-                count: state.count + 1
-            };
+ case "increment":
+ return {
+ ...state,
+ count: state.count + 1
+ };
 
-        default:
-            return state;
-    }
+ default:
+ return state;
+ }
 }
 ```
 
@@ -1098,15 +1101,15 @@ Middleware
 
 ```text
 Component
-   ↓
+ ↓
 dispatch(action)
-   ↓
+ ↓
 Middleware
-   ↓
+ ↓
 Reducer
-   ↓
+ ↓
 Store
-   ↓
+ ↓
 UI re-renders
 ```
 
@@ -1129,17 +1132,17 @@ Example:
 
 ```jsx
 const counterSlice = createSlice({
-    name: "counter",
+ name: "counter",
 
-    initialState: {
-        count: 0
-    },
+ initialState: {
+ count: 0
+ },
 
-    reducers: {
-        increment(state) {
-            state.count++;
-        }
-    }
+ reducers: {
+ increment(state) {
+ state.count++;
+ }
+ }
 });
 ```
 
@@ -1159,8 +1162,8 @@ Example:
 
 ```jsx
 <Routes>
-    <Route path="/users" element={<Users />} />
-    <Route path="/products" element={<Products />} />
+ <Route path="/users"element={<Users />} />
+ <Route path="/products"element={<Products />} />
 </Routes>
 ```
 
@@ -1186,7 +1189,7 @@ Then:
 
 ```jsx
 <Suspense fallback={<Loading />}>
-    <Admin />
+ <Admin />
 </Suspense>
 ```
 
@@ -1206,7 +1209,7 @@ Example:
 
 ```jsx
 <Suspense fallback={<Loading />}>
-    <Admin />
+ <Admin />
 </Suspense>
 ```
 
@@ -1252,9 +1255,9 @@ For class components, the traditional lifecycle is:
 
 ```text
 Mounting
-   ↓
+ ↓
 Updating
-   ↓
+ ↓
 Unmounting
 ```
 
@@ -1319,7 +1322,7 @@ Example:
 
 ```jsx
 <StrictMode>
-    <App />
+ <App />
 </StrictMode>
 ```
 
@@ -1341,11 +1344,11 @@ The important idea is:
 
 ```text
 Urgent update
-     ↓
+ ↓
 Higher priority
 
 Non-urgent update
-     ↓
+ ↓
 Can be interrupted/deferred
 ```
 
@@ -1361,7 +1364,7 @@ It allows you to mark an update as non-urgent.
 const [isPending, startTransition] = useTransition();
 
 startTransition(() => {
-    setSearchResults(results);
+ setSearchResults(results);
 });
 ```
 
@@ -1373,11 +1376,11 @@ Search/filter UI is a common example:
 
 ```text
 User typing
-    ↓
+ ↓
 Urgent
 
 Large result list update
-    ↓
+ ↓
 Non-urgent
 ```
 
@@ -1434,9 +1437,9 @@ Conceptually:
 
 ```text
 10,000 records
-       ↓
+ ↓
 Only visible ~20-50 records
-       ↓
+ ↓
 Render those
 ```
 
@@ -1472,9 +1475,9 @@ Common use case:
 
 ```text
 Search box
-   ↓
+ ↓
 Wait 300ms
-   ↓
+ ↓
 API call
 ```
 
@@ -1498,12 +1501,12 @@ Execute at most once per interval
 
 ### Follow-up: Debounce vs throttle?
 
-| Debounce                   | Throttle                         |
+| Debounce | Throttle |
 | -------------------------- | -------------------------------- |
 | Waits until activity stops | Executes at controlled intervals |
-| Search input               | Scroll                           |
-| Resize                     | Mouse movement                   |
-| Form validation            | Continuous events                |
+| Search input | Scroll |
+| Resize | Mouse movement |
+| Form validation | Continuous events |
 
 ---
 
@@ -1516,14 +1519,14 @@ Example:
 ```jsx
 useEffect(() => {
 
-    async function loadUsers() {
-        const response = await fetch("/api/users");
-        const data = await response.json();
+ async function loadUsers() {
+ const response = await fetch("/api/users");
+ const data = await response.json();
 
-        setUsers(data);
-    }
+ setUsers(data);
+ }
 
-    loadUsers();
+ loadUsers();
 
 }, []);
 ```
@@ -1663,9 +1666,9 @@ It allows HTML strings to be inserted into the DOM.
 
 ```jsx
 <div
-    dangerouslySetInnerHTML={{
-        __html: html
-    }}
+dangerouslySetInnerHTML={{
+ __html: html
+ }}
 />
 ```
 
@@ -1719,7 +1722,7 @@ Prefer:
 
 ```jsx
 <button onClick={save}>
-    Save
+ Save
 </button>
 ```
 
@@ -1727,7 +1730,7 @@ rather than:
 
 ```jsx
 <div onClick={save}>
-    Save
+ Save
 </div>
 ```
 
@@ -1741,21 +1744,21 @@ Ask:
 
 ```text
 Who needs this state?
-       ↓
+ ↓
 One component?
-       ↓
+ ↓
 Keep local.
 
 Multiple nearby components?
-       ↓
+ ↓
 Lift state up.
 
 Many distant components?
-       ↓
+ ↓
 Context / state-management solution.
 
 Server data?
-       ↓
+ ↓
 Server-state solution.
 ```
 
@@ -1805,8 +1808,8 @@ you might compose:
 UserPage
  ├── SearchBox
  ├── UserTable
- │    ├── UserRow
- │    └── UserActions
+ │ ├── UserRow
+ │ └── UserActions
  └── Pagination
 ```
 
@@ -1852,8 +1855,8 @@ Depending on the case, you might use:
 
 ```jsx
 const value = useMemo(
-    () => ({ user, login }),
-    [user, login]
+ () => ({ user, login }),
+ [user, login]
 );
 ```
 
@@ -1918,11 +1921,11 @@ Example:
 
 ```jsx
 useEffect(() => {
-    const timer = setInterval(() => {
-        console.log(count);
-    }, 1000);
+ const timer = setInterval(() => {
+ console.log(count);
+ }, 1000);
 
-    return () => clearInterval(timer);
+ return () => clearInterval(timer);
 }, []);
 ```
 
@@ -2061,16 +2064,16 @@ A feature-oriented structure can also be useful:
 features/
 │
 ├── auth/
-│   ├── components/
-│   ├── hooks/
-│   ├── api/
-│   └── types/
+│ ├── components/
+│ ├── hooks/
+│ ├── api/
+│ └── types/
 │
 ├── users/
-│   ├── components/
-│   ├── hooks/
-│   ├── api/
-│   └── types/
+│ ├── components/
+│ ├── hooks/
+│ ├── api/
+│ └── types/
 ```
 
 ### Follow-up: Which structure is best?
@@ -2086,7 +2089,6 @@ The important thing is that the architecture:
 * makes dependencies understandable
 
 ---
-
 # 61. Senior Scenario Question
 
 ### 63. Your React application is very slow. What will you do?
@@ -2142,7 +2144,7 @@ Large images
 
 The key senior-level point is:
 
-> **Measure first, optimize second.**
+>**Measure first, optimize second.**
 
 ---
 
@@ -2154,17 +2156,17 @@ A good architecture:
 
 ```text
 User types
-   ↓
+ ↓
 Local input state
-   ↓
+ ↓
 Debounce
-   ↓
+ ↓
 API request
-   ↓
+ ↓
 Loading
-   ↓
+ ↓
 Results
-   ↓
+ ↓
 Error / Empty state
 ```
 
@@ -2241,12 +2243,12 @@ Dashboard
 ├── Sidebar
 │
 └── DashboardGrid
-     │
-     ├── SalesWidget
-     ├── RevenueWidget
-     ├── UsersWidget
-     ├── OrdersWidget
-     └── ...
+ │
+ ├── SalesWidget
+ ├── RevenueWidget
+ ├── UsersWidget
+ ├── OrdersWidget
+ └── ...
 ```
 
 Each widget can manage its own concerns.
@@ -2299,12 +2301,12 @@ Example:
 
 ```tsx
 interface UserProps {
-    id: number;
-    name: string;
+ id: number;
+ name: string;
 }
 
 function User({ id, name }: UserProps) {
-    return <div>{name}</div>;
+ return <div>{name}</div>;
 }
 ```
 
@@ -2328,7 +2330,7 @@ Conceptually:
 
 ```tsx
 function List<T>({ items }: { items: T[] }) {
-    // ...
+ // ...
 }
 ```
 
@@ -2346,13 +2348,13 @@ For example:
 
 ```text
 Render login form
-      ↓
+ ↓
 Enter username/password
-      ↓
+ ↓
 Click Login
-      ↓
+ ↓
 Mock/execute API interaction
-      ↓
+ ↓
 Verify success/error UI
 ```
 
@@ -2376,23 +2378,23 @@ Different error types require different strategies.
 
 ```text
 Component rendering errors
-        ↓
+ ↓
 Error Boundary
 
 API errors
-        ↓
+ ↓
 API/data layer
 
 Authentication errors
-        ↓
+ ↓
 Auth handling
 
 Form validation
-        ↓
+ ↓
 Form layer
 
 Unexpected errors
-        ↓
+ ↓
 Global logging/monitoring
 ```
 
@@ -2407,20 +2409,20 @@ Production systems may also integrate error monitoring services.
 ```jsx
 function UserList({ users }) {
 
-    const filteredUsers = users.filter(
-        user => user.active
-    );
+ const filteredUsers = users.filter(
+ user => user.active
+ );
 
-    return (
-        <>
-            {filteredUsers.map((user, index) => (
-                <User
-                    key={index}
-                    user={user}
-                />
-            ))}
-        </>
-    );
+ return (
+ <>
+ {filteredUsers.map((user, index) => (
+ <User
+key={index}
+user={user}
+ />
+ ))}
+ </>
+ );
 }
 ```
 
@@ -2466,7 +2468,7 @@ If thousands of users are rendered, consider virtualization.
 
 ```jsx
 setUser({
-    name: "John"
+ name: "John"
 });
 ```
 
@@ -2474,9 +2476,9 @@ Suppose the previous state is:
 
 ```javascript
 {
-    id: 10,
-    name: "Mike",
-    age: 30
+ id: 10,
+ name: "Mike",
+ age: 30
 }
 ```
 
@@ -2484,7 +2486,7 @@ The new state becomes:
 
 ```javascript
 {
-    name: "John"
+ name: "John"
 }
 ```
 
@@ -2494,8 +2496,8 @@ Correct:
 
 ```jsx
 setUser(prev => ({
-    ...prev,
-    name: "John"
+ ...prev,
+ name: "John"
 }));
 ```
 
@@ -2507,7 +2509,7 @@ setUser(prev => ({
 
 ```jsx
 useEffect(() => {
-    fetchUser(userId);
+ fetchUser(userId);
 }, []);
 ```
 
@@ -2517,7 +2519,7 @@ Typically:
 
 ```jsx
 useEffect(() => {
-    fetchUser(userId);
+ fetchUser(userId);
 }, [userId]);
 ```
 
@@ -2533,9 +2535,9 @@ The exact implementation should also handle cancellation/race conditions when ap
 const [user, setUser] = useState({});
 
 useEffect(() => {
-    setUser({
-        name: "John"
-    });
+ setUser({
+ name: "John"
+ });
 }, [user]);
 ```
 
@@ -2569,7 +2571,7 @@ The dependency changes because a new object reference is created.
 const [fullName, setFullName] = useState("");
 
 useEffect(() => {
-    setFullName(firstName + " " + lastName);
+ setFullName(firstName + " " + lastName);
 }, [firstName, lastName]);
 ```
 
@@ -2597,27 +2599,27 @@ A strong answer should discuss:
 
 ```text
 1. Requirements
-        ↓
+ ↓
 2. Component architecture
-        ↓
+ ↓
 3. Routing
-        ↓
+ ↓
 4. State architecture
-        ↓
+ ↓
 5. API/data layer
-        ↓
+ ↓
 6. Authentication
-        ↓
+ ↓
 7. Error handling
-        ↓
+ ↓
 8. Performance
-        ↓
+ ↓
 9. Accessibility
-        ↓
+ ↓
 10. Testing
-        ↓
+ ↓
 11. CI/CD
-        ↓
+ ↓
 12. Monitoring
 ```
 
@@ -2762,17 +2764,17 @@ Discuss:
 
 ```text
 React DevTools Profiler
-       ↓
+ ↓
 Identify parent updates
-       ↓
+ ↓
 Check props
-       ↓
+ ↓
 Check state
-       ↓
+ ↓
 Check context
-       ↓
+ ↓
 Check object/function references
-       ↓
+ ↓
 Optimize only if necessary
 ```
 
@@ -2786,15 +2788,15 @@ Possible cause:
 
 ```text
 Request A
-   ↓
+ ↓
 Request B
 
 B finishes first
-   ↓
+ ↓
 Latest data
 
 A finishes later
-   ↓
+ ↓
 Old data overwrites B
 ```
 
@@ -2963,9 +2965,9 @@ For example:
 
 ```jsx
 function App() {
-    const [count, setCount] = useState(0);
+ const [count, setCount] = useState(0);
 
-    return <h1>{count}</h1>;
+ return <h1>{count}</h1>;
 }
 ```
 
@@ -2993,15 +2995,15 @@ Conceptually:
 
 ```text
 State / Props change
-       ↓
+ ↓
 React renders
-       ↓
+ ↓
 New element tree
-       ↓
+ ↓
 Reconciliation
-       ↓
+ ↓
 Determine changes
-       ↓
+ ↓
 Commit DOM updates
 ```
 
@@ -3029,7 +3031,7 @@ For example:
 
 ```jsx
 <div>
-    <h1>Hello</h1>
+ <h1>Hello</h1>
 </div>
 ```
 
@@ -3037,7 +3039,7 @@ becomes:
 
 ```jsx
 <div>
-    <h1>Hello React</h1>
+ <h1>Hello React</h1>
 </div>
 ```
 
@@ -3073,13 +3075,13 @@ Conceptually:
 
 ```text
 React Update
-     ↓
+ ↓
 Fiber tree
-     ↓
+ ↓
 Rendering work
-     ↓
+ ↓
 Prioritize / schedule work
-     ↓
+ ↓
 Commit changes
 ```
 
@@ -3111,11 +3113,11 @@ Instead, React can:
 
 ```text
 Start rendering
-      ↓
+ ↓
 Pause if necessary
-      ↓
+ ↓
 Handle more urgent work
-      ↓
+ ↓
 Resume / discard / continue rendering
 ```
 
@@ -3125,7 +3127,7 @@ Typing into the input is urgent:
 
 ```text
 User typing
-     ↓
+ ↓
 High priority
 ```
 
@@ -3133,7 +3135,7 @@ Updating a huge result list can be treated as less urgent:
 
 ```text
 Result rendering
-     ↓
+ ↓
 Lower priority
 ```
 
@@ -3158,8 +3160,8 @@ For example:
 ```jsx
 function updateUser() {
 
-    setName("John");
-    setAge(30);
+ setName("John");
+ setAge(30);
 }
 ```
 
@@ -3192,7 +3194,7 @@ With batching:
 ```text
 setName()
 setAge()
-   ↓
+ ↓
 one rendering/commit opportunity
 ```
 
@@ -3230,11 +3232,11 @@ This is an important interview point.
 
 ```text
 Component renders
-       ↓
+ ↓
 React reconciliation
-       ↓
+ ↓
 Does DOM actually need to change?
-       ↓
+ ↓
 Maybe / Maybe not
 ```
 
@@ -3252,9 +3254,9 @@ Example:
 
 ```jsx
 const User = React.memo(function User({ name }) {
-    console.log("User rendered");
+ console.log("User rendered");
 
-    return <h1>{name}</h1>;
+ return <h1>{name}</h1>;
 });
 ```
 
@@ -3287,11 +3289,11 @@ Consider:
 
 ```javascript
 const user1 = {
-    name: "John"
+ name: "John"
 };
 
 const user2 = {
-    name: "John"
+ name: "John"
 };
 ```
 
@@ -3313,7 +3315,7 @@ Now:
 
 ```jsx
 const User = React.memo(({ user }) => {
-    return <h1>{user.name}</h1>;
+ return <h1>{user.name}</h1>;
 });
 ```
 
@@ -3333,7 +3335,7 @@ Potentially:
 
 ```jsx
 const user = useMemo(() => ({
-    name: "John"
+ name: "John"
 }), []);
 ```
 
@@ -3349,10 +3351,10 @@ Example:
 
 ```jsx
 users.map(user => (
-    <User
-        key={user.id}
-        user={user}
-    />
+ <User
+key={user.id}
+user={user}
+ />
 ))
 ```
 
@@ -3417,8 +3419,8 @@ Correct:
 ```jsx
 function App() {
 
-    const [count, setCount] = useState(0);
-    const [name, setName] = useState("");
+ const [count, setCount] = useState(0);
+ const [name, setName] = useState("");
 
 }
 ```
@@ -3427,7 +3429,7 @@ Incorrect:
 
 ```jsx
 if (isLoggedIn) {
-    const [name, setName] = useState("");
+ const [name, setName] = useState("");
 }
 ```
 
@@ -3456,17 +3458,17 @@ Example:
 ```jsx
 function Counter() {
 
-    const [count, setCount] = useState(0);
+ const [count, setCount] = useState(0);
 
-    useEffect(() => {
+ useEffect(() => {
 
-        const timer = setInterval(() => {
-            console.log(count);
-        }, 1000);
+ const timer = setInterval(() => {
+ console.log(count);
+ }, 1000);
 
-        return () => clearInterval(timer);
+ return () => clearInterval(timer);
 
-    }, []);
+ }, []);
 
 }
 ```
@@ -3497,7 +3499,7 @@ Example:
 
 ```jsx
 useEffect(() => {
-    fetchUser(userId);
+ fetchUser(userId);
 }, [userId]);
 ```
 
@@ -3507,7 +3509,7 @@ When `userId` changes:
 
 ```text
 userId changes
-     ↓
+ ↓
 effect re-runs
 ```
 
@@ -3519,7 +3521,7 @@ React compares dependencies between renders using `Object.is` semantics.
 
 ```jsx
 useEffect(() => {
-    // ...
+ // ...
 });
 ```
 
@@ -3529,7 +3531,7 @@ Runs after every completed render.
 
 ```jsx
 useEffect(() => {
-    // ...
+ // ...
 }, []);
 ```
 
@@ -3539,7 +3541,7 @@ No changing dependencies are specified; in typical client-side usage, it runs af
 
 ```jsx
 useEffect(() => {
-    // ...
+ // ...
 }, [userId]);
 ```
 
@@ -3600,7 +3602,7 @@ Caches a **calculated value**.
 
 ```jsx
 const total = useMemo(() => {
-    return calculateTotal(items);
+ return calculateTotal(items);
 }, [items]);
 ```
 
@@ -3610,7 +3612,7 @@ Caches a **function reference**.
 
 ```jsx
 const handleClick = useCallback(() => {
-    saveUser(user);
+ saveUser(user);
 }, [user]);
 ```
 
@@ -3618,11 +3620,11 @@ Think:
 
 ```text
 useMemo
-   ↓
+ ↓
 memoize VALUE
 
 useCallback
-   ↓
+ ↓
 memoize FUNCTION
 ```
 
@@ -3632,7 +3634,7 @@ Suppose:
 
 ```jsx
 const Child = React.memo(({ onClick }) => {
-    // ...
+ // ...
 });
 ```
 
@@ -3675,7 +3677,7 @@ Example:
 
 ```jsx
 useLayoutEffect(() => {
-    const height = elementRef.current.offsetHeight;
+ const height = elementRef.current.offsetHeight;
 }, []);
 ```
 
@@ -3748,17 +3750,17 @@ Example:
 
 ```jsx
 function useDebounce(value, delay) {
-    const [debouncedValue, setDebouncedValue] = useState(value);
+ const [debouncedValue, setDebouncedValue] = useState(value);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setDebouncedValue(value);
-        }, delay);
+ useEffect(() => {
+ const timer = setTimeout(() => {
+ setDebouncedValue(value);
+ }, delay);
 
-        return () => clearTimeout(timer);
-    }, [value, delay]);
+ return () => clearTimeout(timer);
+ }, [value, delay]);
 
-    return debouncedValue;
+ return debouncedValue;
 }
 ```
 
@@ -3796,15 +3798,15 @@ Check:
 
 ```text
 Which component renders?
-        ↓
+ ↓
 Why did it render?
-        ↓
+ ↓
 Parent update?
 Props?
 State?
 Context?
 External store?
-        ↓
+ ↓
 Is the rendering actually expensive?
 ```
 
@@ -3841,9 +3843,9 @@ Use:
 
 ```text
 100,000 records
-       ↓
+ ↓
 Visible viewport
-       ↓
+ ↓
 Render only ~20-100 rows
 ```
 
@@ -3896,7 +3898,7 @@ Use dynamic imports.
 
 ```jsx
 const Reports = lazy(
-    () => import("./Reports")
+ () => import("./Reports")
 );
 ```
 
@@ -3904,7 +3906,7 @@ Then:
 
 ```jsx
 <Suspense fallback={<Loading />}>
-    <Reports />
+ <Reports />
 </Suspense>
 ```
 
@@ -3912,11 +3914,11 @@ Conceptually:
 
 ```text
 Initial bundle
-     ↓
+ ↓
 Application loads
-     ↓
+ ↓
 User opens Reports
-     ↓
+ ↓
 Reports chunk downloaded
 ```
 
@@ -3934,8 +3936,8 @@ Potential use cases:
 
 ```jsx
 const result = useMemo(
-    () => expensiveCalculation(data),
-    [data]
+ () => expensiveCalculation(data),
+ [data]
 );
 ```
 
@@ -3943,8 +3945,8 @@ const result = useMemo(
 
 ```jsx
 const handleClick = useCallback(
-    () => save(id),
-    [id]
+ () => save(id),
+ [id]
 );
 ```
 
@@ -3973,16 +3975,16 @@ First determine where the slowness comes from.
 
 ```text
 Slow dashboard
-      ↓
+ ↓
 Measure
-      ↓
+ ↓
 Network?
 API?
 JavaScript?
 Rendering?
 Images?
 Large lists?
-      ↓
+ ↓
 Optimize specific bottleneck
 ```
 
@@ -4036,15 +4038,15 @@ A typical architecture:
 
 ```text
 User types
-   ↓
+ ↓
 Local input state
-   ↓
+ ↓
 Debounce
-   ↓
+ ↓
 API request
-   ↓
+ ↓
 Loading
-   ↓
+ ↓
 Results
 ```
 
@@ -4058,7 +4060,7 @@ Then fetch based on:
 
 ```jsx
 useEffect(() => {
-    search(debouncedQuery);
+ search(debouncedQuery);
 }, [debouncedQuery]);
 ```
 
@@ -4094,7 +4096,6 @@ Wait until typing pauses
 ```
 
 ---
-
 # Architecture
 
 # 25. How do you structure a large React application?
@@ -4107,10 +4108,10 @@ src/
 ├── components/
 │
 ├── features/
-│   ├── auth/
-│   ├── users/
-│   ├── orders/
-│   └── payments/
+│ ├── auth/
+│ ├── users/
+│ ├── orders/
+│ └── payments/
 │
 ├── pages/
 │
@@ -4131,11 +4132,11 @@ For large applications, **feature-based organization** is often easier to scale:
 
 ```text
 features/
-    users/
-        components/
-        hooks/
-        api/
-        types/
+ users/
+ components/
+ hooks/
+ api/
+ types/
 ```
 
 ### Follow-up: Is this the only correct architecture?
@@ -4224,11 +4225,11 @@ Conceptually:
 
 ```text
 React component
-      ↓
+ ↓
 Query
-      ↓
+ ↓
 Cache
-      ↓
+ ↓
 API
 ```
 
@@ -4258,9 +4259,9 @@ Example:
 
 ```jsx
 <Button
-    variant="primary"
-    disabled={loading}
-    onClick={save}
+variant="primary"
+disabled={loading}
+onClick={save}
 />
 ```
 
@@ -4410,9 +4411,9 @@ Use an **Error Boundary**.
 
 ```text
 Component crash
-      ↓
+ ↓
 Error Boundary
-      ↓
+ ↓
 Fallback UI
 ```
 
@@ -4466,7 +4467,7 @@ You can use React for UI-level authorization:
 
 ```jsx
 {user.role === "ADMIN" && (
-    <DeleteButton />
+ <DeleteButton />
 )}
 ```
 
@@ -4474,13 +4475,13 @@ But the backend must enforce the actual permission:
 
 ```text
 DELETE /api/users/10
-          ↓
+ ↓
 Backend
-          ↓
+ ↓
 Check authentication
-          ↓
+ ↓
 Check permission
-          ↓
+ ↓
 Allow / Deny
 ```
 
@@ -4502,7 +4503,7 @@ Then:
 
 ```jsx
 {can(user, "DELETE_USER") && (
-    <DeleteButton />
+ <DeleteButton />
 )}
 ```
 
@@ -4522,41 +4523,41 @@ A user can bypass your React UI and call your API directly, so the server must a
 
 For senior interviews, remember these distinctions:
 
-| Topic                 | Key Point                                   |
+| Topic | Key Point |
 | --------------------- | ------------------------------------------- |
-| Reconciliation        | Determines what UI changes are needed       |
-| Fiber                 | React's internal rendering architecture     |
-| Concurrent rendering  | Rendering work can be scheduled/interrupted |
-| Batching              | Groups state updates                        |
-| Re-render             | Doesn't necessarily mean DOM mutation       |
-| `React.memo`          | Memoizes component rendering based on props |
-| Referential equality  | Object/function identity matters            |
-| Keys                  | Provide stable list item identity           |
-| `useRef`              | Persistent mutable value without re-render  |
-| `useMemo`             | Memoizes a calculated value                 |
-| `useCallback`         | Memoizes a function reference               |
-| `useEffect`           | Synchronizes with external systems          |
-| `useLayoutEffect`     | Runs before paint for layout-sensitive work |
-| `useState`            | Simple state                                |
-| `useReducer`          | Complex state transitions                   |
-| Custom Hook           | Reusable React logic                        |
-| Virtualization        | Render only visible large-list items        |
-| Code splitting        | Split JavaScript into loadable chunks       |
-| Context               | Pass values through component tree          |
-| Redux                 | Dedicated client-state management           |
-| Server state          | Data fetched/cached from backend            |
-| Authentication        | Who are you?                                |
-| Authorization         | What can you do?                            |
-| CSRF                  | Forged authenticated requests               |
-| XSS                   | Malicious script injection                  |
-| Error Boundary        | Handles certain descendant rendering errors |
-| Backend authorization | Actual security boundary                    |
+| Reconciliation | Determines what UI changes are needed |
+| Fiber | React's internal rendering architecture |
+| Concurrent rendering | Rendering work can be scheduled/interrupted |
+| Batching | Groups state updates |
+| Re-render | Doesn't necessarily mean DOM mutation |
+| `React.memo` | Memoizes component rendering based on props |
+| Referential equality | Object/function identity matters |
+| Keys | Provide stable list item identity |
+| `useRef` | Persistent mutable value without re-render |
+| `useMemo` | Memoizes a calculated value |
+| `useCallback` | Memoizes a function reference |
+| `useEffect` | Synchronizes with external systems |
+| `useLayoutEffect` | Runs before paint for layout-sensitive work |
+| `useState` | Simple state |
+| `useReducer` | Complex state transitions |
+| Custom Hook | Reusable React logic |
+| Virtualization | Render only visible large-list items |
+| Code splitting | Split JavaScript into loadable chunks |
+| Context | Pass values through component tree |
+| Redux | Dedicated client-state management |
+| Server state | Data fetched/cached from backend |
+| Authentication | Who are you? |
+| Authorization | What can you do? |
+| CSRF | Forged authenticated requests |
+| XSS | Malicious script injection |
+| Error Boundary | Handles certain descendant rendering errors |
+| Backend authorization | Actual security boundary |
 
 ## The most important Senior-level mindset
 
 When an interviewer asks:
 
-> **"How would you optimize this?"**
+>**"How would you optimize this?"**
 
 Don't immediately say:
 
@@ -4566,13 +4567,13 @@ Instead say:
 
 ```text
 Measure
-   ↓
+ ↓
 Identify bottleneck
-   ↓
+ ↓
 Understand why it is slow
-   ↓
+ ↓
 Choose appropriate optimization
-   ↓
+ ↓
 Measure again
 ```
 
@@ -4591,13 +4592,13 @@ For every question, prepare:
 
 ```text
 Main Question
-      ↓
+ ↓
 Answer
-      ↓
+ ↓
 Interviewer Follow-up
-      ↓
+ ↓
 Follow-up Answer
-      ↓
+ ↓
 Real-world Scenario
 ```
 
@@ -4669,12 +4670,12 @@ A component is a reusable unit of UI and behavior.
 
 ```jsx
 function ProductCard({ product }) {
-    return (
-        <div>
-            <h2>{product.name}</h2>
-            <p>{product.price}</p>
-        </div>
-    );
+ return (
+ <div>
+ <h2>{product.name}</h2>
+ <p>{product.price}</p>
+ </div>
+ );
 }
 ```
 
@@ -4696,7 +4697,7 @@ Functional component:
 
 ```jsx
 function User() {
-    return <h1>User</h1>;
+ return <h1>User</h1>;
 }
 ```
 
@@ -4704,9 +4705,9 @@ Class component:
 
 ```jsx
 class User extends React.Component {
-    render() {
-        return <h1>User</h1>;
-    }
+ render() {
+ return <h1>User</h1>;
+ }
 }
 ```
 
@@ -4722,12 +4723,12 @@ No. Legacy applications still use them, and concepts such as lifecycle methods a
 
 ## Q5. What is the difference between props and state?
 
-| Props                              | State                               |
+| Props | State |
 | ---------------------------------- | ----------------------------------- |
-| Passed from parent                 | Owned by component                  |
-| Read-only from child's perspective | Can change                          |
-| Used for communication             | Used for component data             |
-| Controlled by parent               | Controlled by component/state owner |
+| Passed from parent | Owned by component |
+| Read-only from child's perspective | Can change |
+| Used for communication | Used for component data |
+| Controlled by parent | Controlled by component/state owner |
 
 Example:
 
@@ -4813,8 +4814,8 @@ Better:
 
 ```jsx
 setUser(prev => ({
-    ...prev,
-    name: "John"
+ ...prev,
+ name: "John"
 }));
 ```
 
@@ -4869,7 +4870,7 @@ Keys help React identify elements across renders.
 
 ```jsx
 items.map(item => (
-    <Product key={item.id} />
+ <Product key={item.id} />
 ))
 ```
 
@@ -4883,7 +4884,7 @@ Stable keys help React preserve the identity of list items.
 
 ```jsx
 items.map((item, index) => (
-    <Product key={index} />
+ <Product key={index} />
 ))
 ```
 
@@ -4965,13 +4966,13 @@ Conceptually:
 
 ```text
 State update
-   ↓
+ ↓
 Render
-   ↓
+ ↓
 Reconciliation
-   ↓
+ ↓
 Commit
-   ↓
+ ↓
 Browser UI
 ```
 
@@ -5043,7 +5044,7 @@ Don't:
 
 ```jsx
 if (condition) {
-    useState(0);
+ useState(0);
 }
 ```
 
@@ -5051,7 +5052,7 @@ Don't:
 
 ```jsx
 function normalFunction() {
-    useState(0);
+ useState(0);
 }
 ```
 
@@ -5102,7 +5103,7 @@ Examples:
 
 ```jsx
 useEffect(() => {
-    document.title = `Count: ${count}`;
+ document.title = `Count: ${count}`;
 }, [count]);
 ```
 
@@ -5129,13 +5130,13 @@ doesn't need an Effect.
 ```jsx
 useEffect(() => {
 
-    const id = setInterval(() => {
-        console.log("running");
-    }, 1000);
+ const id = setInterval(() => {
+ console.log("running");
+ }, 1000);
 
-    return () => {
-        clearInterval(id);
-    };
+ return () => {
+ clearInterval(id);
+ };
 
 }, []);
 ```
@@ -5160,7 +5161,7 @@ You can get:
 
 ```jsx
 useEffect(() => {
-    ...
+ ...
 });
 ```
 
@@ -5168,7 +5169,7 @@ Runs after every commit.
 
 ```jsx
 useEffect(() => {
-    ...
+ ...
 }, []);
 ```
 
@@ -5176,7 +5177,7 @@ Runs after initial mount in normal production behavior.
 
 ```jsx
 useEffect(() => {
-    ...
+ ...
 }, [userId]);
 ```
 
@@ -5194,7 +5195,7 @@ Development Strict Mode intentionally performs extra setup/cleanup behavior to e
 
 ```jsx
 useEffect(() => {
-    setData(transform(data));
+ setData(transform(data));
 }, [data]);
 ```
 
@@ -5226,9 +5227,9 @@ Example:
 
 ```jsx
 useEffect(() => {
-    setInterval(() => {
-        console.log(count);
-    }, 1000);
+ setInterval(() => {
+ console.log(count);
+ }, 1000);
 }, []);
 ```
 
@@ -5286,9 +5287,9 @@ It memoizes a calculated value.
 
 ```jsx
 const filteredProducts = useMemo(() => {
-    return products.filter(
-        p => p.price > 50000
-    );
+ return products.filter(
+ p => p.price > 50000
+ );
 }, [products]);
 ```
 
@@ -5310,7 +5311,7 @@ It memoizes a function reference.
 
 ```jsx
 const handleAdd = useCallback(() => {
-    addToCart(product);
+ addToCart(product);
 }, [product]);
 ```
 
@@ -5336,9 +5337,9 @@ It allows React to skip re-rendering a component when its props are considered u
 
 ```jsx
 const Product = React.memo(function Product({
-    product
+ product
 }) {
-    return <div>{product.name}</div>;
+ return <div>{product.name}</div>;
 });
 ```
 
@@ -5346,7 +5347,7 @@ const Product = React.memo(function Product({
 
 ```jsx
 <Product
-    onClick={() => addToCart(product)}
+onClick={() => addToCart(product)}
 />
 ```
 
@@ -5396,7 +5397,7 @@ Use `useReducer` when state transitions become complex or related.
 
 ```jsx
 const [state, dispatch] =
-    useReducer(reducer, initialState);
+ useReducer(reducer, initialState);
 ```
 
 Example:
@@ -5446,13 +5447,13 @@ Example:
 ```jsx
 function useCounter() {
 
-    const [count, setCount] = useState(0);
+ const [count, setCount] = useState(0);
 
-    const increment = () => {
-        setCount(prev => prev + 1);
-    };
+ const increment = () => {
+ setCount(prev => prev + 1);
+ };
 
-    return { count, increment };
+ return { count, increment };
 }
 ```
 
@@ -5476,8 +5477,8 @@ Example:
 
 ```jsx
 useLayoutEffect(() => {
-    const rect =
-        elementRef.current.getBoundingClientRect();
+ const rect =
+ elementRef.current.getBoundingClientRect();
 }, []);
 ```
 
@@ -5495,10 +5496,10 @@ It allows certain state updates to be treated as non-urgent.
 
 ```jsx
 const [isPending, startTransition] =
-    useTransition();
+ useTransition();
 
 startTransition(() => {
-    setSearchResults(results);
+ setSearchResults(results);
 });
 ```
 
@@ -5518,7 +5519,7 @@ It allows a value to have a deferred version.
 
 ```jsx
 const deferredSearch =
-    useDeferredValue(search);
+ useDeferredValue(search);
 ```
 
 The input can respond immediately while expensive rendering can use the deferred value.
@@ -5555,12 +5556,12 @@ Conceptually:
 
 ```jsx
 const [
-    state,
-    action,
-    isPending
+ state,
+ action,
+ isPending
 ] = useActionState(
-    submitForm,
-    initialState
+ submitForm,
+ initialState
 );
 ```
 
@@ -5597,11 +5598,11 @@ Example:
 
 ```text
 User clicks Like
-       ↓
+ ↓
 UI immediately shows +1
-       ↓
+ ↓
 Server request
-       ↓
+ ↓
 Success → keep +1
 Failure → revert
 ```
@@ -5743,7 +5744,7 @@ Example:
 
 ```jsx
 <Suspense fallback={<Loading />}>
-    <ProductPage />
+ <ProductPage />
 </Suspense>
 ```
 
@@ -5759,14 +5760,14 @@ No. It is also used in modern React frameworks and data-loading architectures.
 
 ```jsx
 const Admin =
-    lazy(() => import("./Admin"));
+ lazy(() => import("./Admin"));
 ```
 
 Then:
 
 ```jsx
 <Suspense fallback={<Loading />}>
-    <Admin />
+ <Admin />
 </Suspense>
 ```
 
@@ -5844,11 +5845,11 @@ Conceptually:
 
 ```text
 100,000 records
-       ↓
+ ↓
 Only ~20 visible rows
-       ↓
+ ↓
 Render those
-       ↓
+ ↓
 Recycle as user scrolls
 ```
 
@@ -6019,7 +6020,6 @@ A common secure web architecture uses:
 Storing sensitive tokens in `localStorage` exposes them to JavaScript running in the page, so an XSS vulnerability can make them accessible.
 
 **Follow-up:** Is HttpOnly cookie automatically secure?
-
 No.
 
 You still need:
@@ -6159,10 +6159,10 @@ Controlled:
 
 ```jsx
 <input
-    value={name}
-    onChange={e =>
-        setName(e.target.value)
-    }
+value={name}
+onChange={e =>
+ setName(e.target.value)
+ }
 />
 ```
 
@@ -6327,7 +6327,7 @@ Example:
 
 ```jsx
 function App() {
-    setCount(1); // ❌ during render
+ setCount(1); // ❌ during render
 }
 ```
 
@@ -6488,11 +6488,11 @@ Use:
 
 ```text
 IntersectionObserver
-       ↓
+ ↓
 Near bottom?
-       ↓
+ ↓
 Fetch next page
-       ↓
+ ↓
 Append results
 ```
 
@@ -6603,7 +6603,7 @@ You can conditionally render:
 
 ```jsx
 {user.role === "ADMIN" && (
-    <DeleteButton />
+ <DeleteButton />
 )}
 ```
 
@@ -6694,15 +6694,15 @@ Use cleanup appropriately.
 ```jsx
 useEffect(() => {
 
-    const socket = new WebSocket(url);
+ const socket = new WebSocket(url);
 
-    socket.onmessage = event => {
-        ...
-    };
+ socket.onmessage = event => {
+ ...
+ };
 
-    return () => {
-        socket.close();
-    };
+ return () => {
+ socket.close();
+ };
 
 }, [url]);
 ```
@@ -7000,8 +7000,8 @@ Example:
 
 ```jsx
 createPortal(
-    <Modal />,
-    document.body
+ <Modal />,
+ document.body
 );
 ```
 
@@ -7054,10 +7054,10 @@ src/
  ├── app/
  ├── components/
  ├── features/
- │    ├── auth/
- │    ├── products/
- │    ├── cart/
- │    └── orders/
+ │ ├── auth/
+ │ ├── products/
+ │ ├── cart/
+ │ └── orders/
  ├── pages/
  ├── hooks/
  ├── services/
@@ -7127,17 +7127,17 @@ Example:
 
 ```tsx
 interface Product {
-    id: number;
-    name: string;
-    price: number;
+ id: number;
+ name: string;
+ price: number;
 }
 
 function ProductCard({
-    product
+ product
 }: {
-    product: Product;
+ product: Product;
 }) {
-    return <div>{product.name}</div>;
+ return <div>{product.name}</div>;
 }
 ```
 
@@ -7149,7 +7149,7 @@ function ProductCard({
 
 ```json
 {
-    "product_name": "Laptop"
+"product_name": "Laptop"
 }
 ```
 
@@ -7346,8 +7346,8 @@ Server Component
  ├── Product data
  ├── Description
  └── Price
-       |
-       ↓
+ |
+ ↓
 Client Component
  └── AddToCart
 ```
@@ -7409,29 +7409,29 @@ This is much stronger than:
 A strong interview answer:
 
 ```text
-                     React / Next.js
-                           |
-       +-------------------+------------------+
-       |                   |                  |
-   Product UI           Cart UI          Account UI
-       |                   |                  |
-       +-------------------+------------------+
-                           |
-                    State Architecture
-                           |
-       +-------------------+------------------+
-       |                   |                  |
-   Local State       Client State       Server State
-       |                   |                  |
-     Modal              Cart/Auth       Products/Orders
-                           |
-                       API Layer
-                           |
-                      Spring Boot
-                           |
-                    Spring Security
-                           |
-                        Database
+ React / Next.js
+ |
+ +-------------------+------------------+
+ | | |
+ Product UI Cart UI Account UI
+ | | |
+ +-------------------+------------------+
+ |
+ State Architecture
+ |
+ +-------------------+------------------+
+ | | |
+ Local State Client State Server State
+ | | |
+ Modal Cart/Auth Products/Orders
+ |
+ API Layer
+ |
+ Spring Boot
+ |
+ Spring Security
+ |
+ Database
 ```
 
 Then explain:
@@ -7487,17 +7487,17 @@ Answer:
 
 ```text
 Check dependency array
-        ↓
+ ↓
 Check state update inside effect
-        ↓
+ ↓
 Check whether dependency changes every render
-        ↓
+ ↓
 Check object/function dependencies
-        ↓
+ ↓
 Check Strict Mode development behavior
-        ↓
+ ↓
 Check component mounting/unmounting
-        ↓
+ ↓
 Check parent rendering/remounting
 ```
 
@@ -7583,11 +7583,11 @@ Check:
 
 ```text
 Multiple sources of truth
-        ↓
+ ↓
 Local cart state
-        +
+ +
 Redux cart state
-        +
+ +
 Server cart
 ```
 
@@ -7674,12 +7674,12 @@ Application
  +-- Header
  |
  +-- Product Feature
- |      |
- |   Error Boundary
+ | |
+ | Error Boundary
  |
  +-- Cart Feature
- |      |
- |   Error Boundary
+ | |
+ | Error Boundary
  |
  +-- Footer
 ```
@@ -7813,13 +7813,13 @@ For your preparation, I recommend this order:
 ```text
 LEVEL 1
 JavaScript fundamentals
-        ↓
+ ↓
 React fundamentals
-        ↓
+ ↓
 JSX
-        ↓
+ ↓
 Props / State
-        ↓
+ ↓
 Components
 ```
 
@@ -7906,8 +7906,500 @@ React's current documentation confirms that Server Components, Server Functions,
 
 If you're targeting a **Java/Spring Boot + React full-stack role**, the highest-value next step is to turn this into a **mock interview sequence of 100 questions**, where I ask you **one question at a time**, wait for your answer, then give the **ideal answer + interviewer follow-up + score + what you missed**.
 
-[1]: https://www.greatfrontend.com/blog/100-react-interview-questions-straight-from-ex-interviewers?utm_source=chatgpt.com "100+ React Interview Questions Straight from Ex-interviewers (2026) | Blog"
-[2]: https://it.react.dev/blog/2024/12/05/react-19?utm_source=chatgpt.com "React v19 – React"
-[3]: https://react.dev/reference/react/useActionState?utm_source=chatgpt.com "useActionState – React"
-[4]: https://react.dev/reference/rsc/server-components?utm_source=chatgpt.com "Server Components – React"
-[5]: https://react.dev/reference/rsc/server-functions?utm_source=chatgpt.com "Server Functions – React"
+[1]: https://www.greatfrontend.com/blog/100-react-interview-questions-straight-from-ex-interviewers?utm_…"100+ React Interview Questions Straight from Ex-interviewers (2026) | Blog"
+[2]: https://it.react.dev/blog/2024/12/05/react-19?utm_source=chatgpt.com"React v19 – React"
+[3]: useActionState – React"useActionState – React"
+[4]: Server Components – React"Server Components – React"
+[5]: Server Functions – React"Server Functions – React"
+
+---
+
+# Additional Production-Standard Explanations and Examples
+
+The complete pasted question bank above is preserved in full. This section adds practical explanations, corrected edge cases, implementation examples and senior-level trade-offs that commonly distinguish a memorized answer from production experience.
+
+## 1. The React mental model
+
+React is best understood as a system that turns state and props into a UI description:
+
+```text
+Props + state + context
+ |
+ v
+ Render
+ |
+ v
+ React element tree
+ |
+ v
+ Reconciliation
+ |
+ v
+ Commit
+ |
+ v
+ Browser UI
+```
+
+The render phase should be pure. It may run more than once, be interrupted, or be abandoned in modern rendering modes. Network calls, subscriptions, logging with business consequences and DOM mutations belong in event handlers, effects or an appropriate data layer, not in render.
+
+The commit phase applies the required changes. A component render does not mean that every DOM node was recreated. It also does not mean that a network request or effect automatically runs unless the relevant dependencies and lifecycle rules require it.
+
+## 2. Virtual DOM is not a complete performance explanation
+
+Avoid answering “React is fast because of the Virtual DOM” as if that were a guarantee. Real performance depends on:
+
+```text
+JavaScript execution
+Component render cost
+State placement
+Context/store subscriptions
+DOM size
+Layout and paint
+Network latency
+Bundle size
+Image and font cost
+Memory usage
+```
+
+The useful interview answer is:
+
+> React creates element descriptions and reconciles them to determine necessary updates. Performance depends on the total rendering and delivery pipeline, so I measure the bottleneck before choosing memoization, virtualization, code splitting or a data-layer change.
+
+## 3. Keys preserve identity, not just performance
+
+Keys tell React which logical item a rendered child represents. They should be stable among siblings and should come from the item identity:
+
+```jsx
+{orders.map(order => (
+ <OrderRow key={order.id} order={order} />
+))}
+```
+
+Avoid generating a new key on every render:
+
+```jsx
+<OrderRow key={Math.random()} order={order} />
+```
+
+That forces React to treat the row as new and can discard local state, focus and DOM continuity. Array indexes are acceptable only when the list is static, never reordered, and never has insertion/deletion that changes identity.
+
+## 4. State ownership decision table
+
+Classify state before choosing a library:
+
+| State type | Examples | Typical owner |
+| --- | --- | --- |
+| Local UI state | Modal, tab, tooltip, input draft | `useState` |
+| Complex local workflow | Checkout steps, reducer-driven form | `useReducer` |
+| URL state | Search, filter, page, sort | Router/search parameters |
+| Shared client state | Cart draft, preferences, session UI | Redux Toolkit or another store |
+| Server state | Products, orders, inventory | RTK Query, TanStack Query or framework data layer |
+| Form state | Validation, touched fields, submission | Local state or a form library |
+
+The question is not “Can Redux store this?” Almost anything can be put in Redux. The better question is “Who owns this data, how long should it live, and what invalidates it?”
+
+## 5. `useEffect`: synchronization, not a second render pipeline
+
+This is derived data and does not need an effect:
+
+```jsx
+const fullName = `${firstName} ${lastName}`;
+const total = price * quantity;
+```
+
+This is synchronization with an external system:
+
+```jsx
+useEffect(() => {
+ document.title = `${cartCount} items`;
+}, [cartCount]);
+```
+
+An empty dependency array does not mean “this code is a universal constructor.” It means the effect does not declare changing reactive dependencies. Effects do not run during server rendering, and development Strict Mode can perform an extra setup/cleanup cycle to expose missing cleanup or non-idempotent work.
+
+## 6. Production API effect with cancellation and race protection
+
+If a framework loader or server-state library is not available, an effect should model loading, error, empty and cancellation states:
+
+```jsx
+function UserSearch({ query }) {
+ const [state, setState] = useState({
+ status: "idle",
+ data: [],
+ error: null
+ });
+
+ useEffect(() => {
+ if (!query.trim()) {
+ setState({ status: "idle", data: [], error: null });
+ return;
+ }
+
+ const controller = new AbortController();
+ let active = true;
+
+ setState(previous => ({
+ ...previous,
+ status: "loading",
+ error: null
+ }));
+
+ fetch(`/api/users?q=${encodeURIComponent(query)}`, {
+ signal: controller.signal
+ })
+ .then(response => {
+ if (!response.ok) {
+ throw new Error(`Request failed: ${response.status}`);
+ }
+ return response.json();
+ })
+ .then(data => {
+ if (active) {
+ setState({ status: data.length ? "success" : "empty", data, error: null });
+ }
+ })
+ .catch(error => {
+ if (error.name !== "AbortError" && active) {
+ setState({ status: "error", data: [], error });
+ }
+ });
+
+ return () => {
+ active = false;
+ controller.abort();
+ };
+ }, [query]);
+
+ if (state.status === "loading") return <p>Loading users...</p>;
+ if (state.status === "error") return <p role="alert">Unable to load users.</p>;
+ if (state.status === "empty") return <p>No users found.</p>;
+
+ return state.data.map(user => <div key={user.id}>{user.name}</div>);
+}
+```
+
+For production applications, prefer RTK Query, TanStack Query or the framework's data-loading model when the feature needs caching, deduplication, invalidation, retries, pagination or background refresh. A hand-written effect should not become an accidental server-state library.
+
+## 7. Debounce is different from cancellation
+
+Debouncing reduces how often a request starts. Cancellation prevents an obsolete request from applying its result. A robust search flow may need both:
+
+```text
+User types
+ -> debounce 300 ms
+ -> start request for latest query
+ -> abort or ignore previous request
+ -> render latest result only
+```
+
+Debouncing alone does not prevent an older request from finishing after a newer request. Cancellation alone may still send too many requests if every keystroke starts one immediately.
+
+## 8. A reusable `useDebounce` Hook
+
+```jsx
+function useDebounce(value, delay) {
+ const [debouncedValue, setDebouncedValue] = useState(value);
+
+ useEffect(() => {
+ const timerId = window.setTimeout(() => {
+ setDebouncedValue(value);
+ }, delay);
+
+ return () => window.clearTimeout(timerId);
+ }, [value, delay]);
+
+ return debouncedValue;
+}
+```
+
+This Hook shares logic, not state. Each component invocation has an independent timer and value. If multiple consumers need one shared cache, use a server-state cache or external store instead.
+
+## 9. Context performance and design
+
+This creates a new object whenever the provider renders:
+
+```jsx
+<AuthContext.Provider value={{ user, logout }}>
+ {children}
+</AuthContext.Provider>
+```
+
+When provider value identity matters, define a stable value deliberately:
+
+```jsx
+const logout = useCallback(() => {
+ setUser(null);
+}, []);
+
+const contextValue = useMemo(() => ({ user, logout }), [user, logout]);
+```
+
+Do not memoize automatically. First determine whether context consumers are expensive or update frequently. Splitting a large context into smaller contexts can be more useful than memoizing one large object.
+
+Never treat context as a security boundary. It can hide or show UI, but authorization must be enforced by the backend on every protected operation.
+
+## 10. TypeScript patterns for production React
+
+Prefer domain types that describe the data at the boundary:
+
+```tsx
+type Product = {
+ id: number;
+ name: string;
+ price: number;
+ inStock: boolean;
+};
+
+type ProductCardProps = {
+ product: Product;
+ onAdd: (productId: number) => void;
+};
+
+function ProductCard({ product, onAdd }: ProductCardProps) {
+ return (
+ <article>
+ <h2>{product.name}</h2>
+ <p>{product.price}</p>
+ <button disabled={!product.inStock} onClick={() => onAdd(product.id)}>
+ Add to cart
+ </button>
+ </article>
+ );
+}
+```
+
+Use `unknown` for untrusted API data and validate it at the boundary instead of asserting everything as a known type:
+
+```typescript
+async function getProduct(id: number): Promise<Product> {
+ const response = await fetch(`/api/products/${id}`);
+ const payload: unknown = await response.json();
+
+ return productSchema.parse(payload);
+}
+```
+
+The schema library is a project choice. The important principle is to validate external data before it reaches many components.
+
+## 11. Error handling layers
+
+Use different tools for different failure classes:
+
+```text
+Render failure in a subtree
+ -> Error Boundary
+
+Expected HTTP failure
+ -> API/data layer + feature error state
+
+Validation failure
+ -> Form state and field messages
+
+401/403
+ -> Session/permission flow
+
+Unexpected production failure
+ -> Logging, tracing and monitoring
+```
+
+An Error Boundary does not replace `try/catch` for an event handler or a rejected Promise. It catches specific rendering/lifecycle failures in descendants. Use a boundary around meaningful feature areas so one broken widget does not remove the whole application.
+
+## 12. Accessibility is part of component correctness
+
+Use the semantic element that already provides the required keyboard and accessibility behaviour:
+
+```jsx
+<button type="button"onClick={save}>
+ Save
+</button>
+```
+
+For a custom dialog, handle at least:
+
+```text
+Accessible name
+Initial focus
+Tab focus containment
+Escape to close
+Focus restoration
+Background inertness
+Screen-reader announcement
+```
+
+Use `useId` to associate labels, but do not use it as a database ID or list key. Use automated checks such as axe where appropriate, then verify keyboard and screen-reader workflows manually.
+
+## 13. React 19-era APIs and version caveats
+
+The following concepts require the React version and framework to support them:
+
+| API/concept | Practical purpose | Important caveat |
+| --- | --- | --- |
+| `useActionState` | Track an async action result and pending state | Requires the supported action/form model |
+| `useOptimistic` | Show an expected result before confirmation | Define rollback and failure messaging |
+| `use` | Read supported resources during rendering | Works with Suspense and supported environments; it is not a generic effect replacement |
+| Server Components | Keep eligible component work on the server | Framework integration determines boundaries and capabilities |
+| Server Functions | Call server-side functions through supported framework mechanisms | Never expose secrets or trust client input |
+| React Compiler | Build-time optimization under supported assumptions | Do not assume manual memoization is always obsolete |
+
+The exact availability and syntax depend on the installed React and framework versions. In an interview, state the version assumption instead of presenting a framework-specific feature as universal React behaviour.
+
+One subtle point: the `use` API has rules that differ from ordinary Hooks in supported versions. Do not claim that every API beginning with “use” follows exactly the same call-order rule without checking the relevant React documentation.
+
+## 14. Authentication and authorization with Spring Boot
+
+For a React plus Spring Boot application:
+
+```text
+React login form
+ -> POST /api/auth/login
+Spring Security authenticates
+ -> session or token response
+React API client
+ -> authenticated request
+Spring Security filter
+ -> authentication and permission checks
+Controller/service
+ -> business authorization
+Database
+```
+
+Frontend route guards improve user experience but do not protect resources. The backend must check ownership, roles and permissions for every sensitive operation.
+
+For browser sessions, HttpOnly, Secure and appropriate SameSite cookie settings can reduce token exposure to JavaScript, but cookie authentication still requires CSRF analysis. For bearer tokens, define an explicit storage, refresh, rotation, revocation and logout strategy. Never place database credentials, signing secrets or private API keys in a React bundle.
+
+## 15. Cart and checkout state architecture
+
+An e-commerce application should not trust the browser for final price or inventory:
+
+```text
+Browser cart
+ -> improves interaction and preserves a draft
+Backend cart/order service
+ -> authoritative price, inventory, discounts and totals
+Payment provider
+ -> authoritative payment result
+```
+
+The browser may show an optimistic cart count, but checkout must revalidate products and prices on the server. A failed mutation needs a rollback or an explicit “server state changed” message.
+
+Useful separation:
+
+```text
+Local state -> open modal, selected tab
+Redux state -> client cart draft, preferences
+RTK Query -> products, cart API, orders
+URL state -> category, sort, page
+Backend -> authorization, price, inventory, checkout
+```
+
+## 16. Testing strategy
+
+Use a pyramid based on risk:
+
+```text
+Unit tests
+ -> pure reducers, formatters, validators
+
+Component/integration tests
+ -> user interactions and API states
+
+End-to-end tests
+ -> critical journeys such as login and checkout
+```
+
+Example behaviour-focused test shape:
+
+```tsx
+it("shows an error when login fails", async () => {
+ server.use(loginFailureHandler);
+ render(<LoginForm />);
+
+ await userEvent.type(screen.getByLabelText(/email/i), "user@example.com");
+ await userEvent.type(screen.getByLabelText(/password/i), "wrong-password");
+ await userEvent.click(screen.getByRole("button", { name: /sign in/i }));
+
+ expect(await screen.findByRole("alert")).toHaveTextContent(
+ /invalid credentials/i
+ );
+});
+```
+
+Test the user's observable result instead of asserting that a component called a particular Hook. Include loading, success, empty, validation, unauthorized, retry, cancellation and keyboard paths.
+
+## 17. Performance investigation runbook
+
+When a React page is slow:
+
+1. Define the metric: initial load, interaction latency, route transition or memory growth.
+2. Reproduce with a realistic dataset and production-like build.
+3. Check network timing, API latency, bundle size and image cost.
+4. Use React DevTools Profiler to identify expensive renders.
+5. Check state ownership, context breadth and unstable props.
+6. Check long tasks in the browser Performance panel.
+7. Apply one targeted change.
+8. Re-measure and compare the metric.
+
+Possible targeted changes include server pagination, virtualization, code splitting, state colocation, query caching, image optimization, component splitting, `useMemo`, `useCallback`, `React.memo`, a transition or a Web Worker. The correct choice depends on the measured bottleneck.
+
+## 18. Senior code-review checklist
+
+When reviewing a React pull request, ask:
+
+```text
+Does render remain pure?
+Is state owned at the narrowest sensible scope?
+Are derived values duplicated in state?
+Are effects synchronizing with real external systems?
+Are effect dependencies complete?
+Is cleanup present and idempotent?
+Can stale requests update the screen?
+Are list keys stable?
+Are user inputs and API responses validated?
+Are loading, empty and error states present?
+Is authorization enforced by the backend?
+Are secrets absent from the client bundle?
+Is keyboard and screen-reader behaviour covered?
+Is memoization justified by a measurement?
+Are tests focused on behaviour and risk?
+```
+
+## 19. Compact senior answer format
+
+For an unfamiliar scenario, answer in this order:
+
+```text
+1. Clarify the user and business requirement.
+2. Classify the state and identify its owner.
+3. Describe the data/API contract.
+4. Explain loading, empty, error and retry states.
+5. Cover cancellation, race conditions and security.
+6. Cover accessibility and responsive behaviour.
+7. Explain the test strategy.
+8. Define the performance metric and how you will measure it.
+9. State the trade-offs and why the chosen approach fits.
+```
+
+This structure is more valuable than naming every React API. It shows that you can turn React knowledge into a reliable product feature.
+
+## 20. Final preparation checklist
+
+Before a senior React interview, practise explaining each topic with **what, why, when, example and trade-off**:
+
+- JSX, components, props, state and one-way data flow.
+- Render, reconciliation, commit, keys, Fiber and batching.
+- `useState`, `useEffect`, cleanup, dependency arrays and stale closures.
+- `useRef`, `useReducer`, custom Hooks and Rules of Hooks.
+- `React.memo`, `useMemo`, `useCallback` and referential equality.
+- Context, Redux Toolkit, RTK Query and server-state libraries.
+- Debounce, throttle, cancellation and API race prevention.
+- Routing, lazy loading, Suspense and error boundaries.
+- Forms, accessibility, portals and focus management.
+- TypeScript props, generics, API validation and adapters.
+- Authentication, authorization, cookies, CSRF, XSS and secret handling.
+- SSR, CSR, hydration, Server Components and framework boundaries.
+- React 19 Actions, `useActionState`, `useOptimistic`, `use` and Compiler caveats.
+- Testing with React Testing Library, MSW and Playwright.
+- Profiling, virtualization, code splitting and production monitoring.
+
+The strongest answer is not “I know this Hook.” It is: “Here is the state model, the ownership boundary, the failure mode, the user experience, the security boundary, the test, and the measurement that tell me this is the right React design.”

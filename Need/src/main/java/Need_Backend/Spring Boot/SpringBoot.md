@@ -10,28 +10,28 @@ _**// WITHOUT IoC — tight coupling**_
 **public class OrderService {**
 -------------------------------
 
-    **private final OrderRepository orderRepository;**
+**private final OrderRepository orderRepository;**
 ------------------------------------------------------
 
-    **private final PaymentService paymentService;**
+**private final PaymentService paymentService;**
 ----------------------------------------------------
 
-    **private final EmailService emailService;**
+**private final EmailService emailService;**
 ------------------------------------------------
 
-    **public OrderService() {**
+**public OrderService() {**
 -------------------------------
 
-        **this.orderRepository = new JdbcOrderRepository();**      _**// hardcoded**_
+**this.orderRepository = new JdbcOrderRepository();**_**// hardcoded**_
 -------------------------------------------------------------------------------------
 
-        **this.paymentService = new StripePaymentService();**       _**// hardcoded**_
+**this.paymentService = new StripePaymentService();**_**// hardcoded**_
 --------------------------------------------------------------------------------------
 
-        **this.emailService = new SmtpEmailService();**             _**// hardcoded**_
+**this.emailService = new SmtpEmailService();**_**// hardcoded**_
 --------------------------------------------------------------------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -40,14 +40,13 @@ _**// WITHOUT IoC — tight coupling**_
 **Problems:**
 -------------
 
-*   **OrderService is tightly coupled to specific implementations.**
+***OrderService is tightly coupled to specific implementations.**
 
-*   **Can't swap JdbcOrderRepository for MongoOrderRepository without modifying OrderService.**
+***Can't swap JdbcOrderRepository for MongoOrderRepository without modifying OrderService.**
 
-*   **Can't test with mocks — constructor always creates real objects.**
+***Can't test with mocks — constructor always creates real objects.**
 
-*   **If SmtpEmailService needs its own dependencies, OrderService must know about those too (transitive coupling).**
-
+***If SmtpEmailService needs its own dependencies, OrderService must know about those too (transitive coupling).**
 
 **With IoC — the container controls object creation and injection:**
 --------------------------------------------------------------------
@@ -61,37 +60,37 @@ _**// WITH IoC — loose coupling**_
 **public class OrderService {**
 -------------------------------
 
-    **private final OrderRepository orderRepository;**
+**private final OrderRepository orderRepository;**
 ------------------------------------------------------
 
-    **private final PaymentService paymentService;**
+**private final PaymentService paymentService;**
 ----------------------------------------------------
 
-    **private final EmailService emailService;**
+**private final EmailService emailService;**
 ------------------------------------------------
 
-    _**// Dependencies are INJECTED by the container — OrderService doesn't create anything**_
+_**// Dependencies are INJECTED by the container — OrderService doesn't create anything**_
 ----------------------------------------------------------------------------------------------
 
-    **public OrderService(OrderRepository orderRepository,**
+**public OrderService(OrderRepository orderRepository,**
 ------------------------------------------------------------
 
-                        **PaymentService paymentService,**
+**PaymentService paymentService,**
 ----------------------------------------------------------
 
-                        **EmailService emailService) {**
+**EmailService emailService) {**
 --------------------------------------------------------
 
-        **this.orderRepository = orderRepository;**
+**this.orderRepository = orderRepository;**
 ---------------------------------------------------
 
-        **this.paymentService = paymentService;**
+**this.paymentService = paymentService;**
 -------------------------------------------------
 
-        **this.emailService = emailService;**
+**this.emailService = emailService;**
 ---------------------------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -100,14 +99,13 @@ _**// WITH IoC — loose coupling**_
 **IoC means: The control of creating and wiring dependencies is inverted — it moves from the class itself to an external container (the Spring IoC container).Benefits:**
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-*   **Loose coupling — Classes depend on interfaces, not implementations.**
+***Loose coupling — Classes depend on interfaces, not implementations.**
 
-*   **Testability — Inject mocks easily.**
+***Testability — Inject mocks easily.**
 
-*   **Configurability — Swap implementations via configuration without code changes.**
+***Configurability — Swap implementations via configuration without code changes.**
 
-*   **Lifecycle management — The container manages creation, initialization, and destruction.**
-
+***Lifecycle management — The container manages creation, initialization, and destruction.**
 
 ### **Q2. What is Dependency Injection (DI)? How does it relate to IoC?**
 
@@ -122,16 +120,16 @@ _**// WITH IoC — loose coupling**_
 **public class OrderService {**
 -------------------------------
 
-    **private final OrderRepository repository;**
+**private final OrderRepository repository;**
 -------------------------------------------------
 
-    **public OrderService(OrderRepository repository) {**  _**// injected via constructor**_
+**public OrderService(OrderRepository repository) {**_**// injected via constructor**_
 --------------------------------------------------------------------------------------------
 
-        **this.repository = repository;**
+**this.repository = repository;**
 -----------------------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -145,19 +143,19 @@ _**// WITH IoC — loose coupling**_
 **public class OrderService {**
 -------------------------------
 
-    **private OrderRepository repository;**
+**private OrderRepository repository;**
 -------------------------------------------
 
-    **@Autowired**
+**@Autowired**
 ------------------
 
-    **public void setRepository(OrderRepository repository) {**  _**// injected via setter**_
+**public void setRepository(OrderRepository repository) {**_**// injected via setter**_
 ---------------------------------------------------------------------------------------------
 
-        **this.repository = repository;**
+**this.repository = repository;**
 -----------------------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -171,10 +169,10 @@ _**// WITH IoC — loose coupling**_
 **public class OrderService {**
 -------------------------------
 
-    **@Autowired**
+**@Autowired**
 ------------------
 
-    **private OrderRepository repository;**  _**// injected directly into field via reflection**_
+**private OrderRepository repository;**_**// injected directly into field via reflection**_
 -------------------------------------------------------------------------------------------------
 
 **}**
@@ -260,32 +258,31 @@ _**// WITH IoC — loose coupling**_
 **Expected Answer:The Spring IoC Container is the core of the framework. It is responsible for:**
 -------------------------------------------------------------------------------------------------
 
-1.  **Instantiating beans.**
+1.**Instantiating beans.**
 
-2.  **Configuring them (injecting dependencies, setting properties).**
+2.**Configuring them (injecting dependencies, setting properties).**
 
-3.  **Managing their lifecycle (initialization, destruction).**
-
+3.**Managing their lifecycle (initialization, destruction).**
 
 **Two types of IoC containers:**
 --------------------------------
 
-                  **IoC Container**
+**IoC Container**
 -----------------------------------
 
-                       **│**
+**│**
 ----------------------------
 
-          **┌────────────┴────────────┐**
+**┌────────────┴────────────┐**
 -----------------------------------------
 
-          **│                         │**
+**│ │**
 -----------------------------------------
 
-    **BeanFactory              ApplicationContext**
+**BeanFactory ApplicationContext**
 ---------------------------------------------------
 
-    **(basic)                  (feature-rich, extends BeanFactory)**
+**(basic) (feature-rich, extends BeanFactory)**
 --------------------------------------------------------------------
 
 **Aspect**
@@ -498,25 +495,25 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 **public class ReportGenerator {**
 ----------------------------------
 
-    **private final List data = new ArrayList<>();**
+**private final List data = new ArrayList<>();**
 ----------------------------------------------------
 
-    **public void addData(String row) {**
+**public void addData(String row) {**
 -----------------------------------------
 
-        **data.add(row);** _**// stateful — each request needs its own instance**_
+**data.add(row);**_**// stateful — each request needs its own instance**_
 ----------------------------------------------------------------------------------
 
-    **}**
+**}**
 ---------
 
-    **public byte\[\] generate() {**
+**public byte\[\] generate() {**
 ------------------------------------
 
-        **return buildReport(data);**
+**return buildReport(data);**
 -------------------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -525,19 +522,19 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 **Prototype scope pitfall with singleton injection:**
 -----------------------------------------------------
 
-**@Service** _**// singleton**_
+**@Service**_**// singleton**_
 -------------------------------
 
 **public class OrderService {**
 -------------------------------
 
-    **@Autowired**
+**@Autowired**
 ------------------
 
-    **private ReportGenerator reportGenerator;** _**// prototype — BUT this is injected ONCE!**_
+**private ReportGenerator reportGenerator;**_**// prototype — BUT this is injected ONCE!**_
 ------------------------------------------------------------------------------------------------
 
-    _**// Every call uses the SAME instance — prototype scope is defeated!**_
+_**// Every call uses the SAME instance — prototype scope is defeated!**_
 -----------------------------------------------------------------------------
 
 **}**
@@ -552,25 +549,25 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 **public class OrderService {**
 -------------------------------
 
-    **@Autowired**
+**@Autowired**
 ------------------
 
-    **private ObjectFactory reportGeneratorFactory;**
+**private ObjectFactory reportGeneratorFactory;**
 -----------------------------------------------------
 
-    **public byte\[\] generateReport() {**
+**public byte\[\] generateReport() {**
 ------------------------------------------
 
-        **ReportGenerator generator = reportGeneratorFactory.getObject();** _**// new instance each time**_
+**ReportGenerator generator = reportGeneratorFactory.getObject();**_**// new instance each time**_
 -----------------------------------------------------------------------------------------------------------
 
-        **generator.addData("...");**
+**generator.addData("...");**
 -------------------------------------
 
-        **return generator.generate();**
+**return generator.generate();**
 ----------------------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -614,76 +611,76 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 **public class HttpClientFactoryBean implements FactoryBean {**
 ---------------------------------------------------------------
 
-    **@Value("${http.connection.timeout:5000}")**
+**@Value("${http.connection.timeout:5000}")**
 -------------------------------------------------
 
-    **private int connectionTimeout;**
+**private int connectionTimeout;**
 --------------------------------------
 
-    **@Value("${http.max.connections:100}")**
+**@Value("${http.max.connections:100}")**
 ---------------------------------------------
 
-    **private int maxConnections;**
+**private int maxConnections;**
 -----------------------------------
 
-    **@Override**
+**@Override**
 -----------------
 
-    **public CloseableHttpClient getObject() {**
+**public CloseableHttpClient getObject() {**
 ------------------------------------------------
 
-        **return HttpClients.custom()**
+**return HttpClients.custom()**
 ---------------------------------------
 
-                **.setMaxConnTotal(maxConnections)**
+**.setMaxConnTotal(maxConnections)**
 ----------------------------------------------------
 
-                **.setDefaultRequestConfig(RequestConfig.custom()**
+**.setDefaultRequestConfig(RequestConfig.custom()**
 -------------------------------------------------------------------
 
-                    **.setConnectTimeout(Timeout.ofMilliseconds(connectionTimeout))**
+**.setConnectTimeout(Timeout.ofMilliseconds(connectionTimeout))**
 -------------------------------------------------------------------------------------
 
-                    **.build())**
+**.build())**
 ---------------------------------
 
-                **.setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()**
+**.setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()**
 --------------------------------------------------------------------------------------------
 
-                    **.setMaxConnTotal(maxConnections)**
+**.setMaxConnTotal(maxConnections)**
 --------------------------------------------------------
 
-                    **.build())**
+**.build())**
 ---------------------------------
 
-                **.build();**
+**.build();**
 -----------------------------
 
-    **}**
+**}**
 ---------
 
-    **@Override**
+**@Override**
 -----------------
 
-    **public Class getObjectType() {**
+**public Class getObjectType() {**
 --------------------------------------
 
-        **return CloseableHttpClient.class;**
+**return CloseableHttpClient.class;**
 ---------------------------------------------
 
-    **}**
+**}**
 ---------
 
-    **@Override**
+**@Override**
 -----------------
 
-    **public boolean isSingleton() {**
+**public boolean isSingleton() {**
 --------------------------------------
 
-        **return true;**
+**return true;**
 ------------------------
 
-    **}**
+**}**
 ---------
 
 **}**
@@ -695,10 +692,10 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 **@Autowired**
 --------------
 
-**private CloseableHttpClient httpClient;** _**// produced by HttpClientFactoryBean**_
+**private CloseableHttpClient httpClient;**_**// produced by HttpClientFactoryBean**_
 --------------------------------------------------------------------------------------
 
- **Real Spring examples: SqlSessionFactoryBean (MyBatis), LocalContainerEntityManagerFactoryBean (JPA), ProxyFactoryBean (AOP).**
+**Real Spring examples: SqlSessionFactoryBean (MyBatis), LocalContainerEntityManagerFactoryBean (JPA), ProxyFactoryBean (AOP).**
 ---------------------------------------------------------------------------------------------------------------------------------
 
 ### **Q1. What is Spring Boot and why do we need it when we already have the Spring Framework?**
@@ -735,22 +732,21 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 
 **Expected Answer:**
 
-1.  **Auto-Configuration — Automatically configures beans based on classpath, properties, and existing beans.**
+1.**Auto-Configuration — Automatically configures beans based on classpath, properties, and existing beans.**
 
-2.  **Starter Dependencies — Pre-packaged dependency descriptors (spring-boot-starter-web, spring-boot-starter-data-jpa, etc.).**
+2.**Starter Dependencies — Pre-packaged dependency descriptors (spring-boot-starter-web, spring-boot-starter-data-jpa, etc.).**
 
-3.  **Embedded Server — Tomcat, Jetty, or Undertow embedded in the JAR — no WAR deployment needed.**
+3.**Embedded Server — Tomcat, Jetty, or Undertow embedded in the JAR — no WAR deployment needed.**
 
-4.  **Spring Boot Actuator — Health checks, metrics, environment info, HTTP trace.**
+4.**Spring Boot Actuator — Health checks, metrics, environment info, HTTP trace.**
 
-5.  **Spring Boot DevTools — Auto-restart, live reload during development.**
+5.**Spring Boot DevTools — Auto-restart, live reload during development.**
 
-6.  **Externalized Configuration — application.properties/application.yml, profiles, environment variables.**
+6.**Externalized Configuration — application.properties/application.yml, profiles, environment variables.**
 
-7.  **Production-Ready — Logging, security defaults, graceful shutdown.**
+7.**Production-Ready — Logging, security defaults, graceful shutdown.**
 
-8.  **No Code Generation, No XML — Pure Java configuration.**
-
+8.**No Code Generation, No XML — Pure Java configuration.**
 
 ### **Q3. What is the difference between Spring, Spring Boot, and Spring MVC?**
 
@@ -837,35 +833,33 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 
 **Key lifecycle events:**
 
-*   **ApplicationStartingEvent — Before anything happens.**
+***ApplicationStartingEvent — Before anything happens.**
 
-*   **ApplicationEnvironmentPreparedEvent — Environment ready, context not created yet.**
+***ApplicationEnvironmentPreparedEvent — Environment ready, context not created yet.**
 
-*   **ApplicationContextInitializedEvent — Context created, beans not loaded.**
+***ApplicationContextInitializedEvent — Context created, beans not loaded.**
 
-*   **ApplicationPreparedEvent — Beans loaded, not refreshed.**
+***ApplicationPreparedEvent — Beans loaded, not refreshed.**
 
-*   **ApplicationStartedEvent — Context refreshed, runners not called.**
+***ApplicationStartedEvent — Context refreshed, runners not called.**
 
-*   **ApplicationReadyEvent — Everything is ready.**
+***ApplicationReadyEvent — Everything is ready.**
 
-*   **ApplicationFailedEvent — Startup failed.**
-
+***ApplicationFailedEvent — Startup failed.**
 
 ### **Q5. What is Auto-Configuration? How does it work internally?**
 
 **Expected Answer:Auto-configuration is Spring Boot's mechanism to automatically configure beans based on what's on the classpath, what beans already exist, and what properties are set.How it works:**
 
-1.  **@SpringBootApplication includes @EnableAutoConfiguration.**
+1.**@SpringBootApplication includes @EnableAutoConfiguration.**
 
-2.  **@EnableAutoConfiguration imports AutoConfigurationImportSelector.**
+2.**@EnableAutoConfiguration imports AutoConfigurationImportSelector.**
 
-3.  **The selector reads META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports (Spring Boot 3.x) or META-INF/spring.factories (older versions).**
+3.**The selector reads META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports (Spring Boot 3.x) or META-INF/spring.factories (older versions).**
 
-4.  **This file lists hundreds of auto-configuration classes.**
+4.**This file lists hundreds of auto-configuration classes.**
 
-5.  **Each class has conditions — it only activates if conditions are met.**
-
+5.**Each class has conditions — it only activates if conditions are met.**
 
 **Example — DataSourceAutoConfiguration:**
 
@@ -893,10 +887,9 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 
 **This means:**
 
-*   **Only activates if DataSource class is on the classpath (i.e., you added a JDBC dependency).**
+***Only activates if DataSource class is on the classpath (i.e., you added a JDBC dependency).**
 
-*   **Only creates a DataSource bean if you haven't defined one yourself (@ConditionalOnMissingBean).**
-
+***Only creates a DataSource bean if you haven't defined one yourself (@ConditionalOnMissingBean).**
 
 **To see what was auto-configured: Run with --debug or check /actuator/conditions.**
 
@@ -962,11 +955,11 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 
 **@Retention(RetentionPolicy.RUNTIME)**
 
-**@SpringBootConfiguration**   _**// equivalent to @Configuration**_
+**@SpringBootConfiguration**_**// equivalent to @Configuration**_
 
-**@EnableAutoConfiguration**   _**// triggers auto-configuration**_
+**@EnableAutoConfiguration**_**// triggers auto-configuration**_
 
-**@ComponentScan**             _**// scans current package and sub-packages**_
+**@ComponentScan**_**// scans current package and sub-packages**_
 
 **public @interface SpringBootApplication { }**
 
@@ -990,19 +983,19 @@ _**// Errors surface at startup, not at runtime (fail fast)**_
 
 **com.example.myapp**
 
-**├── MyApplication.java        ← @SpringBootApplication here**
+**├── MyApplication.java ← @SpringBootApplication here**
 
 **├── controller/**
 
-**│   └── OrderController.java  ← found by @ComponentScan**
+**│ └── OrderController.java ← found by @ComponentScan**
 
 **├── service/**
 
-**│   └── OrderService.java     ← found by @ComponentScan**
+**│ └── OrderService.java ← found by @ComponentScan**
 
 **└── repository/**
 
-**└── OrderRepository.java  ← found by @ComponentScan**
+**└── OrderRepository.java ← found by @ComponentScan**
 
 ### **Q8. What is the difference between application.properties and application.yml? What is the property loading order?**
 
@@ -1032,38 +1025,37 @@ _**\# application.yml**_
 
 **YAML advantages: Hierarchical structure, less repetition, supports lists naturally.Properties advantages: Simpler, no indentation sensitivity.Property source priority (highest to lowest):**
 
-1.  **Command-line arguments (--server.port=9090)**
+1.**Command-line arguments (--server.port=9090)**
 
-2.  **SPRING\_APPLICATION\_JSON (inline JSON env var)**
+2.**SPRING\_APPLICATION\_JSON (inline JSON env var)**
 
-3.  **Servlet init parameters**
+3.**Servlet init parameters**
 
-4.  **JNDI attributes**
+4.**JNDI attributes**
 
-5.  **Java system properties (-Dserver.port=9090)**
+5.**Java system properties (-Dserver.port=9090)**
 
-6.  **OS environment variables (SERVER\_PORT=9090)**
+6.**OS environment variables (SERVER\_PORT=9090)**
 
-7.  **Profile-specific properties (application-dev.properties)**
+7.**Profile-specific properties (application-dev.properties)**
 
-8.  **Application properties (application.properties / application.yml)**
+8.**Application properties (application.properties / application.yml)**
 
-9.  **@PropertySource on @Configuration classes**
+9.**@PropertySource on @Configuration classes**
 
-10.  **Default properties (SpringApplication.setDefaultProperties(...))**
-
+10.**Default properties (SpringApplication.setDefaultProperties(...))**
 
 ### **Q9. What are Spring Boot Profiles and how do you use them?**
 
 **Expected Answer:Profiles allow you to define environment-specific configurations — different database URLs, logging levels, feature flags for dev/staging/prod.Define profile-specific files:**
 
-**application.properties        ← common config**
+**application.properties ← common config**
 
-**application-dev.properties     ← dev overrides**
+**application-dev.properties ← dev overrides**
 
 **application-staging.properties ← staging overrides**
 
-**application-prod.properties    ← prod overrides**
+**application-prod.properties ← prod overrides**
 
 **Activate a profile:**
 
@@ -1091,7 +1083,7 @@ _**\# Environment variable**_
 
 **public DataSource dataSource() {**
 
-**return new H2DataSource();** _**// in-memory DB for dev**_
+**return new H2DataSource();**_**// in-memory DB for dev**_
 
 **}**
 
@@ -1107,7 +1099,7 @@ _**\# Environment variable**_
 
 **public DataSource dataSource() {**
 
-**return new HikariDataSource();** _**// production connection pool**_
+**return new HikariDataSource();**_**// production connection pool**_
 
 **}**
 
@@ -1169,20 +1161,19 @@ _**\# Environment variable**_
 
 **Key point: @Service, @Repository, @Controller are all specializations of @Component. Functionally, Spring treats them the same for component scanning. The differences are:**
 
-*   **Semantic clarity — Makes code intent obvious.**
+***Semantic clarity — Makes code intent obvious.**
 
-*   **@Repository additionally enables automatic exception translation — SQL exceptions are converted to Spring's DataAccessException hierarchy.**
+***@Repository additionally enables automatic exception translation — SQL exceptions are converted to Spring's DataAccessException hierarchy.**
 
-*   **@Controller enables Spring MVC handler mapping.**
+***@Controller enables Spring MVC handler mapping.**
 
-*   **@RestController = @Controller + @ResponseBody.**
-
+***@RestController = @Controller + @ResponseBody.**
 
 **@Target(ElementType.TYPE)**
 
 **@Retention(RetentionPolicy.RUNTIME)**
 
-**@Component**  _**// ← it IS a component**_
+**@Component**_**// ← it IS a component**_
 
 **public @interface Service { }**
 
@@ -1270,7 +1261,7 @@ _**\# Environment variable**_
 
 **public ServiceA serviceA() {**
 
-**return new ServiceA(commonDependency());** _**// calls commonDependency()**_
+**return new ServiceA(commonDependency());**_**// calls commonDependency()**_
 
 **}**
 
@@ -1278,7 +1269,7 @@ _**\# Environment variable**_
 
 **public ServiceB serviceB() {**
 
-**return new ServiceB(commonDependency());** _**// calls commonDependency() again**_
+**return new ServiceB(commonDependency());**_**// calls commonDependency() again**_
 
 **}**
 
@@ -1349,16 +1340,15 @@ _**// @Autowired is optional when there's only one constructor (Spring 4.3+)**_
 
 **Why constructor injection is preferred:**
 
-1.  **Immutability — Fields can be final.**
+1.**Immutability — Fields can be final.**
 
-2.  **Required dependencies — Cannot create the object with null dependencies.**
+2.**Required dependencies — Cannot create the object with null dependencies.**
 
-3.  **Testability — Easy to pass mocks in unit tests without Spring.**
+3.**Testability — Easy to pass mocks in unit tests without Spring.**
 
-4.  **No reflection — Unlike field injection, no reflection magic.**
+4.**No reflection — Unlike field injection, no reflection magic.**
 
-5.  **Fail fast — App won't start if a dependency is missing.**
-
+5.**Fail fast — App won't start if a dependency is missing.**
 
 **Field injection (discouraged):**
 
@@ -1366,7 +1356,7 @@ _**// @Autowired is optional when there's only one constructor (Spring 4.3+)**_
 
 **public class OrderService {**
 
-**@Autowired**  _**// discouraged**_
+**@Autowired**_**// discouraged**_
 
 **private OrderRepository orderRepository;**
 
@@ -1436,7 +1426,7 @@ _**// receives both EmailNotificationService and SmsNotificationService**_
 
 **private String gatewayUrl;**
 
-**@Value("${payment.timeout:5000}")** _**// default value if not set**_
+**@Value("${payment.timeout:5000}")**_**// default value if not set**_
 
 **private int timeout;**
 
@@ -1444,7 +1434,7 @@ _**// receives both EmailNotificationService and SmsNotificationService**_
 
 **private boolean retryEnabled;**
 
-**@Value("#{${payment.fee.rates}}")** _**// SpEL for maps**_
+**@Value("#{${payment.fee.rates}}")**_**// SpEL for maps**_
 
 **private Map feeRates;**
 
@@ -1531,15 +1521,15 @@ _**// getters and setters**_
 
 **public class OrderController {**
 
-**@GetMapping**                          _**// GET /api/v1/orders**_
+**@GetMapping**_**// GET /api/v1/orders**_
 
 **public List getAllOrders() { ... }**
 
-**@GetMapping("/{id}")**                 _**// GET /api/v1/orders/123**_
+**@GetMapping("/{id}")**_**// GET /api/v1/orders/123**_
 
 **public OrderDTO getOrder(@PathVariable Long id) { ... }**
 
-**@GetMapping("/search")**               _**// GET /api/v1/orders/search?status=PENDING&page=0**_
+**@GetMapping("/search")**_**// GET /api/v1/orders/search?status=PENDING&page=0**_
 
 **public Page search(**
 
@@ -1547,13 +1537,13 @@ _**// getters and setters**_
 
 **@RequestParam(defaultValue = "0") int page) { ... }**
 
-**@PostMapping**                         _**// POST /api/v1/orders**_
+**@PostMapping**_**// POST /api/v1/orders**_
 
 **@ResponseStatus(HttpStatus.CREATED)**
 
 **public OrderDTO createOrder(@Valid @RequestBody CreateOrderRequest request) { ... }**
 
-**@PutMapping("/{id}")**                 _**// PUT /api/v1/orders/123**_
+**@PutMapping("/{id}")**_**// PUT /api/v1/orders/123**_
 
 **public OrderDTO updateOrder(**
 
@@ -1561,7 +1551,7 @@ _**// getters and setters**_
 
 **@Valid @RequestBody UpdateOrderRequest request) { ... }**
 
-**@PatchMapping("/{id}/status")**        _**// PATCH /api/v1/orders/123/status**_
+**@PatchMapping("/{id}/status")**_**// PATCH /api/v1/orders/123/status**_
 
 **public OrderDTO updateStatus(**
 
@@ -1569,7 +1559,7 @@ _**// getters and setters**_
 
 **@RequestBody StatusUpdateRequest request) { ... }**
 
-**@DeleteMapping("/{id}")**              _**// DELETE /api/v1/orders/123**_
+**@DeleteMapping("/{id}")**_**// DELETE /api/v1/orders/123**_
 
 **@ResponseStatus(HttpStatus.NO\_CONTENT)**
 
@@ -1643,7 +1633,7 @@ _**// @Controller — returns VIEW names (resolved by ViewResolver)**_
 
 **model.addAttribute("message", "Hello");**
 
-**return "home";**  _**// resolves to home.html (Thymeleaf)**_
+**return "home";**_**// resolves to home.html (Thymeleaf)**_
 
 **}**
 
@@ -1663,7 +1653,7 @@ _**// Need @ResponseBody to return data directly**_
 
 _**// @RestController — EVERY method returns data (JSON/XML), never a view**_
 
-**@RestController**  _**// = @Controller + @ResponseBody on every method**_
+**@RestController**_**// = @Controller + @ResponseBody on every method**_
 
 **public class ApiController {**
 
@@ -1671,7 +1661,7 @@ _**// @RestController — EVERY method returns data (JSON/XML), never a view**_
 
 **public DataDTO getData() {**
 
-**return new DataDTO("value");** _**// automatically serialized to JSON**_
+**return new DataDTO("value");**_**// automatically serialized to JSON**_
 
 **}**
 
@@ -1727,7 +1717,7 @@ _**// @RestController — EVERY method returns data (JSON/XML), never a view**_
 
 **@Size(min = 1, max = 100)**
 
-**private List<@Valid OrderItemRequest> items;** _**// @Valid cascades into each item**_
+**private List<@Valid OrderItemRequest> items;**_**// @Valid cascades into each item**_
 
 **@Positive**
 
@@ -1769,9 +1759,9 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **public class UserRequest {**
 
-**@Null(groups = OnCreate.class)**         _**// ID must be null on create**_
+**@Null(groups = OnCreate.class)**_**// ID must be null on create**_
 
-**@NotNull(groups = OnUpdate.class)**      _**// ID must exist on update**_
+**@NotNull(groups = OnUpdate.class)**_**// ID must exist on update**_
 
 **private Long id;**
 
@@ -1807,7 +1797,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **"error": "Internal Server Error",**
 
-**"trace": "java.lang.NullPointerException at line 45..."  ❌ Ugly!**
+**"trace": "java.lang.NullPointerException at line 45..." ❌ Ugly!**
 
 **}**
 
@@ -1819,7 +1809,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **"code": "NOT\_FOUND",**
 
-**"message": "Employee not found with id: 5"   ✅ Clean!**
+**"message": "Employee not found with id: 5" ✅ Clean!**
 
 **}**
 
@@ -1896,11 +1886,11 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **public record ErrorResponse(**
 
-**String code,      // e.g. "NOT\_FOUND"**
+**String code, // e.g. "NOT\_FOUND"**
 
-**String message,   // e.g. "Employee not found with id: 5"**
+**String message, // e.g. "Employee not found with id: 5"**
 
-**Map details  // extra info (optional)**
+**Map details // extra info (optional)**
 
 **) {**
 
@@ -1931,7 +1921,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **This is your Security Guard class — one place that catches ALL errors.**
 
-**@RestControllerAdvice  // ← This makes it the GLOBAL handler**
+**@RestControllerAdvice // ← This makes it the GLOBAL handler**
 
 **public class GlobalExceptionHandler {**
 
@@ -1939,7 +1929,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **@ExceptionHandler(ResourceNotFoundException.class)**
 
-**@ResponseStatus(HttpStatus.NOT\_FOUND)  // sends 404**
+**@ResponseStatus(HttpStatus.NOT\_FOUND) // sends 404**
 
 **public ErrorResponse handleNotFound(ResourceNotFoundException ex) {**
 
@@ -1953,7 +1943,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **@ExceptionHandler(MethodArgumentNotValidException.class)**
 
-**@ResponseStatus(HttpStatus.BAD\_REQUEST)  // sends 400**
+**@ResponseStatus(HttpStatus.BAD\_REQUEST) // sends 400**
 
 **public ErrorResponse handleValidation(MethodArgumentNotValidException ex) {**
 
@@ -1973,17 +1963,17 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **// {**
 
-**//   "code": "VALIDATION\_FAILED",**
+**// "code": "VALIDATION\_FAILED",**
 
-**//   "message": "Invalid request",**
+**// "message": "Invalid request",**
 
-**//   "details": {**
+**// "details": {**
 
-**//     "email": "must be a valid email",**
+**// "email": "must be a valid email",**
 
-**//     "name": "must not be blank"**
+**// "name": "must not be blank"**
 
-**//   }**
+**// }**
 
 **// }**
 
@@ -1993,7 +1983,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **@ExceptionHandler(DataIntegrityViolationException.class)**
 
-**@ResponseStatus(HttpStatus.CONFLICT)  // sends 409**
+**@ResponseStatus(HttpStatus.CONFLICT) // sends 409**
 
 **public ErrorResponse handleConflict(DataIntegrityViolationException ex) {**
 
@@ -2007,11 +1997,11 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **@ExceptionHandler(Exception.class)**
 
-**@ResponseStatus(HttpStatus.INTERNAL\_SERVER\_ERROR)  // sends 500**
+**@ResponseStatus(HttpStatus.INTERNAL\_SERVER\_ERROR) // sends 500**
 
 **public ErrorResponse handleGeneral(Exception ex) {**
 
-**log.error("Unhandled exception", ex);  // log it for debugging**
+**log.error("Unhandled exception", ex); // log it for debugging**
 
 **return new ErrorResponse("INTERNAL\_ERROR", "An unexpected error occurred");**
 
@@ -2042,7 +2032,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **↓**
 
-**@RestControllerAdvice intercepts it  ← Security Guard catches it**
+**@RestControllerAdvice intercepts it ← Security Guard catches it**
 
 **↓**
 
@@ -2117,11 +2107,11 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **"details": {**
 
-**"name":  "Name must not be blank",**
+**"name": "Name must not be blank",**
 
 **"email": "Must be a valid email",**
 
-**"age":   "Age must be at least 18"**
+**"age": "Age must be at least 18"**
 
 **}**
 
@@ -2136,7 +2126,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **↓**
 
-**Is it ResourceNotFoundException?     → Guard 1 handles it ✅**
+**Is it ResourceNotFoundException? → Guard 1 handles it ✅**
 
 **↓ No**
 
@@ -2148,7 +2138,7 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **↓ No**
 
-**Is it any other Exception?            → Guard 4 handles it ✅**
+**Is it any other Exception? → Guard 4 handles it ✅**
 
 **Always put Exception.class handler LAST — it is the catch-all safety net.**
 
@@ -2174,21 +2164,21 @@ _**// Spring returns 400 Bad Request automatically**_
 **Without vs With — Side by Side**
 ----------------------------------
 
-**WITHOUT GlobalExceptionHandler       WITH GlobalExceptionHandler**
+**WITHOUT GlobalExceptionHandler WITH GlobalExceptionHandler**
 
-**─────────────────────────────        ────────────────────────────**
+**───────────────────────────── ────────────────────────────**
 
-**HTTP 500                             HTTP 404**
+**HTTP 500 HTTP 404**
 
-**{                                    {**
+**{ {**
 
-**"timestamp": "...",                  "code": "NOT\_FOUND",**
+**"timestamp": "...", "code": "NOT\_FOUND",**
 
-**"status": 500,                       "message": "Employee not**
+**"status": 500, "message": "Employee not**
 
-**"error": "Internal...",                        found with id: 5"**
+**"error": "Internal...", found with id: 5"**
 
-**"trace": "java.lang..."  ❌        }  ✅**
+**"trace": "java.lang..." ❌ } ✅**
 
 **}**
 
@@ -2260,11 +2250,11 @@ _**// Spring returns 400 Bad Request automatically**_
 
 **private LocalDateTime updatedAt;**
 
-**@Version**  _**// Optimistic locking**_
+**@Version**_**// Optimistic locking**_
 
 **private Long version;**
 
-**@Transient**  _**// Not persisted in DB**_
+**@Transient**_**// Not persisted in DB**_
 
 **private BigDecimal calculatedTax;**
 
@@ -2382,11 +2372,11 @@ _**// Derived query method — Spring Data generates SQL from method name**_
 
 **N+1 Problem:**
 
-**List orders = orderRepository.findAll();** _**// 1 query: SELECT \* FROM orders**_
+**List orders = orderRepository.findAll();**_**// 1 query: SELECT \* FROM orders**_
 
 **for (Order order : orders) {**
 
-**order.getCustomer().getName();** _**// N queries: SELECT \* FROM customers WHERE id = ?**_
+**order.getCustomer().getName();**_**// N queries: SELECT \* FROM customers WHERE id = ?**_
 
 **}**
 
@@ -2423,34 +2413,33 @@ _**// 3. @BatchSize — loads related entities in batches**_
 
 **Flow:**
 
-1.  **Proxy intercepts the call.**
+1.**Proxy intercepts the call.**
 
-2.  **PlatformTransactionManager.getTransaction() — starts or joins a transaction.**
+2.**PlatformTransactionManager.getTransaction() — starts or joins a transaction.**
 
-3.  **Actual method executes.**
+3.**Actual method executes.**
 
-4.  **If method returns normally → commit().**
+4.**If method returns normally → commit().**
 
-5.  **If method throws a runtime exception → rollback().**
+5.**If method throws a runtime exception → rollback().**
 
-6.  **If method throws a checked exception → commit() (by default! — a common pitfall).**
-
+6.**If method throws a checked exception → commit() (by default! — a common pitfall).**
 
 **Key attributes:**
 
 **@Transactional(**
 
-**propagation = Propagation.REQUIRED,**     _**// default — join existing or create new**_
+**propagation = Propagation.REQUIRED,**_**// default — join existing or create new**_
 
-**isolation = Isolation.READ\_COMMITTED,**   _**// prevents dirty reads**_
+**isolation = Isolation.READ\_COMMITTED,**_**// prevents dirty reads**_
 
-**timeout = 30,**                           _**// seconds**_
+**timeout = 30,**_**// seconds**_
 
-**readOnly = true,**                        _**// optimization hint for read-only ops**_
+**readOnly = true,**_**// optimization hint for read-only ops**_
 
-**rollbackFor = BusinessException.class,**  _**// rollback on checked exceptions too**_
+**rollbackFor = BusinessException.class,**_**// rollback on checked exceptions too**_
 
-**noRollbackFor = EmailException.class**    _**// don't rollback for this exception**_
+**noRollbackFor = EmailException.class**_**// don't rollback for this exception**_
 
 **)**
 
@@ -2502,7 +2491,7 @@ _**// 3. @BatchSize — loads related entities in batches**_
 
 **public void callProcess() {**
 
-**this.processOrder();** _**// BYPASSES the proxy — NO transaction!**_
+**this.processOrder();**_**// BYPASSES the proxy — NO transaction!**_
 
 **}**
 
@@ -2515,14 +2504,13 @@ _**// 3. @BatchSize — loads related entities in batches**_
 
 **Expected Answer:AOP separates cross-cutting concerns (logging, security, transactions, metrics) from business logic. Instead of scattering logging code across 100 methods, you define it once in an aspect.Key terms:**
 
-*   **Aspect — The cross-cutting concern (e.g., logging aspect).**
+***Aspect — The cross-cutting concern (e.g., logging aspect).**
 
-*   **Advice — What to do (the code) and when (before, after, around).**
+***Advice — What to do (the code) and when (before, after, around).**
 
-*   **Pointcut — Where to apply (which methods).**
+***Pointcut — Where to apply (which methods).**
 
-*   **Join Point — The actual method being intercepted.**
-
+***Join Point — The actual method being intercepted.**
 
 **@Aspect**
 
@@ -2673,19 +2661,19 @@ _**// Usage**_
 
 **public class ReportService {**
 
-**@Scheduled(fixedRate = 60000)**  _**// every 60 seconds**_
+**@Scheduled(fixedRate = 60000)**_**// every 60 seconds**_
 
 **public void generateReport() { ... }**
 
-**@Scheduled(fixedDelay = 30000)**  _**// 30s after previous execution COMPLETES**_
+**@Scheduled(fixedDelay = 30000)**_**// 30s after previous execution COMPLETES**_
 
 **public void cleanupTempFiles() { ... }**
 
-**@Scheduled(cron = "0 0 2 \* \* \*")**  _**// every day at 2:00 AM**_
+**@Scheduled(cron = "0 0 2 \* \* \*")**_**// every day at 2:00 AM**_
 
 **public void nightlyBatch() { ... }**
 
-**@Scheduled(cron = "0 \*/5 \* \* \* \*")**  _**// every 5 minutes**_
+**@Scheduled(cron = "0 \*/5 \* \* \* \*")**_**// every 5 minutes**_
 
 **public void healthCheck() { ... }**
 
@@ -2953,7 +2941,7 @@ _**// fire and forget — no return value**_
 
 **@EnableWebSecurity**
 
-**@EnableMethodSecurity**  _**// enables @PreAuthorize, @PostAuthorize, etc.**_
+**@EnableMethodSecurity**_**// enables @PreAuthorize, @PostAuthorize, etc.**_
 
 **public class SecurityConfig {**
 
@@ -3213,25 +3201,23 @@ _**// fire and forget — no return value**_
 
 **Expected Answer:**
 
-1.  **Run with --debug or set debug=true in properties — prints the auto-configuration report showing what was applied and what was skipped (and why).**
+1.**Run with --debug or set debug=true in properties — prints the auto-configuration report showing what was applied and what was skipped (and why).**
 
-2.  **Check /actuator/conditions — Shows positive matches (applied) and negative matches (skipped) with reasons.**
+2.**Check /actuator/conditions — Shows positive matches (applied) and negative matches (skipped) with reasons.**
 
-3.  **Check /actuator/beans — Lists all registered beans.**
+3.**Check /actuator/beans — Lists all registered beans.**
 
-4.  **Common causes:**
+4.**Common causes:**
 
+***Component not in a package scanned by @ComponentScan (main class in wrong package).**
 
-*   **Component not in a package scanned by @ComponentScan (main class in wrong package).**
+***Missing @Component / @Service / @Bean annotation.**
 
-*   **Missing @Component / @Service / @Bean annotation.**
+***@Conditional annotation evaluated to false.**
 
-*   **@Conditional annotation evaluated to false.**
+***Missing dependency on classpath (auto-configuration skipped).**
 
-*   **Missing dependency on classpath (auto-configuration skipped).**
-
-*   **Profile mismatch — bean has @Profile("prod") but running with dev profile.**
-
+***Profile mismatch — bean has @Profile("prod") but running with dev profile.**
 
 ### **Q29. Scenario: Your API returns a 200 with an empty body instead of a 404 when a resource doesn't exist. What's wrong?**
 
@@ -3275,74 +3261,71 @@ _**// fire and forget — no return value**_
 
 **Expected Answer:**
 
-1.  **Checked exception — By default, @Transactional only rolls back on unchecked (runtime) exceptions. Fix:**
+1.**Checked exception — By default, @Transactional only rolls back on unchecked (runtime) exceptions. Fix:**
 
-2.     **@Transactional(rollbackFor = Exception.class)**
+2.**@Transactional(rollbackFor = Exception.class)**
 
-3.  **Self-invocation — Calling the @Transactional method from within the same class bypasses the proxy.**
+3.**Self-invocation — Calling the @Transactional method from within the same class bypasses the proxy.**
 
-4.  **Method is not public — Spring AOP proxies only intercept public methods.**
+4.**Method is not public — Spring AOP proxies only intercept public methods.**
 
-5.  **Exception caught inside the method — If you catch the exception and don't rethrow, Spring thinks it succeeded:**
+5.**Exception caught inside the method — If you catch the exception and don't rethrow, Spring thinks it succeeded:**
 
-6.     **@Transactional**
+6.**@Transactional**
 
-7.     **public void process() {**
+7.**public void process() {**
 
-8.         **try {**
+8.**try {**
 
-9.             **riskyOperation();**
+9.**riskyOperation();**
 
-10.         **} catch (Exception e) {**
+10.**} catch (Exception e) {**
 
-11.             **log.error("Failed", e);**
+11.**log.error("Failed", e);**
 
-12.             _**// Transaction will COMMIT because no exception propagated!**_
+12._**// Transaction will COMMIT because no exception propagated!**_
 
-13.         **}**
+13.**}**
 
-14.     **}**
+14.**}**
 
-15.  **Wrong transaction manager — Multiple data sources but not specifying which manager:**
+15.**Wrong transaction manager — Multiple data sources but not specifying which manager:**
 
-16.     **@Transactional("secondaryTransactionManager")**
-
+16.**@Transactional("secondaryTransactionManager")**
 
 ### **Q31. Scenario: Your Spring Boot app takes 45 seconds to start. How do you optimize startup time?**
 
 **Expected Answer:**
 
-1.  **Lazy initialization — Don't create beans until they're first needed:**
+1.**Lazy initialization — Don't create beans until they're first needed:**
 
-2.     **spring.main.lazy-initialization=true**
+2.**spring.main.lazy-initialization=true**
 
-3.  **Exclude unnecessary auto-configurations:**
+3.**Exclude unnecessary auto-configurations:**
 
-4.     **@SpringBootApplication(exclude = {**
+4.**@SpringBootApplication(exclude = {**
 
-5.         **DataSourceAutoConfiguration.class,**
+5.**DataSourceAutoConfiguration.class,**
 
-6.         **MongoAutoConfiguration.class,**
+6.**MongoAutoConfiguration.class,**
 
-7.         **SecurityAutoConfiguration.class**
+7.**SecurityAutoConfiguration.class**
 
-8.     **})**
+8.**})**
 
-9.  **Use Spring Boot's startup actuator to find slow beans:**
+9.**Use Spring Boot's startup actuator to find slow beans:**
 
-10.     **management.endpoint.startup.enabled=true**
-
+10.**management.endpoint.startup.enabled=true**
 
 **Then check /actuator/startup for bean initialization timings.**
 
-1.  **Reduce component scanning scope — Don't scan packages you don't need.**
+1.**Reduce component scanning scope — Don't scan packages you don't need.**
 
-2.  **Use Spring AOT (Ahead-of-Time compilation) with GraalVM native image for sub-second startup.**
+2.**Use Spring AOT (Ahead-of-Time compilation) with GraalVM native image for sub-second startup.**
 
-3.  **Review Hibernate/JPA — spring.jpa.defer-datasource-initialization=true, validate vs. update ddl-auto.**
+3.**Review Hibernate/JPA — spring.jpa.defer-datasource-initialization=true, validate vs. update ddl-auto.**
 
-4.  **Profile startup with -Dspring.context.initializer.classes or JFR (Java Flight Recorder).**
-
+4.**Profile startup with -Dspring.context.initializer.classes or JFR (Java Flight Recorder).**
 
 ### **Q32. Scenario: You need to run some initialization code after your Spring Boot application is fully started. How do you do it?**
 
@@ -3458,15 +3441,15 @@ _**// Runs when THIS bean is created — other beans may not be ready yet**_
 
 **public class MyService implements InitializingBean {**
 
-**@PostConstruct**          _**// runs 1st**_
+**@PostConstruct**_**// runs 1st**_
 
 **public void postConstruct() { }**
 
-**@Override**               _**// runs 2nd**_
+**@Override**_**// runs 2nd**_
 
 **public void afterPropertiesSet() { }**
 
-**public void customInit() { }**  _**// runs 3rd (if configured via @Bean(initMethod))**_
+**public void customInit() { }**_**// runs 3rd (if configured via @Bean(initMethod))**_
 
 **}**
 
@@ -3561,33 +3544,33 @@ _**// Runs when THIS bean is created — other beans may not be ready yet**_
 
 **Expected Answer:**
 
-**1.  Bean class instantiated (constructor called)**
+**1. Bean class instantiated (constructor called)**
 
-**2.  Dependencies injected (setter/@Autowired)**
+**2. Dependencies injected (setter/@Autowired)**
 
-**3.  BeanNameAware.setBeanName()**
+**3. BeanNameAware.setBeanName()**
 
-**4.  BeanFactoryAware.setBeanFactory()**
+**4. BeanFactoryAware.setBeanFactory()**
 
-**5.  ApplicationContextAware.setApplicationContext()**
+**5. ApplicationContextAware.setApplicationContext()**
 
-**6.  BeanPostProcessor.postProcessBeforeInitialization()   ← for ALL beans**
+**6. BeanPostProcessor.postProcessBeforeInitialization() ← for ALL beans**
 
-**7.  @PostConstruct**
+**7. @PostConstruct**
 
-**8.  InitializingBean.afterPropertiesSet()**
+**8. InitializingBean.afterPropertiesSet()**
 
-**9.  @Bean(initMethod = "customInit")**
+**9. @Bean(initMethod = "customInit")**
 
-**10\. BeanPostProcessor.postProcessAfterInitialization()    ← proxies created here**
+**10\. BeanPostProcessor.postProcessAfterInitialization() ← proxies created here**
 
 **11\. ──── Bean is ready for use ────**
 
-**12\. @PreDestroy                                           (on shutdown)**
+**12\. @PreDestroy (on shutdown)**
 
-**13\. DisposableBean.destroy()                              (on shutdown)**
+**13\. DisposableBean.destroy() (on shutdown)**
 
-**14\. @Bean(destroyMethod = "customDestroy")                (on shutdown)**
+**14\. @Bean(destroyMethod = "customDestroy") (on shutdown)**
 
 **BeanPostProcessor is critical — this is where Spring creates AOP proxies for @Transactional, @Cacheable, @Async, etc. That's why those annotations use proxies and why self-invocation bypasses them.**
 
@@ -3612,7 +3595,6 @@ _**// Runs when THIS bean is created — other beans may not be ready yet**_
 **10\. Call ApplicationRunner / CommandLineRunner beans**
 
 **11\. Application is ready — publish ApplicationReadyEvent**
-
 
 # Spring Boot — 60 Senior Developer Interview Questions & Answers
 
@@ -3650,19 +3632,19 @@ For example:
 
 ```text
 Traditional Spring
-       |
-       +--> XML/configuration
-       +--> manually configure server
-       +--> manually configure dependencies
-       +--> manually configure infrastructure
+ |
+ +--> XML/configuration
+ +--> manually configure server
+ +--> manually configure dependencies
+ +--> manually configure infrastructure
 
 Spring Boot
-       |
-       +--> Starters
-       +--> Auto Configuration
-       +--> Embedded Server
-       +--> Actuator
-       +--> External Configuration
+ |
+ +--> Starters
+ +--> Auto Configuration
+ +--> Embedded Server
+ +--> Actuator
+ +--> External Configuration
 ```
 
 The key philosophy is:
@@ -3677,14 +3659,14 @@ The key philosophy is:
 
 **Answer:**
 
-| Spring Framework                  | Spring Boot                           |
+| Spring Framework | Spring Boot |
 | --------------------------------- | ------------------------------------- |
-| Core framework                    | Built on Spring                       |
-| Requires more configuration       | Convention over configuration         |
-| No embedded server by itself      | Embedded server support               |
-| Dependency management is manual   | Starters simplify dependencies        |
+| Core framework | Built on Spring |
+| Requires more configuration | Convention over configuration |
+| No embedded server by itself | Embedded server support |
+| Dependency management is manual | Starters simplify dependencies |
 | Production features require setup | Actuator provides production features |
-| More flexible                     | More opinionated                      |
+| More flexible | More opinionated |
 
 Spring Boot does **not replace Spring Framework**.
 
@@ -3692,13 +3674,13 @@ Instead:
 
 ```text
 Spring Boot
-     |
-     +---- Spring Core
-     +---- Spring MVC
-     +---- Spring Data
-     +---- Spring Security
-     +---- Spring Integration
-     +---- etc.
+ |
+ +---- Spring Core
+ +---- Spring MVC
+ +---- Spring Data
+ +---- Spring Security
+ +---- Spring Integration
+ +---- etc.
 ```
 
 ---
@@ -3713,9 +3695,9 @@ This is one of the most frequently asked senior-level questions.
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+ public static void main(String[] args) {
+ SpringApplication.run(Application.class, args);
+ }
 }
 ```
 
@@ -3731,12 +3713,12 @@ So:
 
 ```text
 @SpringBootApplication
-        |
-        +--> @SpringBootConfiguration
-        |
-        +--> @EnableAutoConfiguration
-        |
-        +--> @ComponentScan
+ |
+ +--> @SpringBootConfiguration
+ |
+ +--> @EnableAutoConfiguration
+ |
+ +--> @ComponentScan
 ```
 
 ### `@SpringBootConfiguration`
@@ -3770,8 +3752,8 @@ For example, if you add:
 
 ```xml
 <dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-data-jpa</artifactId>
+ <groupId>org.springframework.boot</groupId>
+ <artifactId>spring-boot-starter-data-jpa</artifactId>
 </dependency>
 ```
 
@@ -3797,20 +3779,20 @@ The simplified flow is:
 
 ```text
 @SpringBootApplication
-       |
-       v
+ |
+ v
 @EnableAutoConfiguration
-       |
-       v
+ |
+ v
 Auto-Configuration Import
-       |
-       v
+ |
+ v
 Auto-Configuration Classes
-       |
-       v
+ |
+ v
 @Conditional checks
-       |
-       v
+ |
+ v
 Beans created
 ```
 
@@ -3864,7 +3846,7 @@ Example:
 @Bean
 @ConditionalOnMissingBean
 public PaymentService paymentService() {
-    return new DefaultPaymentService();
+ return new DefaultPaymentService();
 }
 ```
 
@@ -3873,7 +3855,7 @@ If the application defines:
 ```java
 @Bean
 PaymentService paymentService() {
-    return new CustomPaymentService();
+ return new CustomPaymentService();
 }
 ```
 
@@ -3890,7 +3872,7 @@ This is one of the core mechanisms that makes Boot's auto-configuration customiz
 Use:
 
 ```bash
-java -jar application.jar --debug
+java -jarapplication.jar--debug
 ```
 
 or:
@@ -3925,7 +3907,7 @@ Example:
 
 ```xml
 <artifactId>
-    spring-boot-starter-web
+ spring-boot-starter-web
 </artifactId>
 ```
 
@@ -3966,8 +3948,8 @@ Provides dependencies.
 
 ```text
 Starter
-   |
-   +--> Required libraries
+ |
+ +--> Required libraries
 ```
 
 ### Auto-configuration
@@ -3976,11 +3958,11 @@ Configures beans automatically.
 
 ```text
 Dependencies
-     |
-     v
+ |
+ v
 Auto Configuration
-     |
-     v
+ |
+ v
 Spring Beans
 ```
 
@@ -4001,7 +3983,6 @@ Auto Configuration = How should those libraries be configured?
 Spring Boot provides dependency management through its BOM/dependency management mechanism.
 
 Instead of specifying versions for every Spring-related dependency, Boot provides compatible versions.
-
 For example, you generally don't want:
 
 ```xml
@@ -4028,35 +4009,35 @@ Simplified:
 
 ```text
 main()
-  |
-  v
+ |
+ v
 SpringApplication.run()
-  |
-  v
+ |
+ v
 Create Environment
-  |
-  v
+ |
+ v
 Load Configuration
-  |
-  v
+ |
+ v
 Create ApplicationContext
-  |
-  v
+ |
+ v
 Prepare Context
-  |
-  v
+ |
+ v
 Load Bean Definitions
-  |
-  v
+ |
+ v
 Refresh Context
-  |
-  v
+ |
+ v
 Create/Initialize Beans
-  |
-  v
+ |
+ v
 Embedded Server Starts
-  |
-  v
+ |
+ v
 ApplicationReadyEvent
 ```
 
@@ -4085,8 +4066,8 @@ Example:
 
 ```java
 SpringApplication.run(
-    Application.class,
-    args
+ Application.class,
+ args
 );
 ```
 
@@ -4111,12 +4092,12 @@ Example:
 ```java
 @Component
 public class DataLoader
-        implements CommandLineRunner {
+ implements CommandLineRunner {
 
-    @Override
-    public void run(String... args) {
-        System.out.println("Application started");
-    }
+ @Override
+ public void run(String... args) {
+ System.out.println("Application started");
+ }
 }
 ```
 
@@ -4179,11 +4160,11 @@ Example:
 
 ```yaml
 server:
-  port: 8080
+ port: 8080
 
 app:
-  payment:
-    timeout: 5s
+ payment:
+ timeout: 5s
 ```
 
 Boot has an ordered property-source mechanism, allowing higher-precedence configuration such as environment variables and command-line arguments to override lower-precedence values. ([Home][4])
@@ -4211,8 +4192,8 @@ Better for structured configuration.
 @ConfigurationProperties(prefix = "app.payment")
 public class PaymentProperties {
 
-    private Duration timeout;
-    private int retryCount;
+ private Duration timeout;
+ private int retryCount;
 }
 ```
 
@@ -4220,9 +4201,9 @@ Configuration:
 
 ```yaml
 app:
-  payment:
-    timeout: 5s
-    retry-count: 3
+ payment:
+ timeout: 5s
+ retry-count: 3
 ```
 
 For enterprise applications, I prefer `@ConfigurationProperties` for grouped configuration because it provides type-safe binding and validation.
@@ -4241,11 +4222,11 @@ Normally, in plain Java, **you create and manage objects yourself**.
 ```java
 public class OrderService {
 
-    private PaymentService paymentService;
+ private PaymentService paymentService;
 
-    public OrderService() {
-        this.paymentService = new PaymentService();
-    }
+ public OrderService() {
+ this.paymentService = new PaymentService();
+ }
 }
 ```
 
@@ -4253,9 +4234,9 @@ Here, `OrderService` controls the creation of `PaymentService`.
 
 ```text
 OrderService
-     |
-     | creates
-     v
+ |
+ | creates
+ v
 PaymentService
 ```
 
@@ -4267,11 +4248,11 @@ With Spring:
 @Service
 public class OrderService {
 
-    private final PaymentService paymentService;
+ private final PaymentService paymentService;
 
-    public OrderService(PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+ public OrderService(PaymentService paymentService) {
+ this.paymentService = paymentService;
+ }
 }
 ```
 
@@ -4284,23 +4265,23 @@ new PaymentService();
 Spring creates the object and supplies it.
 
 ```text
-                Spring
-                  |
-             creates beans
-                  |
-        ┌─────────┴─────────┐
-        ↓                   ↓
-OrderService         PaymentService
-        ↑
-        |
-   dependency injected
+ Spring
+ |
+ creates beans
+ |
+ ┌─────────┴─────────┐
+ ↓ ↓
+OrderService PaymentService
+ ↑
+ |
+ dependency injected
 ```
 
 That's **Inversion of Control**.
 
 ### Interview definition
 
-> **IoC means that the responsibility for creating, configuring, managing, and wiring application objects is transferred from the application code to the Spring container.**
+>**IoC means that the responsibility for creating, configuring, managing, and wiring application objects is transferred from the application code to the Spring container.**
 
 ---
 
@@ -4337,16 +4318,16 @@ The container is responsible for things like:
 Conceptually:
 
 ```text
-                IoC Container
-                     |
-       ┌─────────────┼─────────────┐
-       ↓             ↓             ↓
- OrderService   PaymentService  UserRepository
-       |             |             |
-       └─────────────┼─────────────┘
-                     |
-                Dependency
-                 Injection
+ IoC Container
+ |
+ ┌─────────────┼─────────────┐
+ ↓ ↓ ↓
+ OrderService PaymentService UserRepository
+ | | |
+ └─────────────┼─────────────┘
+ |
+ Dependency
+ Injection
 ```
 
 ---
@@ -4377,10 +4358,10 @@ You can also explicitly create a bean:
 @Configuration
 public class AppConfig {
 
-    @Bean
-    public PaymentService paymentService() {
-        return new PaymentService();
-    }
+ @Bean
+ public PaymentService paymentService() {
+ return new PaymentService();
+ }
 }
 ```
 
@@ -4388,11 +4369,11 @@ Now:
 
 ```text
 PaymentService
-      |
-      v
+ |
+ v
 Spring Container
-      |
-      v
+ |
+ v
 Managed Bean
 ```
 
@@ -4406,20 +4387,20 @@ This is where many interview candidates get confused.
 
 In simple terms:
 
-> **ApplicationContext is the central Spring container that creates, configures, stores, and manages beans and also provides additional application-level features.**
+>**ApplicationContext is the central Spring container that creates, configures, stores, and manages beans and also provides additional application-level features.**
 
 For example:
 
 ```java
 ApplicationContext context =
-        SpringApplication.run(Application.class, args);
+ SpringApplication.run(Application.class, args);
 ```
 
 You can retrieve a bean:
 
 ```java
 OrderService service =
-        context.getBean(OrderService.class);
+ context.getBean(OrderService.class);
 ```
 
 ---
@@ -4430,21 +4411,21 @@ A very important interview distinction:
 
 ```text
 IoC Container
-     |
-     +--> Concept / responsibility
-     |
-     +--> Spring manages beans
+ |
+ +--> Concept / responsibility
+ |
+ +--> Spring manages beans
 
 ApplicationContext
-     |
-     +--> Spring's powerful container abstraction
-     |
-     +--> Bean management
-     +--> Events
-     +--> Resources
-     +--> Environment
-     +--> Internationalization
-     +--> Application infrastructure
+ |
+ +--> Spring's powerful container abstraction
+ |
+ +--> Bean management
+ +--> Events
+ +--> Resources
+ +--> Environment
+ +--> Internationalization
+ +--> Application infrastructure
 ```
 
 Spring has historically had two major container interfaces:
@@ -4468,13 +4449,13 @@ Suppose you have:
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
+ public static void main(String[] args) {
 
-        SpringApplication.run(
-            Application.class,
-            args
-        );
-    }
+ SpringApplication.run(
+ Application.class,
+ args
+ );
+ }
 }
 ```
 
@@ -4482,35 +4463,35 @@ The simplified startup flow is:
 
 ```text
 main()
-  |
-  v
+ |
+ v
 SpringApplication.run()
-  |
-  v
+ |
+ v
 Create ApplicationContext
-  |
-  v
+ |
+ v
 Scan components
-  |
-  v
+ |
+ v
 Find @Component / @Service / @Repository etc.
-  |
-  v
+ |
+ v
 Create Bean Definitions
-  |
-  v
+ |
+ v
 Create Beans
-  |
-  v
+ |
+ v
 Resolve Dependencies
-  |
-  v
+ |
+ v
 Dependency Injection
-  |
-  v
+ |
+ v
 Initialize Beans
-  |
-  v
+ |
+ v
 Start Application
 ```
 
@@ -4528,13 +4509,13 @@ Suppose:
 @Service
 public class OrderService {
 
-    private final PaymentService paymentService;
+ private final PaymentService paymentService;
 
-    public OrderService(
-            PaymentService paymentService) {
+ public OrderService(
+ PaymentService paymentService) {
 
-        this.paymentService = paymentService;
-    }
+ this.paymentService = paymentService;
+ }
 }
 ```
 
@@ -4550,12 +4531,12 @@ Spring provides it.
 
 ```text
 Spring Container
-      |
-      +---- creates PaymentService
-      |
-      +---- creates OrderService
-                    |
-                    +---- injects PaymentService
+ |
+ +---- creates PaymentService
+ |
+ +---- creates OrderService
+ |
+ +---- injects PaymentService
 ```
 
 This is **Dependency Injection**.
@@ -4570,12 +4551,12 @@ Consider:
 @Service
 public class OrderService {
 
-    private final PaymentService paymentService;
+ private final PaymentService paymentService;
 
-    public OrderService(
-            PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+ public OrderService(
+ PaymentService paymentService) {
+ this.paymentService = paymentService;
+ }
 }
 ```
 
@@ -4592,10 +4573,10 @@ Testing becomes easy:
 
 ```java
 PaymentService paymentService =
-        mock(PaymentService.class);
+ mock(PaymentService.class);
 
 OrderService service =
-        new OrderService(paymentService);
+ new OrderService(paymentService);
 ```
 
 For modern Spring applications, **constructor injection is generally the preferred approach**.
@@ -4612,14 +4593,14 @@ Group them by purpose.
 
 ```text
 Spring Boot / Spring Annotations
-          |
+ |
  ┌────────┼───────────┬────────────┐
- ↓        ↓           ↓            ↓
-Startup  Beans     Configuration  Web
- ↓        ↓           ↓            ↓
-@Spring  @Service   @Configuration @RestController
-Boot     @Repository @Bean          @GetMapping
-         @Component  @Value         @PostMapping
+ ↓ ↓ ↓ ↓
+Startup Beans Configuration Web
+ ↓ ↓ ↓ ↓
+@Spring @Service @Configuration @RestController
+Boot @Repository @Bean @GetMapping
+ @Component @Value @PostMapping
 ```
 
 Let's go through the important ones.
@@ -4648,12 +4629,12 @@ Conceptually:
 
 ```text
 @SpringBootApplication
-        |
-        +---- @SpringBootConfiguration
-        |
-        +---- @EnableAutoConfiguration
-        |
-        +---- @ComponentScan
+ |
+ +---- @SpringBootConfiguration
+ |
+ +---- @EnableAutoConfiguration
+ |
+ +---- @ComponentScan
 ```
 
 ---
@@ -4682,17 +4663,17 @@ Example:
 
 ```text
 com.example
-   |
-   +-- Application
-   |
-   +-- controller
-   |      └── UserController
-   |
-   +-- service
-   |      └── UserService
-   |
-   +-- repository
-          └── UserRepository
+ |
+ +-- Application
+ |
+ +-- controller
+ | └── UserController
+ |
+ +-- service
+ | └── UserService
+ |
+ +-- repository
+ └── UserRepository
 ```
 
 If `Application` is at:
@@ -4747,10 +4728,10 @@ Conceptually:
 
 ```text
 @Component
-   |
-   +---- @Service
-   +---- @Repository
-   +---- @Controller
+ |
+ +---- @Service
+ +---- @Repository
+ +---- @Controller
 ```
 
 ---
@@ -4771,7 +4752,7 @@ With Spring Data:
 
 ```java
 public interface UserRepository
-        extends JpaRepository<User, Long> {
+ extends JpaRepository<User, Long> {
 }
 ```
 
@@ -4787,10 +4768,10 @@ Used for Spring MVC controllers, especially when returning views.
 @Controller
 public class HomeController {
 
-    @GetMapping("/home")
-    public String home() {
-        return "home";
-    }
+ @GetMapping("/home")
+ public String home() {
+ return "home";
+ }
 }
 ```
 
@@ -4806,10 +4787,10 @@ Used for REST APIs.
 @RestController
 public class UserController {
 
-    @GetMapping("/users")
-    public User getUser() {
-        return user;
-    }
+ @GetMapping("/users")
+ public User getUser() {
+ return user;
+ }
 }
 ```
 
@@ -4840,10 +4821,10 @@ For example:
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
-    public PaymentClient paymentClient() {
-        return new PaymentClient();
-    }
+ @Bean
+ public PaymentClient paymentClient() {
+ return new PaymentClient();
+ }
 }
 ```
 
@@ -4863,10 +4844,10 @@ Example:
 @Configuration
 public class AppConfig {
 
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
+ @Bean
+ public ObjectMapper objectMapper() {
+ return new ObjectMapper();
+ }
 }
 ```
 
@@ -4897,7 +4878,7 @@ Used on a method:
 ```java
 @Bean
 public EmailClient emailClient() {
-    return new EmailClient();
+ return new EmailClient();
 }
 ```
 
@@ -4913,7 +4894,7 @@ Example:
 ```java
 @Bean
 public RestClient restClient() {
-    return RestClient.builder().build();
+ return RestClient.builder().build();
 }
 ```
 
@@ -4933,14 +4914,14 @@ Example:
 @Service
 public class OrderService {
 
-    private final PaymentService paymentService;
+ private final PaymentService paymentService;
 
-    @Autowired
-    public OrderService(
-            PaymentService paymentService) {
+ @Autowired
+ public OrderService(
+ PaymentService paymentService) {
 
-        this.paymentService = paymentService;
-    }
+ this.paymentService = paymentService;
+ }
 }
 ```
 
@@ -4952,12 +4933,12 @@ So this is enough:
 @Service
 public class OrderService {
 
-    private final PaymentService paymentService;
+ private final PaymentService paymentService;
 
-    public OrderService(
-            PaymentService paymentService) {
-        this.paymentService = paymentService;
-    }
+ public OrderService(
+ PaymentService paymentService) {
+ this.paymentService = paymentService;
+ }
 }
 ```
 
@@ -4970,7 +4951,7 @@ Suppose:
 ```java
 @Component
 class PaypalPaymentService
-        implements PaymentService {
+ implements PaymentService {
 }
 ```
 
@@ -4979,7 +4960,7 @@ and:
 ```java
 @Component
 class StripePaymentService
-        implements PaymentService {
+ implements PaymentService {
 }
 ```
 
@@ -4987,7 +4968,7 @@ Then:
 
 ```java
 public OrderService(
-        PaymentService paymentService) {
+ PaymentService paymentService) {
 }
 ```
 
@@ -5017,7 +4998,7 @@ Example:
 @Component
 @Primary
 public class StripePaymentService
-        implements PaymentService {
+ implements PaymentService {
 }
 ```
 
@@ -5032,7 +5013,7 @@ Use:
 ```java
 @Component("stripe")
 public class StripePaymentService
-        implements PaymentService {
+ implements PaymentService {
 }
 ```
 
@@ -5040,8 +5021,8 @@ Then:
 
 ```java
 public OrderService(
-    @Qualifier("stripe")
-    PaymentService paymentService) {
+ @Qualifier("stripe")
+ PaymentService paymentService) {
 }
 ```
 
@@ -5055,7 +5036,7 @@ Used to inject configuration values.
 
 ```yaml
 app:
-  name: OrderService
+ name: OrderService
 ```
 
 Then:
@@ -5081,10 +5062,10 @@ For enterprise applications, this is very useful.
 
 ```yaml
 app:
-  payment:
-    timeout: 5s
-    retry-count: 3
-    enabled: true
+ payment:
+ timeout: 5s
+ retry-count: 3
+ enabled: true
 ```
 
 Java:
@@ -5093,9 +5074,9 @@ Java:
 @ConfigurationProperties(prefix = "app.payment")
 public class PaymentProperties {
 
-    private Duration timeout;
-    private int retryCount;
-    private boolean enabled;
+ private Duration timeout;
+ private int retryCount;
+ private boolean enabled;
 }
 ```
 
@@ -5111,7 +5092,7 @@ Used to activate beans only for specific environments.
 @Profile("dev")
 @Bean
 public PaymentClient mockPaymentClient() {
-    return new MockPaymentClient();
+ return new MockPaymentClient();
 }
 ```
 
@@ -5121,7 +5102,7 @@ Production:
 @Profile("prod")
 @Bean
 public PaymentClient realPaymentClient() {
-    return new RealPaymentClient();
+ return new RealPaymentClient();
 }
 ```
 
@@ -5146,20 +5127,20 @@ Spring delays creation until the bean is actually needed.
 Normal:
 
 Application startup
-      |
-      v
+ |
+ v
 Create Bean
 
 @Lazy:
 
 Application startup
-      |
-      v
+ |
+ v
 Don't create
 
 First usage
-      |
-      v
+ |
+ v
 Create Bean
 ```
 
@@ -5200,7 +5181,7 @@ Used to run initialization logic after dependency injection.
 ```java
 @PostConstruct
 public void init() {
-    System.out.println("Initialization");
+ System.out.println("Initialization");
 }
 ```
 
@@ -5208,14 +5189,14 @@ Lifecycle:
 
 ```text
 Create Bean
-    |
-    v
+ |
+ v
 Inject Dependencies
-    |
-    v
+ |
+ v
 @PostConstruct
-    |
-    v
+ |
+ v
 Bean Ready
 ```
 
@@ -5242,7 +5223,7 @@ Defines transaction boundaries.
 ```java
 @Transactional
 public void transferMoney() {
-    ...
+ ...
 }
 ```
 
@@ -5252,17 +5233,17 @@ Important senior interview point:
 
 ```text
 @Transactional
-      |
-      v
+ |
+ v
 Spring Proxy
-      |
-      v
+ |
+ v
 Transaction begin
-      |
-      v
+ |
+ v
 Method execution
-      |
-      v
+ |
+ v
 Commit / Rollback
 ```
 
@@ -5332,8 +5313,8 @@ Used for caching.
 ```java
 @Cacheable("users")
 public User findUser(Long id) {
-    return repository.findById(id)
-        .orElseThrow();
+ return repository.findById(id)
+ .orElseThrow();
 }
 ```
 
@@ -5341,16 +5322,16 @@ Flow:
 
 ```text
 Request
-   |
-   v
+ |
+ v
 Cache?
- /   \
-Yes   No
- |     |
-Return  DB
-        |
-        v
-      Cache
+ / \
+Yes No
+ | |
+Return DB
+ |
+ v
+ Cache
 ```
 
 ---
@@ -5361,11 +5342,11 @@ Removes data from cache.
 
 ```java
 @CacheEvict(
-    value = "users",
-    key = "#id"
+ value = "users",
+ key = "#id"
 )
 public void deleteUser(Long id) {
-    repository.deleteById(id);
+ repository.deleteById(id);
 }
 ```
 
@@ -5408,7 +5389,7 @@ Converts request JSON into a Java object.
 ```java
 @PostMapping("/users")
 public User create(
-        @RequestBody UserRequest request) {
+ @RequestBody UserRequest request) {
 }
 ```
 
@@ -5433,7 +5414,7 @@ Gets a value from the URL.
 ```java
 @GetMapping("/users/{id}")
 public User getUser(
-        @PathVariable Long id) {
+ @PathVariable Long id) {
 }
 ```
 
@@ -5458,7 +5439,7 @@ Gets a query parameter.
 ```java
 @GetMapping("/users")
 public List<User> getUsers(
-        @RequestParam String status) {
+ @RequestParam String status) {
 }
 ```
 
@@ -5483,9 +5464,9 @@ Triggers Bean Validation.
 ```java
 @PostMapping("/users")
 public User create(
-        @Valid
-        @RequestBody
-        CreateUserRequest request) {
+ @Valid
+ @RequestBody
+ CreateUserRequest request) {
 }
 ```
 
@@ -5494,11 +5475,11 @@ Example:
 ```java
 public class CreateUserRequest {
 
-    @NotBlank
-    private String name;
+ @NotBlank
+ private String name;
 
-    @Email
-    private String email;
+ @Email
+ private String email;
 }
 ```
 
@@ -5532,14 +5513,14 @@ This is particularly useful for REST APIs.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<?> handle(
-            UserNotFoundException ex) {
+ @ExceptionHandler(UserNotFoundException.class)
+ public ResponseEntity<?> handle(
+ UserNotFoundException ex) {
 
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(ex.getMessage());
-    }
+ return ResponseEntity
+ .status(HttpStatus.NOT_FOUND)
+ .body(ex.getMessage());
+ }
 }
 ```
 
@@ -5547,7 +5528,7 @@ This avoids duplicating:
 
 ```java
 try {
-   ...
+ ...
 } catch (...) {
 }
 ```
@@ -5562,10 +5543,10 @@ Defines a method to handle a particular exception.
 
 ```java
 @ExceptionHandler(
-    UserNotFoundException.class
+ UserNotFoundException.class
 )
 public ResponseEntity<?> handleUserNotFound(
-        UserNotFoundException ex) {
+ UserNotFoundException ex) {
 }
 ```
 
@@ -5629,8 +5610,8 @@ It tells JPA that a class represents a persistent entity.
 @Entity
 public class User {
 
-    @Id
-    private Long id;
+ @Id
+ private Long id;
 }
 ```
 
@@ -5644,12 +5625,12 @@ All are component stereotypes, but they communicate different responsibilities.
 
 ```text
 @Component
-    |
-    +---- @Service
-    |
-    +---- @Repository
-    |
-    +---- @Controller
+ |
+ +---- @Service
+ |
+ +---- @Repository
+ |
+ +---- @Controller
 ```
 
 ### `@Service`
@@ -5676,13 +5657,13 @@ Let's connect everything.
 @SpringBootApplication
 public class Application {
 
-    public static void main(String[] args) {
+ public static void main(String[] args) {
 
-        SpringApplication.run(
-            Application.class,
-            args
-        );
-    }
+ SpringApplication.run(
+ Application.class,
+ args
+ );
+ }
 }
 ```
 
@@ -5693,20 +5674,20 @@ Controller:
 @RequestMapping("/users")
 public class UserController {
 
-    private final UserService userService;
+ private final UserService userService;
 
-    public UserController(
-            UserService userService) {
+ public UserController(
+ UserService userService) {
 
-        this.userService = userService;
-    }
+ this.userService = userService;
+ }
 
-    @GetMapping("/{id}")
-    public User getUser(
-            @PathVariable Long id) {
+ @GetMapping("/{id}")
+ public User getUser(
+ @PathVariable Long id) {
 
-        return userService.getUser(id);
-    }
+ return userService.getUser(id);
+ }
 }
 ```
 
@@ -5716,24 +5697,24 @@ Service:
 @Service
 public class UserService {
 
-    private final UserRepository repository;
+ private final UserRepository repository;
 
-    public UserService(
-            UserRepository repository) {
+ public UserService(
+ UserRepository repository) {
 
-        this.repository = repository;
-    }
+ this.repository = repository;
+ }
 
-    @Transactional(readOnly = true)
-    public User getUser(Long id) {
+ @Transactional(readOnly = true)
+ public User getUser(Long id) {
 
-        return repository.findById(id)
-                .orElseThrow(
-                    () -> new RuntimeException(
-                        "User not found"
-                    )
-                );
-    }
+ return repository.findById(id)
+ .orElseThrow(
+ () -> new RuntimeException(
+"User not found"
+ )
+ );
+ }
 }
 ```
 
@@ -5742,23 +5723,23 @@ Repository:
 ```java
 @Repository
 public interface UserRepository
-        extends JpaRepository<User, Long> {
+ extends JpaRepository<User, Long> {
 }
 ```
 
 The dependency flow is:
 
 ```text
-              Spring ApplicationContext
-                       |
-                       |
-          ┌────────────┼────────────┐
-          ↓            ↓            ↓
-      Controller     Service     Repository
-          |            |            |
-          └────────────┼────────────┘
-                       |
-                Dependency Injection
+ Spring ApplicationContext
+ |
+ |
+ ┌────────────┼────────────┐
+ ↓ ↓ ↓
+ Controller Service Repository
+ | | |
+ └────────────┼────────────┘
+ |
+ Dependency Injection
 ```
 
 ---
@@ -5767,36 +5748,36 @@ The dependency flow is:
 
 If an interviewer asks:
 
-> **"Explain ApplicationContext, IoC, DI and Spring Boot annotations."**
+>**"Explain ApplicationContext, IoC, DI and Spring Boot annotations."**
 
 Don't explain them as four unrelated topics.
 
 Explain the relationship:
 
 ```text
-                    Spring Boot
-                         |
-                         v
-              Application Startup
-                         |
-                         v
-                 ApplicationContext
-                         |
-                         v
-                  IoC Container
-                         |
-              ┌──────────┴──────────┐
-              |                     |
-        Creates Beans          Manages Beans
-              |                     |
-              └──────────┬──────────┘
-                         |
-                         v
-                Dependency Injection
-                         |
-          ┌──────────────┼──────────────┐
-          ↓              ↓              ↓
-     Controller       Service       Repository
+ Spring Boot
+ |
+ v
+ Application Startup
+ |
+ v
+ ApplicationContext
+ |
+ v
+ IoC Container
+ |
+ ┌──────────┴──────────┐
+ | |
+ Creates Beans Manages Beans
+ | |
+ └──────────┬──────────┘
+ |
+ v
+ Dependency Injection
+ |
+ ┌──────────────┼──────────────┐
+ ↓ ↓ ↓
+ Controller Service Repository
 ```
 
 And the annotations tell Spring **what those classes/objects mean and how they should be configured**.
@@ -5805,53 +5786,53 @@ For example:
 
 ```text
 @SpringBootApplication
-        ↓
+ ↓
 Starts/configures Boot application
 
 @Component / @Service / @Repository / @Controller
-        ↓
+ ↓
 Identify Spring-managed components
 
 @Bean
-        ↓
+ ↓
 Explicitly register an object
 
 @Autowired / constructor
-        ↓
+ ↓
 Dependency Injection
 
 @Configuration
-        ↓
+ ↓
 Application configuration
 
 @ConfigurationProperties
-        ↓
+ ↓
 External configuration binding
 
 @Transactional
-        ↓
+ ↓
 Transaction boundary
 
 @Cacheable
-        ↓
+ ↓
 Caching
 
 @Async
-        ↓
+ ↓
 Asynchronous execution
 
 @Scheduled
-        ↓
+ ↓
 Scheduled execution
 
 @RestController
-        ↓
+ ↓
 REST API endpoint
 ```
 
 ### ⭐ Senior interview one-liner
 
-> **"Spring Boot starts the application and creates an ApplicationContext. The ApplicationContext acts as the IoC container, managing Spring Beans and their lifecycle. IoC means Spring takes responsibility for object creation and wiring, while Dependency Injection is the mechanism through which those dependencies are supplied to objects. Spring Boot annotations such as `@SpringBootApplication`, `@Service`, `@Repository`, `@RestController`, `@Configuration`, `@Bean`, and `@ConfigurationProperties` provide metadata that tells Spring how to discover, create, configure, and manage those components."**
+>**"Spring Boot starts the application and creates an ApplicationContext. The ApplicationContext acts as the IoC container, managing Spring Beans and their lifecycle. IoC means Spring takes responsibility for object creation and wiring, while Dependency Injection is the mechanism through which those dependencies are supplied to objects. Spring Boot annotations such as `@SpringBootApplication`, `@Service`, `@Repository`, `@RestController`, `@Configuration`, `@Bean`, and `@ConfigurationProperties` provide metadata that tells Spring how to discover, create, configure, and manage those components."**
 
 That is the **core mental model** you should carry into almost every Spring Boot interview.
 
@@ -5874,8 +5855,8 @@ Activate:
 
 ```yaml
 spring:
-  profiles:
-    active: prod
+ profiles:
+ active: prod
 ```
 
 Or:
@@ -5890,7 +5871,7 @@ Example:
 @Profile("prod")
 @Bean
 PaymentClient productionPaymentClient() {
-    return new ProductionPaymentClient();
+ return new ProductionPaymentClient();
 }
 ```
 
@@ -5906,12 +5887,12 @@ Instead:
 
 ```text
 Same Docker Image
-        |
-        +--> DEV configuration
-        |
-        +--> QA configuration
-        |
-        +--> PROD configuration
+ |
+ +--> DEV configuration
+ |
+ +--> QA configuration
+ |
+ +--> PROD configuration
 ```
 
 Use:
@@ -5929,7 +5910,7 @@ For Kubernetes:
 
 ```text
 ConfigMap -> non-sensitive configuration
-Secret    -> credentials/secrets
+Secret -> credentials/secrets
 ```
 
 The application artifact remains the same.
@@ -5950,7 +5931,7 @@ or commit:
 
 ```yaml
 database:
-  password: password123
+ password: password123
 ```
 
 Use:
@@ -5967,11 +5948,11 @@ For your EKS-style deployment architecture:
 
 ```text
 AWS Secrets Manager
-       |
-       v
+ |
+ v
 Kubernetes / External Secrets
-       |
-       v
+ |
+ v
 Spring Boot
 ```
 
@@ -6003,15 +5984,14 @@ public class HomeController {
 ```
 
 `@RestController` is designed for REST APIs:
-
 ```java
 @RestController
 public class UserController {
 
-    @GetMapping("/users")
-    public List<User> users() {
-        return service.findAll();
-    }
+ @GetMapping("/users")
+ public List<User> users() {
+ return service.findAll();
+ }
 }
 ```
 
@@ -6027,11 +6007,11 @@ Flow:
 
 ```text
 Java Object
-    |
-    v
+ |
+ v
 Jackson
-    |
-    v
+ |
+ v
 JSON
 ```
 
@@ -6051,8 +6031,8 @@ Example:
 
 ```json
 {
-  "name": "Goutham",
-  "age": 28
+"name": "Goutham",
+"age": 28
 }
 ```
 
@@ -6080,17 +6060,17 @@ Example:
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handle(
-            UserNotFoundException ex) {
+ @ExceptionHandler(UserNotFoundException.class)
+ public ResponseEntity<ErrorResponse> handle(
+ UserNotFoundException ex) {
 
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(new ErrorResponse(
-                "USER_NOT_FOUND",
-                ex.getMessage()
-            ));
-    }
+ return ResponseEntity
+ .status(HttpStatus.NOT_FOUND)
+ .body(new ErrorResponse(
+"USER_NOT_FOUND",
+ ex.getMessage()
+ ));
+ }
 }
 ```
 
@@ -6111,17 +6091,17 @@ I would consider:
 
 ```text
 Controller
-   |
-   v
+ |
+ v
 DTO
-   |
-   v
+ |
+ v
 Validation
-   |
-   v
+ |
+ v
 Service
-   |
-   v
+ |
+ v
 Repository
 ```
 
@@ -6165,14 +6145,14 @@ Example:
 ```java
 public class CreateUserRequest {
 
-    @NotBlank
-    private String name;
+ @NotBlank
+ private String name;
 
-    @Email
-    private String email;
+ @Email
+ private String email;
 
-    @Min(18)
-    private int age;
+ @Min(18)
+ private int age;
 }
 ```
 
@@ -6181,9 +6161,9 @@ Controller:
 ```java
 @PostMapping("/users")
 public User create(
-        @Valid @RequestBody CreateUserRequest request) {
+ @Valid @RequestBody CreateUserRequest request) {
 
-    return service.create(request);
+ return service.create(request);
 }
 ```
 
@@ -6224,7 +6204,7 @@ For example:
 
 ```java
 public interface UserRepository
-        extends JpaRepository<User, Long> {
+ extends JpaRepository<User, Long> {
 }
 ```
 
@@ -6309,9 +6289,9 @@ Example:
 
 ```java
 @Query("""
-    select o
-    from Order o
-    join fetch o.customer
+ select o
+ from Order o
+ join fetch o.customer
 """)
 List<Order> findOrdersWithCustomer();
 ```
@@ -6333,12 +6313,12 @@ Example:
 ```java
 @Transactional
 public void transferMoney(
-        Long source,
-        Long target,
-        BigDecimal amount) {
+ Long source,
+ Long target,
+ BigDecimal amount) {
 
-    debit(source, amount);
-    credit(target, amount);
+ debit(source, amount);
+ credit(target, amount);
 }
 ```
 
@@ -6346,14 +6326,14 @@ If an unchecked exception occurs and rollback rules apply:
 
 ```text
 Debit
-  |
-  v
+ |
+ v
 Credit
-  |
-  v
+ |
+ v
 Exception
-  |
-  v
+ |
+ v
 Rollback
 ```
 
@@ -6388,11 +6368,11 @@ For example:
 ```java
 @Transactional
 public void process() {
-    try {
-        ...
-    } catch (Exception e) {
-        // swallowed
-    }
+ try {
+ ...
+ } catch (Exception e) {
+ // swallowed
+ }
 }
 ```
 
@@ -6430,11 +6410,11 @@ Example:
 
 ```text
 Outer Transaction
-       |
-       v
+ |
+ v
 REQUIRES_NEW
-       |
-       v
+ |
+ v
 Independent Transaction
 ```
 
@@ -6517,10 +6497,10 @@ For example:
 
 ```text
 Kubernetes
-    |
-    +--> livenessProbe
-    |
-    +--> readinessProbe
+ |
+ +--> livenessProbe
+ |
+ +--> readinessProbe
 ```
 
 Conceptually:
@@ -6553,13 +6533,13 @@ Example:
 
 ```text
 Application running
-       |
-       +--> Liveness = UP
-       |
-       +--> Database unavailable
-                 |
-                 v
-          Readiness = DOWN
+ |
+ +--> Liveness = UP
+ |
+ +--> Database unavailable
+ |
+ v
+ Readiness = DOWN
 ```
 
 You don't want Kubernetes restarting all application pods just because a downstream dependency is temporarily unavailable.
@@ -6628,15 +6608,15 @@ Typical stack:
 
 ```text
 Spring Boot Actuator
-        |
-        v
+ |
+ v
 Micrometer
-        |
-        +--> Prometheus
-        |
-        +--> Grafana
-        |
-        +--> Cloud monitoring
+ |
+ +--> Prometheus
+ |
+ +--> Grafana
+ |
+ +--> Cloud monitoring
 ```
 
 ---
@@ -6653,15 +6633,15 @@ Conceptually:
 
 ```text
 Spring Boot
-    |
-    v
+ |
+ v
 Micrometer
-    |
-    +--> Prometheus
-    +--> Datadog
-    +--> New Relic
-    +--> CloudWatch
-    +--> etc.
+ |
+ +--> Prometheus
+ +--> Datadog
+ +--> New Relic
+ +--> CloudWatch
+ +--> etc.
 ```
 
 This avoids coupling application instrumentation directly to one monitoring vendor.
@@ -6680,13 +6660,13 @@ Example:
 
 ```json
 {
-  "timestamp": "...",
-  "level": "ERROR",
-  "service": "order-service",
-  "traceId": "...",
-  "spanId": "...",
-  "orderId": "123",
-  "message": "Payment failed"
+"timestamp": "...",
+"level": "ERROR",
+"service": "order-service",
+"traceId": "...",
+"spanId": "...",
+"orderId": "123",
+"message": "Payment failed"
 }
 ```
 
@@ -6741,8 +6721,8 @@ Then:
 ```java
 @Cacheable("users")
 public User findUser(Long id) {
-    return repository.findById(id)
-        .orElseThrow();
+ return repository.findById(id)
+ .orElseThrow();
 }
 ```
 
@@ -6750,16 +6730,16 @@ Flow:
 
 ```text
 Request
-  |
-  v
+ |
+ v
 Cache?
- /   \
-Yes   No
- |     |
-Return  DB
-        |
-        v
-      Cache
+ / \
+Yes No
+ | |
+Return DB
+ |
+ v
+ Cache
 ```
 
 ---
@@ -6796,19 +6776,19 @@ Example:
 
 ```text
 Create User
-    |
-    v
+ |
+ v
 DB
-    |
-    v
+ |
+ v
 Cache
 
 Update User
-    |
-    v
+ |
+ v
 DB
-    |
-    v
+ |
+ v
 Update Cache
 ```
 
@@ -6831,7 +6811,7 @@ and:
 ```java
 @Async
 public CompletableFuture<Result> process() {
-    ...
+ ...
 }
 ```
 
@@ -6925,8 +6905,8 @@ Tests one component in isolation.
 
 ```text
 Service
-  |
-  +--> Mock Repository
+ |
+ +--> Mock Repository
 ```
 
 Fast.
@@ -6937,11 +6917,11 @@ Tests multiple real components.
 
 ```text
 Controller
-   |
+ |
 Service
-   |
+ |
 Repository
-   |
+ |
 Database
 ```
 
@@ -7046,14 +7026,14 @@ Instead of opening a database connection for every request:
 
 ```text
 Request
-  |
-  v
+ |
+ v
 Create DB connection
-  |
-  v
+ |
+ v
 Query
-  |
-  v
+ |
+ v
 Close
 ```
 
@@ -7102,8 +7082,8 @@ For a traditional blocking service:
 
 ```text
 Order Service
-     |
-     v
+ |
+ v
 Customer Service
 ```
 
@@ -7111,8 +7091,8 @@ For reactive applications:
 
 ```text
 WebFlux
-   |
-   v
+ |
+ v
 WebClient
 ```
 
@@ -7138,14 +7118,14 @@ Suppose:
 
 ```text
 Service A
-   |
-   v
+ |
+ v
 Service B
-   |
-   v
+ |
+ v
 Service C
-   |
-   v
+ |
+ v
 Database
 ```
 
@@ -7155,12 +7135,12 @@ Eventually:
 
 ```text
 Service A
-   |
-   +--> threads blocked
-   +--> connection pool exhausted
-   +--> request queue grows
-   +--> latency increases
-   +--> service fails
+ |
+ +--> threads blocked
+ +--> connection pool exhausted
+ +--> request queue grows
+ +--> latency increases
+ +--> service fails
 ```
 
 This is a cascading failure.
@@ -7188,34 +7168,34 @@ States:
 
 ```text
 CLOSED
-   |
-   | failures exceed threshold
-   v
+ |
+ | failures exceed threshold
+ v
 OPEN
-   |
-   | wait
-   v
+ |
+ | wait
+ v
 HALF_OPEN
-   |
-   +--> success -> CLOSED
-   |
-   +--> failure -> OPEN
+ |
+ +--> success -> CLOSED
+ |
+ +--> failure -> OPEN
 ```
 
 Example:
 
 ```text
 Order Service
-     |
-     v
+ |
+ v
 Payment Service
-     |
-   FAILING
-     |
-     v
+ |
+ FAILING
+ |
+ v
 Circuit Breaker
-     |
-     v
+ |
+ v
 Fallback / Error
 ```
 
@@ -7278,14 +7258,14 @@ Architecture:
 
 ```text
 Producer
-   |
-   v
+ |
+ v
 Kafka Topic
-   |
-   v
+ |
+ v
 Consumer
-   |
-   v
+ |
+ v
 Spring Boot
 ```
 
@@ -7315,11 +7295,11 @@ Example:
 
 ```text
 Receive message
-     |
-     v
+ |
+ v
 Process successfully
-     |
-     X
+ |
+ X
 Crash before offset commit
 ```
 
@@ -7327,8 +7307,8 @@ After restart:
 
 ```text
 Same message
-     |
-     v
+ |
+ v
 Processed again
 ```
 
@@ -7354,20 +7334,20 @@ Typical Docker flow:
 
 ```text
 Source Code
-    |
-    v
+ |
+ v
 Maven/Gradle Build
-    |
-    v
+ |
+ v
 Spring Boot JAR
-    |
-    v
+ |
+ v
 Docker Image
-    |
-    v
+ |
+ v
 Container Registry
-    |
-    v
+ |
+ v
 Kubernetes/EKS
 ```
 
@@ -7392,32 +7372,32 @@ For production, use a suitable supported JDK/JRE base image, non-root execution 
 A typical architecture:
 
 ```text
-                    EKS
-                     |
-        ┌────────────┼────────────┐
-        |            |            |
-       Pod          Pod          Pod
-        |            |            |
- Spring Boot   Spring Boot   Spring Boot
+ EKS
+ |
+ ┌────────────┼────────────┐
+ | | |
+ Pod Pod Pod
+ | | |
+ Spring Boot Spring Boot Spring Boot
 ```
 
 Configuration:
 
 ```text
 ConfigMap
-   |
-   v
+ |
+ v
 Environment Variables
-   |
-   v
+ |
+ v
 Spring Boot
 
 Secret
-   |
-   v
+ |
+ v
 Environment Variables / mounted secret
-   |
-   v
+ |
+ v
 Spring Boot
 ```
 
@@ -7516,10 +7496,10 @@ Then each service adds:
 
 ```xml
 <dependency>
-    <groupId>com.company</groupId>
-    <artifactId>
-        company-observability-spring-boot-starter
-    </artifactId>
+ <groupId>com.company</groupId>
+ <artifactId>
+ company-observability-spring-boot-starter
+ </artifactId>
 </dependency>
 ```
 
@@ -7615,19 +7595,19 @@ Check:
 
 ```bash
 kubectl logs
-kubectl describe pod
-kubectl get events
+kubectl describepod
+kubectl getevents
 ```
 
 Then determine:
 
 ```text
 Application problem
-        vs
+ vs
 Configuration problem
-        vs
+ vs
 Infrastructure problem
-        vs
+ vs
 Dependency problem
 ```
 
@@ -7644,17 +7624,17 @@ I would not immediately change JVM settings.
 I'd investigate in this order:
 
 ```text
-                    API
-                     |
-                     v
-              Spring Boot
-                     |
-       ┌─────────────┼─────────────┐
-       |             |             |
-      DB           Redis         Kafka
-       |             |             |
-       v             v             v
-   Latency        Latency       Consumer Lag
+ API
+ |
+ v
+ Spring Boot
+ |
+ ┌─────────────┼─────────────┐
+ | | |
+ DB Redis Kafka
+ | | |
+ v v v
+ Latency Latency Consumer Lag
 ```
 
 ### Step 1 — Compare p50 vs p99
@@ -7745,15 +7725,15 @@ Trace a slow request:
 
 ```text
 API Gateway
-     |
-     v
-Service A       20ms
-     |
-     v
-Service B       1.8s  <-- bottleneck
-     |
-     v
-Database        10ms
+ |
+ v
+Service A 20ms
+ |
+ v
+Service B 1.8s <-- bottleneck
+ |
+ v
+Database 10ms
 ```
 
 Then fix the actual bottleneck rather than blindly increasing:
@@ -7771,23 +7751,23 @@ connection pool
 
 For a **Senior Java Developer interview**, if you have limited time, prioritize these:
 
-| Priority | Topic                                               | Interview Importance |
+| Priority | Topic | Interview Importance |
 | -------- | --------------------------------------------------- | -------------------- |
-| ⭐⭐⭐⭐⭐    | `@SpringBootApplication` internals                  | Very High            |
-| ⭐⭐⭐⭐⭐    | Auto-configuration                                  | Very High            |
-| ⭐⭐⭐⭐⭐    | `@ConditionalOnClass` / `@ConditionalOnMissingBean` | Very High            |
-| ⭐⭐⭐⭐⭐    | Spring Boot startup lifecycle                       | Very High            |
-| ⭐⭐⭐⭐⭐    | `@ConfigurationProperties` vs `@Value`              | Very High            |
-| ⭐⭐⭐⭐⭐    | Profiles/configuration management                   | Very High            |
-| ⭐⭐⭐⭐⭐    | `@Transactional` internals                          | Very High            |
-| ⭐⭐⭐⭐⭐    | Actuator                                            | Very High            |
-| ⭐⭐⭐⭐⭐    | Liveness vs Readiness                               | Very High            |
-| ⭐⭐⭐⭐⭐    | HikariCP                                            | Very High            |
-| ⭐⭐⭐⭐⭐    | N+1 / JPA performance                               | Very High            |
-| ⭐⭐⭐⭐⭐    | Microservice timeouts/retries                       | Very High            |
-| ⭐⭐⭐⭐⭐    | Spring Boot + Kafka                                 | Very High            |
-| ⭐⭐⭐⭐⭐    | Kubernetes/EKS deployment                           | Very High            |
-| ⭐⭐⭐⭐⭐    | Production troubleshooting                          | **Critical**         |
+| ⭐⭐⭐⭐⭐ | `@SpringBootApplication` internals | Very High |
+| ⭐⭐⭐⭐⭐ | Auto-configuration | Very High |
+| ⭐⭐⭐⭐⭐ | `@ConditionalOnClass` / `@ConditionalOnMissingBean` | Very High |
+| ⭐⭐⭐⭐⭐ | Spring Boot startup lifecycle | Very High |
+| ⭐⭐⭐⭐⭐ | `@ConfigurationProperties` vs `@Value` | Very High |
+| ⭐⭐⭐⭐⭐ | Profiles/configuration management | Very High |
+| ⭐⭐⭐⭐⭐ | `@Transactional` internals | Very High |
+| ⭐⭐⭐⭐⭐ | Actuator | Very High |
+| ⭐⭐⭐⭐⭐ | Liveness vs Readiness | Very High |
+| ⭐⭐⭐⭐⭐ | HikariCP | Very High |
+| ⭐⭐⭐⭐⭐ | N+1 / JPA performance | Very High |
+| ⭐⭐⭐⭐⭐ | Microservice timeouts/retries | Very High |
+| ⭐⭐⭐⭐⭐ | Spring Boot + Kafka | Very High |
+| ⭐⭐⭐⭐⭐ | Kubernetes/EKS deployment | Very High |
+| ⭐⭐⭐⭐⭐ | Production troubleshooting | **Critical** |
 
 ---
 
@@ -7799,13 +7779,13 @@ For each topic, prepare this **5-level explanation**:
 
 ```text
 1. What is it?
-       ↓
+ ↓
 2. Why do we use it?
-       ↓
+ ↓
 3. How does it work internally?
-       ↓
+ ↓
 4. How have I used it in production?
-       ↓
+ ↓
 5. What problems/trade-offs did I face?
 ```
 
@@ -7845,9 +7825,714 @@ The current Boot documentation also explicitly covers **auto-configuration, exte
 
 [Spring Boot System Requirements](https://docs.spring.io/spring-boot/system-requirements.html?utm_source=chatgpt.com)
 
-[1]: https://docs.spring.io/spring-boot/reference/index.html?utm_source=chatgpt.com "Reference :: Spring Boot"
-[2]: https://docs.spring.io/spring-boot/reference/using/auto-configuration.html?utm_source=chatgpt.com "Auto-configuration :: Spring Boot"
-[3]: https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html?utm_source=chatgpt.com "Creating Your Own Auto-configuration :: Spring Boot"
-[4]: https://docs.spring.io/spring-boot/reference/features/external-config.html?utm_source=chatgpt.com "Externalized Configuration :: Spring Boot"
-[5]: https://docs.spring.io/spring-boot/system-requirements.html?utm_source=chatgpt.com "System Requirements :: Spring Boot"
- 
+[1]: https://docs.spring.io/spring-boot/reference/index.html?utm_source=chatgpt.com"Reference :: Spring Boot"
+[2]: https://docs.spring.io/spring-boot/reference/using/auto-configuration.html?utm_source=chatgpt.com"Auto-configuration :: Spring Boot"
+[3]: https://docs.spring.io/spring-boot/reference/features/developing-auto-configuration.html?utm_source…"Creating Your Own Auto-configuration :: Spring Boot"
+[4]: https://docs.spring.io/spring-boot/reference/features/external-config.html?utm_source=chatgpt.com"Externalized Configuration :: Spring Boot"
+[5]: https://docs.spring.io/spring-boot/system-requirements.html?utm_source=chatgpt.com"System Requirements :: Spring Boot"
+
+---
+
+# Production and Current-Industry Appendix
+
+The complete supplied Spring Boot interview material above is preserved. This appendix connects those concepts to production design, failure handling, security, testing, operations and senior-level interview answers.
+
+# Appendix A1. The Senior Spring Boot Mental Model
+
+Think of a Spring Boot application as several cooperating layers:
+
+```text
+HTTP/event entry point
+ |
+ v
+Validation and authorization
+ |
+ v
+Application use case
+ |
+ +--> domain rules
+ +--> repository or client
+ +--> transaction boundary
+ `--> event/outbox/workflow
+ |
+ v
+Response, event or durable state
+```
+
+Spring provides infrastructure for these layers, but it does not decide business correctness automatically. A senior developer explains where validation, authorization, transaction ownership, retries and observability belong.
+
+# Appendix A2. Constructor Injection and Bean Design
+
+Prefer required dependencies in constructors:
+
+```java
+@Service
+public class OrderService {
+
+ private final OrderRepository orderRepository;
+ private final PaymentClient paymentClient;
+
+ public OrderService(
+ OrderRepository orderRepository,
+ PaymentClient paymentClient) {
+ this.orderRepository = orderRepository;
+ this.paymentClient = paymentClient;
+ }
+}
+```
+
+Benefits:
+
+- The object cannot be created without required dependencies.
+- Fields can remain final.
+- Unit tests can construct the class directly.
+- Circular dependencies become visible early.
+- The class's dependency count is easy to review.
+
+If a service has many dependencies, the problem may be design complexity rather than a need for more injection annotations. Split responsibilities around use cases or ports.
+
+# Appendix A3. Configuration with `@ConfigurationProperties`
+
+Use type-safe configuration for related settings:
+
+```java
+@ConfigurationProperties(prefix = "payment")
+public record PaymentProperties(
+ URI baseUrl,
+ Duration timeout,
+ int maxAttempts) {
+}
+```
+
+```yaml
+payment:
+ base-url: https://payment.internal
+ timeout: 2s
+ max-attempts: 3
+```
+
+This is clearer than scattering string lookups across services. Validate required configuration at startup:
+
+```java
+@ConfigurationProperties(prefix = "payment")
+@Validated
+public record PaymentProperties(
+ @NotNull URI baseUrl,
+ @NotNull Duration timeout,
+ @Min(1) int maxAttempts) {
+}
+```
+
+Use environment variables, Parameter Store or a secret manager for deployment-specific values. Do not commit passwords, private keys or production tokens into YAML, source code or container images.
+
+# Appendix A4. Configuration Precedence and Safety
+
+When debugging configuration, identify the winning property source:
+```text
+application.yml
+profile-specific YAML
+environment variables
+command-line arguments
+external configuration/imports
+secret/configuration service
+```
+
+The exact precedence depends on the Spring Boot version and configuration mechanism. Verify it rather than guessing. For every sensitive property, document:
+
+```text
+Owner
+Source
+Rotation process
+Allowed environments
+Failure behaviour
+Audit requirements
+```
+
+Fail fast for mandatory configuration. A service that starts with an empty signing key is more dangerous than a service that refuses to start.
+
+# Appendix A5. REST API Boundaries
+
+A production controller should be thin:
+
+```java
+@RestController
+@RequestMapping("/orders")
+public class OrderController {
+
+ private final OrderApplicationService service;
+
+ @PostMapping
+ ResponseEntity<OrderResponse> create(
+ @Valid @RequestBody CreateOrderRequest request) {
+ OrderResponse response = service.create(request);
+ return ResponseEntity.status(HttpStatus.CREATED).body(response);
+ }
+}
+```
+
+Keep transport DTOs separate from persistence entities and domain objects. This avoids exposing database structure as a public API and lets the API evolve independently.
+
+Define:
+
+- Request and response schemas.
+- Status-code behaviour.
+- Validation errors.
+- Idempotency requirements.
+- Authentication and resource authorization.
+- Pagination and filtering rules.
+- Compatibility and deprecation policy.
+
+# Appendix A6. Validation and Problem Details
+
+Validate at the boundary, then enforce business rules in the application layer. Use a consistent error shape, such as an RFC 9457-style problem detail:
+
+```json
+{
+"type": "https://api.example.com/problems/validation-error",
+"title": "Request validation failed",
+"status": 400,
+"detail": "One or more fields are invalid",
+"instance": "/orders",
+"errors": [
+ {
+"field": "items",
+"code": "NotEmpty"
+ }
+ ],
+"traceId": "abc-123"
+}
+```
+
+Do not expose stack traces, SQL text, internal hostnames or secret values to API clients. Log diagnostic details internally with a correlation ID.
+
+# Appendix A7. Exception Handling Strategy
+
+Use a single, intentional mapping from application failures to HTTP responses:
+
+```text
+Validation failure -> 400
+Authentication failure -> 401
+Authorization failure -> 403
+Resource not found -> 404
+Business conflict -> 409
+Rate limit -> 429
+Unexpected failure -> 500
+```
+
+The exact status depends on the API contract. Avoid catching `Exception` everywhere and returning success. That hides outages and can cause message consumers to acknowledge failed work.
+
+For asynchronous handlers, classify errors explicitly:
+
+```text
+Permanent invalid message -> quarantine/DLQ and acknowledge deliberately
+Transient dependency error -> bounded retry
+Business conflict -> record outcome according to contract
+Unknown failure -> fail visibly and preserve evidence
+```
+
+# Appendix A8. Transaction Ownership in Spring
+
+Place `@Transactional` around an application use case that owns one database consistency boundary:
+
+```java
+@Service
+public class OrderApplicationService {
+
+ @Transactional
+ public OrderId create(CreateOrderCommand command) {
+ Order order = orderFactory.create(command);
+ orderRepository.save(order);
+ outboxRepository.save(OrderCreated.from(order));
+ return order.id();
+ }
+}
+```
+
+The transaction protects the configured database resources. It does not make an HTTP call, Kafka publish or email send atomic with the database. Use an outbox, workflow or explicit compensation for cross-system operations.
+
+# Appendix A9. Spring Transaction Traps
+
+Senior interview points:
+
+- Proxy-based transaction interception can be bypassed by self-invocation.
+- Runtime exceptions normally trigger rollback; checked exceptions need explicit policy.
+- A transaction on a private method may not be intercepted as expected.
+- Long network calls inside transactions hold connections and locks.
+- `readOnly` is a performance/provider hint, not a universal write prohibition.
+- Transaction propagation changes whether a method joins, suspends or creates a transaction.
+- Isolation level does not solve external side effects or duplicate messages.
+
+Always state the database and transaction manager when discussing exact behaviour.
+
+# Appendix A10. JPA Entity and API Separation
+
+Avoid returning entities directly from controllers:
+
+```text
+Database entity
+ -> persistence mapping and relationships
+
+API DTO
+ -> public contract and serialization
+
+Domain model
+ -> business invariants and use cases
+```
+
+This prevents accidental lazy-loading during serialization, sensitive-field exposure and API contracts coupled to schema migrations.
+
+Use projections for read-heavy endpoints:
+
+```java
+public record OrderSummary(
+ long id,
+ BigDecimal amount,
+ String status) {
+}
+```
+
+Read only what the endpoint needs. A `findAll()` that materializes a large object graph is rarely a production query design.
+
+# Appendix A11. JPA Fetching and N+1 Prevention
+
+Inspect generated SQL for every non-trivial repository method. A method that loads orders and then accesses customer or item relationships can issue:
+
+```text
+1 query for orders
+N queries for customers/items
+```
+
+Use one of these deliberately:
+
+```text
+DTO projection
+Controlled fetch join
+EntityGraph
+Batch fetching
+Separate bounded queries
+JdbcTemplate for tuned SQL
+```
+
+Do not solve N+1 by making every relationship eager. That may replace many small queries with a huge join, duplicate rows and memory pressure.
+
+# Appendix A12. Optimistic and Pessimistic Concurrency
+
+Optimistic locking is a good fit when conflicts are uncommon:
+
+```java
+@Version
+private long version;
+```
+
+The update succeeds only if the version still matches. Return a clear conflict response or retry according to business rules.
+
+Pessimistic locking can serialize access:
+
+```sql
+SELECT *
+FROM inventory
+WHERE product_id = :productId
+FOR UPDATE;
+```
+
+Use it only inside a short, well-understood transaction. It can create lock waits and deadlocks under load.
+
+# Appendix A13. Resilience for Outbound HTTP Calls
+
+Configure each client with:
+
+```text
+Connection timeout
+Response timeout
+Total deadline
+Bounded retries
+Exponential backoff with jitter
+Circuit breaker
+Bulkhead/concurrency limit
+```
+
+Retry only operations that are safe to repeat or have an idempotency key. A retrying client can amplify an outage:
+
+```text
+100 requests
+ x 3 client retries
+ x 2 gateway retries
+ = 600 downstream attempts
+```
+
+Use Resilience4j or an established platform pattern where appropriate, and monitor the rejected, timed-out and fallback paths.
+
+# Appendix A14. Messaging and Idempotency
+
+For SQS, Kafka or other at-least-once systems:
+
+```text
+Receive event
+ -> validate envelope
+ -> claim durable idempotency key
+ -> perform business operation
+ -> record outcome
+ -> acknowledge/commit offset
+```
+
+Do not rely on a static Java collection for durable deduplication. Use a unique database constraint, DynamoDB conditional write or another durable idempotency store.
+
+If the handler performs a database write and publishes an event, use a transactional outbox or a technology-specific atomic integration pattern.
+
+# Appendix A15. Spring Security Production Model
+
+Separate authentication from authorization:
+
+```text
+Authentication -> Who is calling?
+Authorization -> What may this identity do to this resource?
+```
+
+For a resource server, validate issuer, signature, audience, expiry and required scopes/roles. Then enforce ownership or tenant access in the application:
+
+```java
+@PreAuthorize("@orderSecurity.canRead(#orderId, authentication)")
+public OrderResponse get(long orderId) {
+ return service.get(orderId);
+}
+```
+
+Do not trust a customer ID supplied only in the request body. Do not expose actuator or management endpoints without an explicit security policy.
+
+# Appendix A16. CSRF, CORS and Browser Boundaries
+
+The correct configuration depends on whether the application is:
+
+```text
+Browser session application
+ -> cookie authentication and CSRF considerations
+
+Bearer-token API
+ -> token validation, CORS and browser storage considerations
+
+Internal service
+ -> service identity, mTLS or workload identity as required
+```
+
+Do not disable CSRF or allow every CORS origin as a reflex. Document the client trust model and test preflight, credentials and rejected origins.
+
+# Appendix A17. Actuator and Observability
+
+A production baseline should include:
+
+```text
+Structured logs
+Request/trace correlation
+Micrometer metrics
+Health and readiness
+JVM and pool metrics
+Outbound client timing
+Database query timing/fingerprints
+Distributed traces
+Business metrics
+```
+
+Expose only the actuator endpoints required by operators. Send logs to a central system and set retention according to operational, privacy and cost requirements.
+
+Use OpenTelemetry or the organization's supported tracing standard consistently across HTTP, messaging and database boundaries. A trace without correlation across asynchronous work is incomplete operational evidence.
+
+# Appendix A18. Graceful Shutdown
+
+When a container or pod is terminated:
+
+```text
+Stop receiving new traffic
+ -> stop polling new messages
+ -> finish bounded in-flight work
+ -> close connections and executors
+ -> exit before the termination deadline
+```
+
+Configure Spring Boot graceful shutdown and align it with:
+
+- Load-balancer deregistration delay.
+- Kubernetes termination grace period.
+- ECS stop timeout.
+- Worker visibility timeout.
+- Client request deadlines.
+
+Test shutdown during an active request and active message processing. A clean application exit is part of reliability, not merely housekeeping.
+
+# Appendix A19. Virtual Threads and Concurrency
+
+Virtual threads can improve throughput for blocking I/O workloads when the application and libraries support the model, but they do not create unlimited database capacity.
+
+```text
+More concurrent request tasks
+ |
+ v
+Database connection pool remains bounded
+ |
+ v
+Backpressure is still required
+```
+
+Measure CPU, memory, connection-pool wait, downstream rate limits and latency. Do not remove concurrency limits simply because thread creation is cheaper.
+
+# Appendix A20. Startup and Runtime Performance
+
+Investigate startup and request latency separately:
+
+```text
+Startup
+ -> classpath and dependency size
+ -> auto-configuration
+ -> bean initialization
+ -> database/client initialization
+
+Runtime
+ -> request mapping
+ -> validation
+ -> business logic
+ -> SQL/HTTP calls
+ -> serialization
+```
+
+Use startup metrics and profiling to find slow beans. Do not disable auto-configuration blindly; remove unused dependencies and narrow component scanning where justified.
+
+# Appendix A21. Native Images and AOT
+
+Native compilation or AOT processing can reduce startup and memory usage for suitable workloads, but it introduces compatibility work for reflection, proxies, resource loading and dynamic frameworks.
+
+Evaluate:
+
+```text
+Startup requirement
+Memory footprint
+Build complexity
+Debugging and profiling
+Reflection/runtime hints
+Library compatibility
+Deployment target
+```
+
+Use measured benchmarks rather than assuming native is faster for every endpoint or cheaper for every traffic pattern.
+
+# Appendix A22. Container and Deployment Baseline
+
+For a Spring Boot container:
+
+- Use a supported Java runtime.
+- Run as a non-root user where possible.
+- Use an immutable image digest.
+- Scan dependencies and generate an SBOM.
+- Externalize configuration and secrets.
+- Emit logs to stdout/stderr.
+- Set memory and CPU requests/limits from measurements.
+- Configure graceful shutdown.
+- Add readiness, liveness and startup checks.
+- Use progressive rollout and automated rollback.
+
+The same application image should move through environments. Environment-specific values belong in deployment configuration, not in rebuilt binaries.
+
+# Appendix A23. Database Connection Capacity
+
+Connection pools multiply across replicas:
+
+```text
+20 pods x 10 connections = 200 possible connections
+```
+
+Include every service, migration job, admin tool, read replica and failover path in the capacity calculation. A large pool does not make a slow database faster; it can make overload worse.
+
+Monitor:
+
+```text
+Pool active
+Pool idle
+Pool pending/wait time
+Connection creation failures
+Database lock waits
+Query duration
+```
+
+Keep remote calls outside transactions and bound all query timeouts.
+
+# Appendix A24. API Versioning and Compatibility
+
+Use additive, backward-compatible changes when possible:
+
+```text
+Consumer supports old and new fields
+ -> deploy consumer
+ -> deploy producer
+ -> deprecate old field
+ -> remove after usage is gone
+```
+
+Do not rename a response field or change enum meaning without a compatibility plan. Contract tests and OpenAPI review should be part of CI/CD.
+
+# Appendix A25. Testing Pyramid for Spring Boot
+
+```text
+Many fast unit tests
+ |
+Component tests with Spring slices
+ |
+Integration tests with real dependencies
+ |
+Few end-to-end tests
+```
+
+Useful tools and patterns include:
+
+- `@WebMvcTest` for MVC boundaries.
+- `@DataJpaTest` for repository behaviour.
+- `@SpringBootTest` for selected full-context tests.
+- Testcontainers for the same database or broker family.
+- WireMock or MockWebServer for outbound HTTP contracts.
+- Contract tests for service and event schemas.
+- Test data builders that make edge cases explicit.
+
+Avoid making every test a full application-context test. Also avoid using only mocks for SQL, serialization, security filters and transaction behaviour.
+
+# Appendix A26. Test Scenarios That Find Production Bugs
+
+Test:
+
+```text
+Duplicate request with same idempotency key
+Concurrent update of one resource
+Database timeout during a transaction
+Deadlock victim and bounded retry
+Remote service timeout and rate limit
+Malformed message and poison message
+Read-after-write against a replica
+Missing secret or invalid configuration
+Expired token and insufficient scope
+Graceful shutdown during active work
+Rollback during a progressive deployment
+```
+
+The purpose is not only to prove the happy path. It is to prove that failure produces a safe, observable and recoverable result.
+
+# Appendix A27. CI/CD Quality Gates
+
+A production pipeline can include:
+
+```text
+Compile
+ -> unit tests
+ -> static analysis
+ -> dependency/CVE scan
+ -> integration tests
+ -> contract tests
+ -> container build and scan
+ -> SBOM/attestation
+ -> deploy to test
+ -> smoke test
+ -> progressive production rollout
+ -> monitor and approve
+```
+
+Keep migrations, application compatibility and rollback strategy in the same release discussion. A green build does not prove a safe database migration or a correct authorization policy.
+
+# Appendix A28. Common Senior-Level Mistakes
+
+- Treating auto-configuration as magic instead of understanding conditions.
+- Using field injection for required dependencies.
+- Returning JPA entities directly from APIs.
+- Catching all exceptions and returning HTTP 200.
+- Retrying non-idempotent operations without a key.
+- Calling remote services inside long database transactions.
+- Using `ddl-auto=update` as a production migration strategy.
+- Exposing all actuator endpoints publicly.
+- Logging secrets, tokens or complete request bodies.
+- Creating a huge connection pool for every replica.
+- Making every relationship eager to hide N+1.
+- Assuming `@Transactional` spans remote services.
+- Scaling application replicas without checking database and provider capacity.
+- Deploying a breaking API or schema change without compatibility.
+
+# Appendix A29. Senior Interview Answer: What Happens at Startup?
+
+> Spring Boot creates a `SpringApplication`, determines the application type, prepares the environment and property sources, creates the application context, registers configuration and auto-configuration candidates, scans and registers beans, applies conditions and post-processors, creates singleton beans with dependency injection, starts the embedded web server, publishes lifecycle events and finally marks the application ready. For troubleshooting I use debug condition reports, startup metrics, bean inspection, configuration review and targeted profiling rather than guessing which annotation failed.
+
+# Appendix A30. Senior Interview Answer: How Do You Design a Production API?
+
+> I keep controllers thin and put use-case orchestration in an application service. Requests are validated at the boundary, authorization is checked against the authenticated identity and resource, and response DTOs are separated from persistence entities. I define timeouts and idempotency for commands, use a transaction only around the local consistency boundary, and use an outbox or workflow for external side effects. The service exposes safe health and readiness signals, structured logs, metrics and traces. Database access is tested with the target engine, query plans are reviewed for important paths, and deployment uses immutable artifacts, compatible migrations, progressive rollout and rollback.
+
+# Appendix A31. Senior Interview Answer: How Do You Improve a Slow Spring Boot Service?
+
+> I measure the complete request path first: queue or load-balancer wait, application processing, connection-pool wait, SQL, remote calls, serialization and response transfer. I use traces and metrics to identify the dominant component, inspect generated SQL and actual execution plans, check N+1 queries and database locks, and review timeout/retry amplification. I make one controlled change, load-test with realistic data, compare p95/p99 and resource usage, and add a regression monitor. I avoid increasing threads, pools or replicas without checking the capacity of the database and downstream services.
+
+# Appendix A32. Architecture Pattern for a Reliable Order Service
+
+```text
+Client
+ -> API Gateway/ALB
+ -> Spring Boot controller
+ -> validation and authorization
+ -> application service
+ -> database transaction
+ +-- order = ACCEPTED
+ `-- outbox = ORDER_ACCEPTED
+ -> publisher
+ -> SQS/Kafka/EventBridge
+ -> payment/inventory/notification consumers
+ -> idempotent state transitions
+ -> metrics, logs, traces and alerts
+```
+
+The local database transaction protects local state and the outbox. The message system provides asynchronous delivery. Consumers protect business effects with idempotency. Observability makes the workflow supportable.
+
+# Appendix A33. Final Spring Boot Production Checklist
+
+### Design
+
+- Use cases and transaction boundaries are explicit.
+- Controllers are thin and API DTOs are separate from entities.
+- Configuration is typed, externalized and validated.
+- Events and APIs have versioned contracts.
+
+### Data
+
+- Queries are indexed and tested against realistic data.
+- N+1 and oversized object graphs are prevented.
+- Pool size, timeouts and database capacity are aligned.
+- Migrations use Flyway/Liquibase or an equivalent controlled process.
+- Backups, restore and recovery objectives are tested.
+
+### Reliability
+
+- Retries are bounded and operation-specific.
+- Idempotency protects commands and messages.
+- Circuit breakers/bulkheads protect dependencies.
+- Graceful shutdown and connection draining are tested.
+- Outbox/workflow patterns cover cross-system side effects.
+
+### Security
+
+- Authentication and resource authorization are distinct.
+- Secrets are not stored in source, images or logs.
+- Actuator and management endpoints are protected.
+- Dependencies and images are scanned.
+- Database and cloud IAM permissions are least privilege.
+
+### Operations
+
+- Structured logs, metrics, traces and business signals exist.
+- Health, readiness and startup checks are meaningful.
+- Dashboards and alarms link to runbooks.
+- Deployment is immutable, progressive and reversible.
+- Capacity and cost are monitored after release.
+
+# Appendix A34. Final Senior Spring Boot Mindset
+
+```text
+Understand the framework
+ -> design clear boundaries
+ -> enforce correctness in the right system
+ -> measure generated behaviour
+ -> protect dependencies
+ -> secure every boundary
+ -> test failure paths
+ -> deploy and recover deliberately
+```
+
+The strongest senior answer does not stop at naming an annotation. It explains the lifecycle, the proxy or runtime behaviour behind it, the trade-off it introduces, the failure mode it creates and the way the production system will observe and recover from that failure.

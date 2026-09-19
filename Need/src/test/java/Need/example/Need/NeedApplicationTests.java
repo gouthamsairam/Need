@@ -6,10 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.servlet.tags.EscapeBodyTag;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 class NeedApplicationTests {
@@ -40,16 +37,32 @@ class NeedApplicationTests {
     }
     @Test
     void contextLoads() {
-        List<Employee> employees = Arrays.asList(
-                new Employee(1, "John", 50000),
-                new Employee(2, "Peter", 70000),
-                new Employee(3, "David", 90000),
-                new Employee(4, "Sam", 80000),
-           new Employee(4, "Sam", 80000)
-        );
-System.out.print(employees);
-//sort employess
-        employees.stream().distinct().forEach(System.out::println);
+       ///  1 add,deleate ,update,fetch
+        List<Employee> list = new ArrayList<>();
+        Employee e1 =
+
+                list.forEach(s->{
+                    Employee e =new Employee();
+//                    list.add(e.getSalary()).add;
+                });
+        list.stream().filter(s->)
+        {
+            /*
+            * Employee table
+            * write a query to featch all employees in Hireache
+            * l1 --> delevery mamages( mangers(employess
+            *
+            *Select Employeename , managename, DelevrymanageName  from Employee
+            * Groupby Managername && DeleveryMangername
+            * orderBy EmployeeName ASE;
+            *
+            * 
+            *
+            * */
+
+        }
+
+
     }
 
 
