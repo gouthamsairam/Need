@@ -37,30 +37,7 @@ class NeedApplicationTests {
     }
     @Test
     void contextLoads() {
-       ///  1 add,deleate ,update,fetch
-        List<Employee> list = new ArrayList<>();
-        Employee e1 =
 
-                list.forEach(s->{
-                    Employee e =new Employee();
-//                    list.add(e.getSalary()).add;
-                });
-        list.stream().filter(s->)
-        {
-            /*
-            * Employee table
-            * write a query to featch all employees in Hireache
-            * l1 --> delevery mamages( mangers(employess
-            *
-            *Select Employeename , managename, DelevrymanageName  from Employee
-            * Groupby Managername && DeleveryMangername
-            * orderBy EmployeeName ASE;
-            *
-            * 
-            *
-            * */
-
-        }
 
 
     }

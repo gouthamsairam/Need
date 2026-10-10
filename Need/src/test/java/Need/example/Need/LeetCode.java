@@ -289,18 +289,18 @@ Example 2:
 Input: nums = [-1,1,0,-3,3]
 Output: [0,0,9,0,0]
 * */
-int arr [] = {1,2,3,4,5};
-int a = 0;
+int arr [] = {-1,1,0,-3,3};
 int output [] = new int  [arr.length];
 for(int i=0;i<arr.length;i++){
-    int b = 0;
-   if(a==i){
-       a++;
-       continue;
-   }else{
-      b = b*arr[i];
-       output[i]=b;
-       a++;
+    int a = 1;
+   for(int j=0;j<arr.length;j++){
+       if(arr[i]==arr[j]){
+           continue;
+       }
+       else{
+           a= a*arr[j];
+       }
+       output[i]=a;
    }
 }
         System.out.print(Arrays.toString(output));
@@ -322,6 +322,14 @@ Output: [2]*/
     public void rearrangeStringnoTochararactersshouldbeconsective() {
         int[] hash = new int[26];
         String str = "aabbccrr";
+
+
+
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i=0;i<str.length();i++){
+            char ch = str.charAt(i);
+            map.put(ch, map.getOrDefault(ch, 0) + 1);
+        }
         for (int i = 0; i < str.length(); i++){
             hash[str.charAt(i) - 'a']++;
         }
@@ -332,6 +340,12 @@ Output: [2]*/
                 max = hash[i];
                 letter = i;
             }
+//        for(int i = 0; i < map.size(); i++){
+//            if(map.get(i)>max){
+//                max = map.get(i);
+//                letter = i;
+//            }
+//        }
 
         if (max > (str.length() + 1) / 2) {
             System.out.println(String.valueOf(" "));

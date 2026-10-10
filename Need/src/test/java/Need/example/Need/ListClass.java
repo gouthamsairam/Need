@@ -3,6 +3,7 @@ package Need.example.Need;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ListClass {
     @Test
@@ -10,11 +11,13 @@ public class ListClass {
 
         List<Integer> input =
                 Arrays.asList(10, 20, 30, 20, 40, 30, 50, 20);
+        Set<Integer> result  = new ArrayList<>();
 
+List<Integer> res = input.stream().filter(s->result.add(s)).collect(Collectors.toUnmodifiableList());
         List<Integer> expected =
                 Arrays.asList(20, 30);
-
-
+System.out.println(result.add(98));
+System.out.println(res);
 
 
     }
