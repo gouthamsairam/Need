@@ -11,7 +11,7 @@ public class ListClass {
 
         List<Integer> input =
                 Arrays.asList(10, 20, 30, 20, 40, 30, 50, 20);
-        Set<Integer> result  = new ArrayList<>();
+        Set<Integer> result  = new HashSet<>();
 
 List<Integer> res = input.stream().filter(s->result.add(s)).collect(Collectors.toUnmodifiableList());
         List<Integer> expected =
@@ -423,6 +423,23 @@ System.out.println(res);
             System.out.print(lb);
         }*/
 
-
+/*
+*
+*
+*
+*
+* input.stream().forEach(s->System.out.print(s));----> we  Should use forEach Defenatily to print elements if i want to use
+*
+*
+*
+* 	List<Integer> input =
+                Arrays.asList(45, 12, 78, 23, 9, 56);
+              Integer  t = input.stream().max((a,b)->a.compareTo(b)).orElse(0);
+                            Integer  r = input.stream().max((a,b)->Integer.compare(a,b)).orElse(0);
+                             Integer  f = input.stream().max(Comparator.naturalOrder());
+                            Integer  f = input.stream().max(Comparator.reverseOrder()).orElse(4);
+*
+*
+* */
     }
 }

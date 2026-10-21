@@ -63,7 +63,7 @@ public class NeedSubArray {
     @Test
     void PrintNth_Non_repaeating_character() {
         String str = "GGowthamsairamz";
-        int k = 8;
+        int k = 1;
         int a = 0;
         for (int i = 0; i < str.length(); i++) {
             boolean check = false;
@@ -107,8 +107,47 @@ public class NeedSubArray {
             }
             System.out.println();
         }
-    }
 
+
+      /*  int arr [] = {1,45,6,7,78,5,5};
+        int k =3;*/
+        /*
+        Second approach
+         */
+        int sum =0;
+        for(int i=0; i<k; i++)
+        {
+            sum = arr[i]+sum;
+        }
+        int Start =0;
+        int end = k;
+        while(end<arr.length){
+            for(int i=Start;i<=end;i++){
+                System.out.print(arr[i]+",");
+            }
+            sum= sum -arr[Start];
+            Start++;
+            sum = sum+arr[end];
+            end ++;
+            System.out.println();
+        }
+
+    
+    }
+@Test
+void printArraywithkSize(){
+    int arr [] = {1,45,6,7,78,5,5};
+    int a =0;
+    for(int i=0; i<arr.length; i++) {
+        System.out.print(arr[i]+",");
+        if(a==2) {
+            a=0;
+            System.out.println();
+        }
+        a++;
+
+    }
+}
     @Test
     void sameKsizesumgreater() {
         int k = 3;

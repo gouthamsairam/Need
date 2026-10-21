@@ -506,7 +506,7 @@ Explanation: There’s.md no common prefix in the given strings.*/
     public void Gas_Station(){
 
         int[] gas = {1, 2, 3, 4, 5};
-        int[] cost = {3, 4, 5, 1, 2};
+        int[] cost = {3, 4, 5, 1, 22};
 
         int totalGas = 0;
         int totalCost = 0;
@@ -526,7 +526,7 @@ Explanation: There’s.md no common prefix in the given strings.*/
         }
 
         if (totalGas < totalCost) {
-            System.out.println(-1); // Not possible to complete the circuit
+            System.out.println(-1+"Not possible to complete the circuit"); // Not possible to complete the circuit
         } else {
             System.out.println(startIndex); // Starting index to complete the circuit
         }
@@ -562,5 +562,122 @@ Explanation: There’s.md no common prefix in the given strings.*/
             // Remove the element
             tempList.remove(tempList.size() - 1);
         }
+    }
+
+
+    //Least Recently Used
+    public static class LRU {
+
+        LinkedHashSet<Integer> list; //Data Structure to implement cache
+        int MAXSIZE;				//Maximum size of the cache
+        static int faults;			//Count the total number of page faults
+
+        public LRU(int cacheSize) {
+            list=new LinkedHashSet<Integer>();
+            MAXSIZE=cacheSize;
+        }
+
+        public void faultHandle(int page) {
+            if(list.size()==MAXSIZE) {
+                //eviction policy
+                int first=list.iterator().next();
+                list.remove(first);
+                list.add(page);
+            }else {
+                list.add(page);
+            }
+            faults++;
+        }
+
+        public void shuffle(int page) { // 2 3 4 (3)
+            list.remove(page); 			// 2 4
+            list.add(page);				// 2 4 3
+        }
+
+        public void refer(int page) {
+            if(list.contains(page)) { //if the hashset already contains the page
+                shuffle(page);
+            }else {
+                faultHandle(page);
+            }
+        }
+
+        public static void main(String[] args) {
+
+            int pages[]= {3,2,1,3,4,1,6,2,4,3,4,2,1,4,5,2,1,3,4};
+
+            LRU cache=new LRU(3);
+
+            for(int page:pages) {
+                cache.refer(page);
+            }
+
+            System.out.println("Pages in cache: "+cache.list);
+            System.out.println("Number of page faults: "+faults);
+
+
+        }
+
+    }
+    @Test
+    void NumberOfIslands() {
+  char[][] grid = {
+                {'1', '1', '0', '0', '0'},
+                {'1', '1', '0', '0', '0'},
+                {'0', '0', '1', '0', '0'},
+                {'0', '0', '0', '1', '1'}
+        };
+        System.out.print(numIslands(grid));
+    }
+        int numIslands(char[][] grid) {
+            if (grid == null || grid.length == 0 || grid[0].length == 0) {
+                return 0;
+            }
+
+            int count = 0;
+
+            for (int i = 0; i < grid.length; i++)
+                for (int j = 0; j < grid[0].length; j++)
+                    if (grid[i][j] == '1') {
+                        dfs(grid, i, j);
+                        count++;
+                    }
+
+            return count;
+        }
+
+
+
+    private void dfs(char[][] grid, int i, int j) {
+        if (i < 0 || i >= grid.length
+                || j < 0 || j >= grid[0].length
+                || grid[i][j] == '0') {
+            return;
+        }
+
+        grid[i][j] = '0'; // Mark the cell as visited
+
+        // Explore all four directions
+        dfs(grid, i + 1, j);
+        dfs(grid, i - 1, j);
+        dfs(grid, i, j + 1);
+        dfs(grid, i, j - 1);
+    }
+
+@Test
+    public  void  fibonacci(int n) {
+        if (n <= 1) {
+            System.out.println(n);
+        }
+
+        int a = 0, b = 1;
+
+        for (int i = 2; i <= n; i++) {
+            int c = a + b;
+            a = b;
+            b = c;
+        }
+
+        System.out.print(b);
     }
 }
