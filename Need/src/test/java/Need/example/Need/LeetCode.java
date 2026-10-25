@@ -23,6 +23,7 @@ public class LeetCode {
         }
         System.out.println(res);
     }
+
     //    maxprofit stocks
     @Test
     void maxprofit() {
@@ -35,6 +36,7 @@ public class LeetCode {
         }
         System.out.println(maxprofit);
     }
+
     //arrayPairSum
     @Test
     void ArrayPartition() {
@@ -47,6 +49,7 @@ public class LeetCode {
         }
         System.out.println(a);
     }
+
     /// To Sum
     @Test
     void twoSum() {
@@ -147,6 +150,28 @@ public class LeetCode {
     }
 
     @Test
+    void palandromicString() {
+        String str = "LEVELA";
+        int left = 0;
+        int right = str.length() - 1;
+        boolean b = true;
+        while (left < right) {
+            if (str.charAt(left) != str.charAt(right)) {
+                b = false;
+                break;
+            }
+
+            left++;
+            right--;
+        }
+        if (b) {
+            System.out.println("Palindrome");
+        } else {
+            System.out.println("Not a Palindrome");
+        }
+    }
+
+    @Test
     void validateAnagrams() {
 
         String s1 = "geeks";
@@ -164,9 +189,10 @@ public class LeetCode {
         // Compare sorted strings
         System.out.println(Arrays.equals(s1Array, s2Array));
     }
+
     @Test
     public void groupAnagrams() {
-        String [] strs = {"act", "god", "cat", "dog", "tac","rat","tar"};
+        String[] strs = {"act", "god", "cat", "dog", "tac", "rat", "tar"};
 
         Map<String, List<String>> map = new HashMap<>();
 
@@ -183,21 +209,30 @@ public class LeetCode {
 
             // Add string to corresponding group
             //1st way
-            map.computeIfAbsent(key, k -> new ArrayList<>())
-                    .add(str);
+          /*  map.computeIfAbsent(key, k -> new ArrayList<>())
+                    .add(str);*/
             //2nd way
-            if(map.containsKey(key)){
+            if (map.containsKey(key)) {
                 map.get(key).add(str);
-            }else{
+            } else {
                 List<String> list = new ArrayList<>();
                 list.add(str);
-                map.put(key,list);
+                map.put(key, list);
             }
         }
         System.out.print(map.values());
     }
+
     @Test
-    public  void print_TwoDArraywithSorted() {
+    void revrseString() {
+        ///  using StringBuilder
+        String str = "Goutham";
+        StringBuilder s = new StringBuilder(str);
+        System.out.println(s.reverse());
+    }
+
+    @Test
+    public void print_TwoDArraywithSorted() {
         int[][] arr = {{10, 1}, {7, 8}, {1, 5}, {2, 4}, {4, 6}};
         int[] t = {3, 1, 77, 1};
         Arrays.sort(arr, (a, b) -> a[0] - b[0]);
@@ -210,6 +245,7 @@ public class LeetCode {
             System.out.println();
         }
     }
+
     @Test
     public void mergeIntervels() {
         int[][] arr = {{7, 8}, {1, 5}, {2, 4}, {4, 6}};
@@ -244,8 +280,9 @@ public class LeetCode {
             System.out.println(interval[0] + " " + interval[1]);
         }
     }
-@Test
-public  void rotatedArray(){
+
+    @Test
+    public void rotatedArray() {
         /*Input: nums = [1,2,3,4,5,6,7], k = 3
 Output: [5,6,7,1,2,3,4]
 
@@ -255,28 +292,28 @@ rotate 2 steps to the right: [6,7,1,2,3,4,5]
 rotate 3 steps to the right: [5,6,7,1,2,3,4]*/
 
 
-    int arr [] = {1,2,3,4,5,6,7};
-    int k=3;
+        int arr[] = {1, 2, 3, 4, 5, 6, 7};
+        int k = 3;
 
-    for(int i=0;i<k;i++){
-        int frist =arr[0];
-        for(int j=0;j<arr.length-1;j++){
-            arr[j]=arr[j+1];
+        for (int i = 0; i < k; i++) {
+            int frist = arr[0];
+            for (int j = 0; j < arr.length - 1; j++) {
+                arr[j] = arr[j + 1];
+            }
+            arr[arr.length - 1] = frist;
         }
-        arr[arr.length-1]=frist;
+        System.out.println("left rotate" + Arrays.toString(arr));
+        int arr1[] = {1, 2, 3, 4, 5, 6, 7};
+        for (int i = 0; i < k; i++) {
+            int last = arr1[arr1.length - 1];
+            for (int j = arr1.length - 1; j > 0; j--) {
+                arr1[j] = arr1[j - 1];
+            }
+            arr1[0] = last;
+        }
+        System.out.println("right rotate" + Arrays.toString(arr1));
+
     }
-    System.out.println("left rotate"+Arrays.toString(arr));
-    int arr1 [] = {1,2,3,4,5,6,7};
-    for(int i=0;i<k;i++){
-        int last = arr1[arr1.length-1];
-        for(int j=arr1.length-1;j>0;j--){
-          arr1[j]=arr1[j-1];
-        }
-        arr1[0]=last;
-   }
-    System.out.println("right rotate"+Arrays.toString(arr1));
-
-}
 
     @Test
     public void productofArrayExceptitself() {
@@ -289,25 +326,25 @@ Example 2:
 Input: nums = [-1,1,0,-3,3]
 Output: [0,0,9,0,0]
 * */
-int arr [] = {-1,1,0,-3,3};
-int output [] = new int  [arr.length];
-for(int i=0;i<arr.length;i++){
-    int a = 1;
-   for(int j=0;j<arr.length;j++){
-       if(arr[i]==arr[j]){
-           continue;
-       }
-       else{
-           a= a*arr[j];
-       }
-       output[i]=a;
-   }
-}
+        int arr[] = {-1, 1, 0, -3, 3};
+        int output[] = new int[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            int a = 1;
+            for (int j = 0; j < arr.length; j++) {
+                if (arr[i] == arr[j]) {
+                    continue;
+                } else {
+                    a = a * arr[j];
+                }
+                output[i] = a;
+            }
+        }
         System.out.print(Arrays.toString(output));
 
     }
+
     @Test
-    public void find_all_numbers_disappeared(){
+    public void find_all_numbers_disappeared() {
         /*Example 1:
 
 Input: nums = [4,3,2,7,8,2,3,1]
@@ -319,66 +356,70 @@ Output: [2]*/
     }
 
     @Test
-    public void rearrangeStringnoTochararactersshouldbeconsective() {
-        int[] hash = new int[26];
-        String str = "aabbccrr";
+    public void rearrangeStringNoCharactersShouldBeConsecutive() {
 
-
+        String str = "aabbccrrt";
 
         Map<Character, Integer> map = new HashMap<>();
-        for(int i=0;i<str.length();i++){
+
+        // Step 1: Count the frequency of each character
+        for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
             map.put(ch, map.getOrDefault(ch, 0) + 1);
         }
-        for (int i = 0; i < str.length(); i++){
-            hash[str.charAt(i) - 'a']++;
-        }
 
-        int max = 0, letter = 0;
-        for (int i = 0; i < hash.length; i++)
-            if (hash[i] > max) {
-                max = hash[i];
-                letter = i;
+        // Step 2: Find the most frequent character
+        char maxChar = '\0';
+        int max = 0;
+
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                maxChar = entry.getKey();
             }
-//        for(int i = 0; i < map.size(); i++){
-//            if(map.get(i)>max){
-//                max = map.get(i);
-//                letter = i;
-//            }
-//        }
-
-        if (max > (str.length() + 1) / 2) {
-            System.out.println(String.valueOf(" "));
         }
 
+        // Step 3: Check whether rearrangement is possible
+        if (max > (str.length() + 1) / 2) {
+            System.out.print("Rearrangement is not possible");
+        }
 
         char[] res = new char[str.length()];
-
-        // Fill all even places with majority character
         int idx = 0;
-        while (hash[letter]-- > 0) {
-            res[idx] = (char) (letter + 'a');
+
+        // Step 4: Place the most frequent character at even indexes
+        for (int i = 0; i < max; i++) {
+            res[idx] = maxChar;
             idx += 2;
         }
 
-        // Fill the remaining characters
-        for (int i = 0; i < hash.length; i++)
-            while (hash[i]-- > 0) {
-                if (idx >= res.length){
+        map.put(maxChar, 0);
+
+        // Step 5: Place all remaining characters
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+
+            char ch = entry.getKey();
+            int count = entry.getValue();
+
+            while (count-- > 0) {
+
+                if (idx >= res.length) {
                     idx = 1;
                 }
 
-                res[idx] = (char) (i + 'a');
+                res[idx] = ch;
                 idx += 2;
             }
+        }
 
-        System.out.println(String.valueOf(res));
+        String result = new String(res);
+        System.out.println(result);
+    }
+
+    @Test
+    public void median_of_Two_Sorted_Arrays() {
 
     }
-@Test
-public void median_of_Two_Sorted_Arrays(){
-
-}
 
     @Test
     public void minimumdiffrences_BetweenHighestand_lowestScores() {
@@ -413,7 +454,7 @@ public void median_of_Two_Sorted_Arrays(){
     @Test
     public void Coinchange() {
 
-        int amount = 11;
+        int amount = 12;
         int coins[] = {2, 5, 3, 6};
 
 
@@ -442,12 +483,60 @@ public void median_of_Two_Sorted_Arrays(){
 
     @Test
     void Spiral_Matrix() {
+        int[][] matrix = {
+                {1, 2, 3, 4},
+                {5, 6, 7, 8},
+                {9, 10, 11, 12},
+                {13, 14, 15, 16}
+        };
+        List<Integer> res = new ArrayList<>();
 
+        if (matrix.length == 0) {
+            System.out.println(res);
+        }
+
+        int rowBegin = 0;
+        int rowEnd = matrix.length - 1;
+        int colBegin = 0;
+        int colEnd = matrix[0].length - 1;
+
+        while (rowBegin <= rowEnd && colBegin <= colEnd) {
+            // Traverse Right
+            for (int j = colBegin; j <= colEnd; j++) {
+                res.add(matrix[rowBegin][j]);
+            }
+            rowBegin++;
+
+            // Traverse Down
+            for (int j = rowBegin; j <= rowEnd; j++) {
+                res.add(matrix[j][colEnd]);
+            }
+            colEnd--;
+
+            if (rowBegin <= rowEnd) {
+                // Traverse Left
+                for (int j = colEnd; j >= colBegin; j--) {
+                    res.add(matrix[rowEnd][j]);
+                }
+            }
+            rowEnd--;
+
+            if (colBegin <= colEnd) {
+                // Traverse Up
+                for (int j = rowEnd; j >= rowBegin; j--) {
+                    res.add(matrix[j][colBegin]);
+                }
+            }
+            colBegin++;
+        }
+
+        System.out.print(res);
     }
+
 
     ///  Two pointers approach
     @Test
-    void findTriplets() {
+    void findTripletsThreeSum() {
         int[] arr = {1, 2, 3, 4, 5, 6, 9, 10};
         int target = 11;
         int n = arr.length;
@@ -471,8 +560,9 @@ public void median_of_Two_Sorted_Arrays(){
             }
         }
     }
+
     @Test
-    public void findcommon_prifix(){
+    public void findcommon_prifix() {
         /*
         * Input: arr[] = [“geeksforgeeks”, “geeks”, “geek”, “geezer”]
 Output: “gee”
@@ -487,26 +577,27 @@ Output: “”
 Explanation: There’s.md no common prefix in the given strings.*/
         List<String> arr = Arrays.asList("geeksforgeeks", "geeks", "geek", "geezer");
         Collections.sort(arr);
-        int r=0;
-        while(arr.get(0).charAt(r)==arr.get(arr.size()-1).charAt(r)){
+        int r = 0;
+        while (arr.get(0).charAt(r) == arr.get(arr.size() - 1).charAt(r)) {
             r++;
         }
-        System.out.println(arr.get(0).substring(0,r));
+        System.out.println(arr.get(0).substring(0, r));
         // with for loop
-        int t=0;
-        for(int i=0; i<arr.get(0).length(); i++) {
-            if(arr.get(0).charAt(i)==arr.get(arr.size()-1).charAt(i)) {
+        int t = 0;
+        for (int i = 0; i < arr.get(0).length(); i++) {
+            if (arr.get(0).charAt(i) == arr.get(arr.size() - 1).charAt(i)) {
                 System.out.print((arr.get(0).charAt(t)));
 
                 t++;
             }
         }
     }
+
     @Test
-    public void Gas_Station(){
+    public void Gas_Station() {
 
         int[] gas = {1, 2, 3, 4, 5};
-        int[] cost = {3, 4, 5, 1, 22};
+        int[] cost = {3, 4, 5, 1, 2};
 
         int totalGas = 0;
         int totalCost = 0;
@@ -526,11 +617,12 @@ Explanation: There’s.md no common prefix in the given strings.*/
         }
 
         if (totalGas < totalCost) {
-            System.out.println(-1+"Not possible to complete the circuit"); // Not possible to complete the circuit
+            System.out.println(-1 + "Not possible to complete the circuit"); // Not possible to complete the circuit
         } else {
             System.out.println(startIndex); // Starting index to complete the circuit
         }
     }
+
     @Test
     public void permute() {
         int[] nums = {1, 2, 3};
@@ -564,64 +656,9 @@ Explanation: There’s.md no common prefix in the given strings.*/
         }
     }
 
-
-    //Least Recently Used
-    public static class LRU {
-
-        LinkedHashSet<Integer> list; //Data Structure to implement cache
-        int MAXSIZE;				//Maximum size of the cache
-        static int faults;			//Count the total number of page faults
-
-        public LRU(int cacheSize) {
-            list=new LinkedHashSet<Integer>();
-            MAXSIZE=cacheSize;
-        }
-
-        public void faultHandle(int page) {
-            if(list.size()==MAXSIZE) {
-                //eviction policy
-                int first=list.iterator().next();
-                list.remove(first);
-                list.add(page);
-            }else {
-                list.add(page);
-            }
-            faults++;
-        }
-
-        public void shuffle(int page) { // 2 3 4 (3)
-            list.remove(page); 			// 2 4
-            list.add(page);				// 2 4 3
-        }
-
-        public void refer(int page) {
-            if(list.contains(page)) { //if the hashset already contains the page
-                shuffle(page);
-            }else {
-                faultHandle(page);
-            }
-        }
-
-        public static void main(String[] args) {
-
-            int pages[]= {3,2,1,3,4,1,6,2,4,3,4,2,1,4,5,2,1,3,4};
-
-            LRU cache=new LRU(3);
-
-            for(int page:pages) {
-                cache.refer(page);
-            }
-
-            System.out.println("Pages in cache: "+cache.list);
-            System.out.println("Number of page faults: "+faults);
-
-
-        }
-
-    }
     @Test
     void NumberOfIslands() {
-  char[][] grid = {
+        char[][] grid = {
                 {'1', '1', '0', '0', '0'},
                 {'1', '1', '0', '0', '0'},
                 {'0', '0', '1', '0', '0'},
@@ -629,23 +666,23 @@ Explanation: There’s.md no common prefix in the given strings.*/
         };
         System.out.print(numIslands(grid));
     }
-        int numIslands(char[][] grid) {
-            if (grid == null || grid.length == 0 || grid[0].length == 0) {
-                return 0;
-            }
 
-            int count = 0;
-
-            for (int i = 0; i < grid.length; i++)
-                for (int j = 0; j < grid[0].length; j++)
-                    if (grid[i][j] == '1') {
-                        dfs(grid, i, j);
-                        count++;
-                    }
-
-            return count;
+    int numIslands(char[][] grid) {
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return 0;
         }
 
+        int count = 0;
+
+        for (int i = 0; i < grid.length; i++)
+            for (int j = 0; j < grid[0].length; j++)
+                if (grid[i][j] == '1') {
+                    dfs(grid, i, j);
+                    count++;
+                }
+
+        return count;
+    }
 
 
     private void dfs(char[][] grid, int i, int j) {
@@ -664,10 +701,68 @@ Explanation: There’s.md no common prefix in the given strings.*/
         dfs(grid, i, j - 1);
     }
 
-@Test
-    public  void  fibonacci(int n) {
+    //Least Recently Used
+    public static class LRU {
+
+        LinkedHashSet<Integer> list; //Data Structure to implement cache
+        int MAXSIZE;                //Maximum size of the cache
+        static int faults;            //Count the total number of page faults
+
+        public LRU(int cacheSize) {
+            list = new LinkedHashSet<Integer>();
+            MAXSIZE = cacheSize;
+        }
+
+        public void faultHandle(int page) {
+            if (list.size() == MAXSIZE) {
+                //eviction policy
+                int first = list.iterator().next();
+                list.remove(first);
+                list.add(page);
+            } else {
+                list.add(page);
+            }
+            faults++;
+        }
+
+        public void shuffle(int page) { // 2 3 4 (3)
+            list.remove(page);            // 2 4
+            list.add(page);                // 2 4 3
+        }
+
+        public void refer(int page) {
+            if (list.contains(page)) { //if the hashset already contains the page
+                shuffle(page);
+            } else {
+                faultHandle(page);
+            }
+        }
+
+        public static void main(String[] args) {
+
+            int pages[] = {3, 2, 1, 3, 4, 1, 6, 2, 4, 3, 4, 2, 1, 4, 5, 2, 1, 3, 4};
+
+            LRU cache = new LRU(3);
+
+            for (int page : pages) {
+                cache.refer(page);
+            }
+
+            System.out.println("Pages in cache: " + cache.list);
+            System.out.println("Number of page faults: " + faults);
+
+
+        }
+
+    }
+
+
+    @Test
+    public void fibonacci() {
+        int n = 1;
         if (n <= 1) {
-            System.out.println(n);
+            System.out.println(5);
+
         }
 
         int a = 0, b = 1;
@@ -680,4 +775,5 @@ Explanation: There’s.md no common prefix in the given strings.*/
 
         System.out.print(b);
     }
+
 }
