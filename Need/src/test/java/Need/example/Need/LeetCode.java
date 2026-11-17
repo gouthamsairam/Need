@@ -16,7 +16,7 @@ public class LeetCode {
 
                 // calculate the amount of water
                 int amount = Math.min(arr[i], arr[j]) * (j - i);
-//System.out.print("arr[" + i + "] = " + arr[i] + ", arr[" + j + "] = " + arr[j] + " j" + j + " i" + i + " i-j " + (j - i) + ", amount = " + amount + "\n");
+//System.out.print("arr[" + i + "] = " + arr[i] + ", arr[" + j + "] = " + arr[j] + " j" + j + " i" + i + " i-j " + (j - i) + ", amount = " + amount + "\AWS Fundamentals.md");
                 // keep track of maximum amount of water
                 res = Math.max(amount, res);
             }
@@ -776,4 +776,66 @@ Explanation: There’s.md no common prefix in the given strings.*/
         System.out.print(b);
     }
 
+     static class OddEvenPrinter {
+
+        private int number = 1;
+        private final int MAX = 100;
+
+        public  void printOdd() {
+            while (number <= MAX) {
+
+
+                if (number % 2 != 0) {
+                    System.out.println("Odd Thread  : " + number);
+                    number++;
+
+                }
+                if (number % 2 == 0) {
+                    System.out.println("Even Thread : " + number);
+                    number++;
+
+                }
+            }
+        }
+
+        public synchronized void printEven() {
+            while (number <= MAX) {
+
+               /* while (number % 2 != 0) {
+                    try {
+                        wait();
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }*/
+
+                if (number % 2 == 0) {
+                    System.out.println("Even Thread : " + number);
+                    number++;
+
+                }
+            }
+        }
+    }
+
+    public static class Main {
+        public static void main(String[] args) throws InterruptedException {
+
+            OddEvenPrinter printer = new OddEvenPrinter();
+
+            Thread oddThread = new Thread(
+                    () -> printer.printOdd()
+            );
+
+           /* Thread evenThread = new Thread(
+                    () -> printer.printEven()
+            );*/
+
+            oddThread.start();
+            oddThread.join();
+
+            System.out.println("HI" + printer.number);
+        }
+    }
 }

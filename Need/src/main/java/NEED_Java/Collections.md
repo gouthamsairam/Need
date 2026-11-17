@@ -221,7 +221,7 @@ for (NotificationEntity e : entities) {
 ```java
 // BAD: removing from the front of a 200,000-element ArrayList
 while (!pending.isEmpty()) {
- process(pending.remove(0)); // shifts 199,999 elements every time -> O(n²)
+ process(pending.remove(0)); // shifts 199,999 elements every time -> O(AWS Fundamentals.md²)
 }
 
 // GOOD: use a queue
@@ -257,20 +257,34 @@ ArrayList : [A][B][C][D][E] <- one contiguous block
 LinkedList: [prev|A|next] <-> [prev|B|next] <-> ... <- nodes scattered on the heap
 ```
 
-| Operation | ArrayList | LinkedList |
-| --- | --- | --- |
-| `get(index)` | O(1) | O(n) — walks nodes from the nearest end |
-| `add(element)` at end | O(1) amortized | O(1) |
-| `add(0, element)` | O(n) — shifts all | O(1) — relink head |
-| `remove(0)` | O(n) — shifts all | O(1) |
-| Insert in middle | O(n) shift | O(n) to find + O(1) to link |
-| Memory per element | ~4-8 bytes (reference) | ~24-40 bytes (node object + 2 pointers) |
-| CPU cache | Excellent | Poor (pointer chasing) |
+2. Important differences
+Feature	ArrayList	LinkedList
+Internal structure	Dynamic array	Doubly linked list
+Random access	Fast – O(1)	Slow – O(n)
+Searching	O(n)	O(n)
+Adding at end	O(1) amortized	O(1)
+Adding at beginning	O(n)	O(1)
+Removing first element	O(n)	O(1)
+Insertion in middle	O(n)	O(n) to locate + O(1) to link
+Memory consumption	Less	More (node references)
+Implements	List	List, Deque, Queue
+Best suited for	Frequent reading	Frequent operations at both ends
 
-**When to use LinkedList:** rarely. Only when you insert/remove through a `ListIterator` at positions you are already at, or you need a `List` that is also a `Deque`.
+4. When should we use ArrayList and LinkedList?
+Use ArrayList when:
+- You frequently retrieve elements using indexes.
+- You perform more read operations.
+- You want lower memory overhead.
+- You don't frequently insert or remove elements at the beginning.
 
-**When to use ArrayList:** almost always — index access, iteration, appends.
+Use LinkedList when:
+- You frequently add or remove elements at the beginning or end.
+- You need Queue or Deque operations.
+- Random index access is not important.
 
+Remember this simple rule:
+- ArrayList = Fast reading and random access.
+- LinkedList = Efficient insertion and deletion at the ends.
 **Real-time example:** benchmark results on 1 million `Integer` elements typically show `ArrayList` iteration several times faster than `LinkedList`, because the CPU pre-fetches contiguous memory. For queue behaviour, `ArrayDeque` is faster than both.
 
 **Interview summary:**

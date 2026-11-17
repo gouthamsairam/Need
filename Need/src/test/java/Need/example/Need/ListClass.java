@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListClass {
     @Test
@@ -42,7 +43,12 @@ System.out.println(res);
 
         int expected = 30;
 
-
+        List<Integer> numbers = Arrays.asList(10, 20, 30,30, 40, 50);
+        Set <Integer> seen = new HashSet<>();
+        Set<Integer> duplicates = numbers.stream()
+                .filter(n -> !seen.add(n))
+                .collect(Collectors.toSet());
+        System.out.print(duplicates);
 
 
     }
@@ -56,10 +62,22 @@ System.out.println(res);
         // Minimum = 9
         // Maximum = 78
 
+Optional<Integer> max =input.stream().max((a, b)->a.compareTo(b));
 
+    Optional<Integer> mat =    input.stream().max((a, b)->Integer.compare(a,b));
 
+max.ifPresent(System.out::println);
+mat.ifPresent(System.out::println);
+        long count = input.stream().count();
+        Stream<Integer> r = input.stream().map(s -> s.intValue());
+        List<Integer> wr = input.stream().mapToInt(s -> s.intValue()).boxed().toList();
+        List<Integer> wre = input.stream().map(s -> s.intValue()).toList();
 
-
+        System.out.println(count);
+        System.out.println(input.stream().mapToInt(s->s.intValue()).sum());
+        System.out.println(input.stream().map(s->s.intValue()));
+        System.out.println(r+"ddgs"+wr+"dvd"+wre);
+        System.out.println(count);
     }
 
     @Test
@@ -272,7 +290,7 @@ System.out.println(res);
     @Test
     void findCharacterFrequency() {
         /*input:  "programming"
-        output: {p=1, r=2, o=1, very important Spring transaction interview questions.md=2, a=1, very strong production-level interview questions.md=2, i=1, n=1}*/
+        output: {p=1, r=2, o=1, very important Spring transaction interview questions.md=2, a=1, very strong production-level interview questions.md=2, i=1, AWS Fundamentals.md=1}*/
     }
     @Test
     void findFirstNonRepeatedCharacter() {
