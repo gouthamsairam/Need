@@ -1,187 +1,164 @@
-1. DOCKER
-   Images (Build, Pull, Push)
-   Command
-   Description
-   docker build -t my-image:tag .
-   Build image from Dockerfile
-   docker images
-   List all local images
-   docker pull image:tag
-   Download image from registry
-   docker push image:tag
-   Upload image to registry
-   docker tag old:tag new:tag
-   Rename/retag an image
-   docker rmi image:tag
-   Delete an image
-
-Containers (Run, Manage, Debug)
-Command
-Description
-docker run -d -p 8080:8080 --name app image:tag
-Run container (detached + port mapped)
-docker ps
-List running containers
-docker ps -a
-List all containers (including stopped)
-docker stop <id>
-Stop a container
-docker start <id>
-Start a stopped container
-docker restart <id>
-Restart a container
-docker rm <id>
-Remove a container
-docker logs <id>
-View logs
-docker logs -f <id>
-Stream logs in real time
-docker exec -it <id> /bin/bash
-Open shell inside container
-docker inspect <id>
-View detailed container info
-
-Cleanup
-Command
-Description
-docker system prune
-Remove all unused data
-docker volume prune
-Remove unused volumes
-docker network prune
-Remove unused networks
-
-Docker Compose
-Command
-Description
-docker-compose up -d
-Start all services (background)
-docker-compose down
-Stop and remove all services
-docker-compose logs -f
-Stream logs for all services
-docker-compose ps
-List running services
-docker-compose build
-Rebuild all services
-
-
-2. KUBERNETES (kubectl)
-   Cluster & Context
-   Command
-   Description
-   kubectl cluster-info
-   Show cluster details
-   kubectl get nodes
-   List all nodes
-   kubectl config get-contexts
-   List available contexts
-   kubectl config use-context <name>
-   Switch to a context
-
-Pods (View, Debug, Access)
-Command
-Description
-kubectl get pods
-List pods (default namespace)
-kubectl get pods -n <ns>
-List pods in a namespace
-kubectl get pods -A
-List pods across all namespaces
-kubectl describe pod <name>
-Detailed pod info + events
-kubectl logs <pod>
-View pod logs
-kubectl logs -f <pod>
-Stream pod logs
-kubectl logs <pod> -c <container>
-Logs for a specific container
-kubectl exec -it <pod> -- /bin/bash
-Shell into a pod
-kubectl delete pod <name>
-Delete a pod
-kubectl top pods
-Show CPU/memory usage
-
-Deployments (Scale, Update, Rollback)
-Command
-Description
-kubectl get deployments
-List deployments
-kubectl describe deployment <name>
-Describe a deployment
-kubectl scale deployment <name> --replicas=3
-Scale up/down
-kubectl rollout status deployment <name>
-Check rollout progress
-kubectl rollout restart deployment <name>
-Restart all pods
-kubectl rollout undo deployment <name>
-Rollback to previous version
-kubectl set image deployment/<name> container=image:tag
-Update container image
-
-Services & Networking
-Command
-Description
-kubectl get services
-List services
-kubectl get ingress
-List ingress rules
-kubectl port-forward pod/<name> 8080:8080
-Forward port to a pod
-kubectl port-forward svc/<name> 8080:80
-Forward port to a service
-
-Apply & Manage Resources (YAML)
-Command
-Description
-kubectl apply -f file.yaml
-Create or update from YAML
-kubectl delete -f file.yaml
-Delete resources from YAML
-kubectl get all -n <ns>
-List everything in a namespace
-kubectl get configmaps
-List ConfigMaps
-kubectl get secrets
-List Secrets
-kubectl get pvc
-List Persistent Volume Claims
-
-Debugging & Troubleshooting
-Command
-Description
-kubectl describe pod <name>
-Check events and error details
-kubectl get events --sort-by=.metadata.creationTimestamp
-View recent cluster events
-kubectl run debug --image=busybox -it --rm -- /bin/sh
-Launch temp debug pod
-
-
-Quick Comparison: Docker vs Kubernetes
-Action
-Docker
-Kubernetes
-Run an app
-docker run
-kubectl apply -f
-View logs
-docker logs
-kubectl logs
-Shell access
-docker exec -it
-kubectl exec -it
-Stop
-docker stop
-kubectl delete pod
-Scale
-docker-compose scale
-kubectl scale deployment
-Port forward
--p 8080:8080 (at run)
-kubectl port-forward
-
-
-
+Docker and Kubernetes Command Reference: Expanded Notes
+Each section below covers one group of commands from your reference. For each group, I explain what the commands do, how they work underneath, their trade-offs, and how they're used in practice. Where the reference is incomplete or misleading, I've noted the correction in the section. Version details, such as which flags or subcommands are current, can change, so check the official documentation for your Docker and kubectl versions.
+1. Docker Images: Build, Pull, Push, Tag, and Remove
+   In simple terms
+   An image is the packaged template that containers start from. The commands in this group move images around. docker build turns a Dockerfile and its surrounding files into an image. docker images lists what is stored on your machine. docker pull downloads an image from a registry, and docker push uploads one. docker tag gives an existing image another name, and docker rmi deletes a name or image from your machine. Think of an image as a shipping box with a label. Build is packing the box, push and pull are sending it through the post office, and tag is writing a second label on the same box.
+   The reference describes docker tag old:tag new:tag as a rename. That is not accurate. The command creates a second name that points to the same image, and the old name still exists. To rename, you tag the image with the new name and then remove the old name with docker rmi. Adding a second tag costs almost no disk space, because both names refer to the same underlying layers.
+   Background: how it was before
+   Before Docker, sharing a runnable environment meant sending a tarball, a virtual machine image, or a long installation guide. There was no standard naming scheme and no easy way to see what was inside. Docker's first useful idea was the layered image with a human-readable name and tag, which made sharing a single command. Docker Hub, launched in 2013, provided a public place to store and fetch images. The Open Container Initiative later standardized the image format, so images from one tool can run in another.
+   How it works internally
+   docker build sends the build context, which is the directory you named with the dot, to the build engine. Since Docker 23, BuildKit is the default builder. It executes each Dockerfile instruction, caches the results, and produces layers identified by content hashes. The -t flag sets the repository name and tag. docker images reads the local image store and shows repositories, tags, image IDs, creation times, and sizes. The sizes can add up to more than the disk actually uses, because layers are shared between images.
+   docker pull resolves the tag to a manifest digest, checks which layers are already present, downloads the rest in parallel, and verifies each layer's hash. Authentication comes from the credentials stored in your Docker configuration. docker push does the reverse: it checks whether the registry already has each layer, uploads only the missing ones, and then updates the tag to point to the manifest. docker rmi removes the name you specify. If a container still uses the image, Docker refuses unless you force it. If that was the last name, the image data is removed when no longer referenced. Images left without any tag, called dangling images, stay on disk until you prune them.
+   Advantages and disadvantages
+   These commands make images portable, versioned, and easy to share. Layer sharing saves space and transfer time. The disadvantages are that tags are mutable, so latest or even a version tag can point to a different image tomorrow. Images can grow large if the Dockerfile is careless. Credentials for private registries must be managed carefully, and a push of an image containing a secret publishes that secret to everyone who can pull it.
+   Real-world examples
+   A continuous integration pipeline runs docker build -t order-service:abc1234 ., using the Git commit as the tag, and pushes it to a private registry. A developer pulls that exact image to reproduce a production bug. A release engineer adds a second tag, order-service:1.4.0, to the same image, so the release name and the commit name both point to the tested build. When a bad build is accidentally pushed under the release tag, the team removes the bad tag and pushes the correct image instead.
+   Alternatives and industry practice
+   Buildah and Kaniko build images without a Docker daemon, which suits rootless or cluster-based builds. Jib builds Java images directly from Maven or Gradle. Current practice avoids relying on mutable tags for production. Teams deploy by digest or by an immutable tag, sign images with cosign, and use the docker tag command for aliases rather than as a rename.
+2. Docker Containers: Run, Manage, and Debug
+   In simple terms
+   A container is a running instance of an image. The commands in this group create, inspect, and control containers. docker run creates a container from an image and starts it. The -d flag runs it in the background, -p 8080:8080 connects port 8080 on your computer to port 8080 in the container, and --name app gives it a readable name. docker ps lists running containers, and -a also includes stopped ones. stop, start, restart, and rm change the container's state. logs shows what the program printed, exec runs a command inside the container, and inspect shows the full configuration as JSON.
+   Two corrections to the reference are needed. The command docker exec -it <container> /bin/bash fails on images that do not include bash, such as Alpine-based images, which provide /bin/sh instead. Distroless images have no shell at all. docker rm also refuses to remove a running container unless you stop it first or use -f.
+   Background: how it was before
+   Before containers, starting an application meant launching a process on a machine, managed by a script or a process supervisor such as systemd. Logs went to files, and checking on a process meant logging into the server. Docker turned an application into a named object that could be started, stopped, and inspected with the same few commands, regardless of its language or framework. The Docker command set has been reorganized over time. Docker 1.13 in 2017 introduced management groups such as docker container and docker image, and the short forms used in the reference still work.
+   How it works internally
+   docker run asks the daemon to create a container from the image. The daemon adds a writable layer on top of the read-only layers, sets up Linux namespaces for processes, network, and mounts, applies control groups for CPU and memory limits, creates a network interface, and starts the entrypoint process. The -p flag adds a rule that forwards traffic from the host port to the container port.
+   A stopped container keeps its writable layer and configuration. docker start launches it again with the same data and settings, which is why a database container's files can survive a restart. docker stop sends SIGTERM to the main process, waits ten seconds by default, and then sends SIGKILL. The -t flag changes the wait. docker kill sends SIGKILL right away. docker restart performs a stop and a start. docker rm deletes the container and its writable layer, but not named volumes unless you add -v.
+   docker logs reads output captured from standard output and standard error. The default logging driver writes JSON files on the host, so without rotation settings those files can fill the disk. docker exec starts a new process inside the running container's namespaces, so the shell must exist in the image. docker inspect returns JSON with the configuration, state, mounts, environment, and network settings. The --format option extracts a single field, which is useful in scripts.
+   Advantages and disadvantages
+   The commands are simple, consistent, and work well for development and single-host operations. Containers persist their state until removed, which can be useful for debugging. The disadvantages are that Docker has no built-in self-healing, so a crashed container stays down unless a restart policy such as --restart unless-stopped is set. Logs on the host need rotation. Running exec in production gives broad access that should be restricted and audited.
+   Real-world examples
+   A developer runs a local Postgres container with a published port and a name, then uses docker logs -f to watch the startup messages. When a test service crashes, the developer runs docker ps -a to see its exit status, then docker logs to find the stack trace. A support engineer uses docker inspect --format '{{.State.ExitCode}}' in a script to detect which containers exited with errors. On a Linux server, the team sets --restart unless-stopped so the monitoring agent comes back after a reboot.
+   Alternatives and industry practice
+   Kubernetes, Nomad, and systemd-based services provide self-healing across failures. Log drivers can send output to Fluent Bit, CloudWatch, or a similar system, and that removes the need to keep logs on the host. Current practice runs containers with a restart policy or an orchestrator, avoids interactive shells in production containers, and uses ephemeral debugging containers where possible.
+3. Docker Cleanup: Prune Commands
+   In simple terms
+   Over time, Docker accumulates stopped containers, unused networks, dangling images, cached build steps, and sometimes volumes, and these consume disk space. The prune commands remove that unused material. docker system prune removes stopped containers, unused networks, dangling images, and build cache. docker volume prune removes volumes not used by any container, and docker network prune removes unused networks. The reference describes docker system prune as removing "all unused data," which is too broad. By default it does not remove volumes, and it does not remove tagged images that are simply unused. Those require the -a flag for images and --volumes for volumes.
+   Background: how it was before
+   Early Docker users noticed that their hosts filled up with old images and stopped containers. Cleanup was done with shell one-liners that listed IDs and removed them, which broke when the commands changed. Docker added dedicated prune commands in its management-command update and continued to extend them. Build caches grew significantly as multi-stage builds became common, and BuildKit's cache management later gave teams more control over it.
+   How it works internally
+   Prune commands ask the daemon to find resources that have no references. A container is unused when it is not running. A network is unused when no container is attached. An image is dangling when it has no tag. Named volumes are unused when no container mounts them. The daemon deletes the matching items and reports the space recovered. Build cache removal is handled separately because cached layers are reused across builds.
+   The safety question is central. Removing a volume deletes data permanently, which is why docker volume prune is dangerous on a host that runs databases with named volumes. Using docker system prune -a --volumes on a shared machine can destroy the data of containers that are merely stopped.
+   Advantages and disadvantages
+   Pruning keeps disks healthy and reduces clutter. It is easy to automate on development machines. The disadvantages are the risk of deleting data that someone expects to keep, the slow rebuilds that follow a build cache prune, and the surprise of removing images that a team still wanted for rollback. A prune command has no undo.
+   Real-world examples
+   A developer's laptop runs out of disk space after months of builds. The developer runs docker system prune and recovers several gigabytes of build cache and stopped containers, while keeping the named database volume. On a CI runner, the team schedules docker builder prune with a size limit each night, so builds stay fast without filling the disk. On a production host, the team forbids volume pruning and uses a monitoring alert for disk usage instead.
+   Alternatives and industry practice
+   Scheduled cleanup jobs with filters such as --filter "until=168h" limit what gets removed. Registries apply retention policies that delete old images in the registry, which is separate from local cleanup. Current practice keeps local cleanup on build machines, avoids volume pruning on hosts that hold data, and treats the volume directory as something to back up rather than discard.
+4. Docker Compose
+   In simple terms
+   Compose lets you describe several containers, their networks, and their volumes in one YAML file, then manage them together. docker compose up -d creates and starts all of them in the background. down stops and removes them. logs -f streams output from all services, ps shows their status, and build rebuilds the images. Compose is a local development and testing tool. It is not an orchestrator for production clusters.
+   The reference uses docker-compose, which is the older standalone Compose version. It reached end of life in 2023. Modern installations use docker compose, with a space, which is provided as a plugin. The docker-compose scale command in the comparison table is also obsolete. Scaling is done with docker compose up -d --scale order-service=3. Finally, docker-compose down does not remove named volumes unless -v is added, which is an important detail when you want to discard a development database.
+   Background: how it was before
+   Before Compose, developers started each container with a separate docker run command and kept track of the network names, ports, and order in a text file. Fig, created in 2013 and acquired by Docker in 2015, introduced a YAML description of a multi-container application. Docker later renamed it Compose and rewrote it in Go, shipping it as a plugin. Before containers, developers used Vagrant to start several virtual machines for a local environment, which was slower and heavier.
+   How it works internally
+   Compose reads the YAML file and builds a model of the project. It creates a network for the project, so services can reach each other by service name through Docker's embedded DNS. It creates named volumes, creates containers from the images, and starts them in an order that respects depends_on. The health check condition waits for a container to report healthy before starting dependents. Compose uses the Docker API to perform each step, and it records the project name so that later commands affect only that project's containers.
+   down stops containers, removes them, and removes the project's networks. It leaves named volumes unless you add -v, and it leaves images unless you add --rmi all. This separation protects data by default.
+   Advantages and disadvantages
+   Compose makes a complete local stack reproducible with a single command, and the file documents the system's dependencies. It is well suited to integration tests in continuous integration. Its disadvantages are that it runs on a single host, has no self-healing across machines, offers no rolling updates, and can differ from production behavior. Projects can also accumulate unused services in their Compose files over time.
+   Real-world examples
+   A developer runs docker compose up -d in the morning to start the order service, Postgres, and a message broker, then runs the test suite against them. At the end of the week, the developer runs docker compose down to stop everything but keep the database volume. A continuous integration job starts the same stack, runs end-to-end tests, and tears it down afterward with -v so the next run starts clean. A team preparing a demo uses --scale to run three copies of a worker to show queue distribution.
+   Alternatives and industry practice
+   Testcontainers starts containers from inside JUnit tests, which gives each test an isolated database and cleans up automatically. Tilt and Skaffold target the inner loop of development against Kubernetes, and kind or minikube run local clusters. Dev Containers configure a complete development environment inside an editor. Current practice uses Compose for shared local stacks, Testcontainers for automated tests, and Kubernetes for production.
+5. Kubernetes Cluster and Context
+   In simple terms
+   A Kubernetes cluster is the set of machines that run your workloads. kubectl is the command-line tool that talks to the cluster's API. Because you may work with several clusters, kubectl stores connection details in a file called a kubeconfig. Each entry in that file is a context, which combines a cluster, a user, and optionally a default namespace. The commands in this group check the cluster's health, list its machines, show your contexts, and switch between them. kubectl cluster-info shows the API server address and some core service endpoints. kubectl get nodes lists the worker machines and their status. kubectl config get-contexts shows all contexts, and kubectl config use-context <name> makes one of them active.
+   Background: how it was before
+   Before Kubernetes, managing a fleet of servers meant SSH sessions, host lists, and configuration management tools that pushed changes to each machine. Teams had their own scripts for identifying which server did what. Kubernetes introduced a single API that all clients use, and kubectl became the standard client. Early on, users often copied the kubeconfig file between machines, which later caused security problems, so modern practice uses short-lived credentials from identity providers.
+   How it works internally
+   kubectl reads the kubeconfig file, selects the current context, and sends each request to the API server of that context's cluster, authenticating with the credentials in the file. The API server checks authorization using role-based access control, then returns the data. kubectl get nodes returns Node objects, which kubelets keep updated with heartbeats. A node's status shows Ready when its kubelet has reported recently. kubectl cluster-info reads the API server address and lists services such as the control plane and cluster DNS.
+   Switching contexts changes only the local kubeconfig. It does not affect the cluster. This is an important point, because an engineer can accidentally run a command against production after forgetting which context is active.
+   Advantages and disadvantages
+   Contexts let one person manage development, staging, and production from one terminal. The API is consistent across clusters. The disadvantages are that a wrong context causes mistakes that are difficult to reverse. Kubeconfig files can contain long-lived credentials that become security risks if copied. Managing many clusters adds naming conventions that people must follow.
+   Real-world examples
+   An engineer runs kubectl config get-contexts before a deployment to confirm the active context, and the output shows the staging context as active. The engineer switches to production with use-context, checks the nodes, and deploys. A platform team names contexts with the environment and region, such as prod-eu-west, to make mistakes less likely. A team uses a tool such as kubectx to switch quickly and displays the current context in the terminal prompt to make it visible.
+   Alternatives and industry practice
+   Cloud CLIs such as aws eks update-kubeconfig and az aks get-credentials add contexts with cloud-based authentication. Tools such as kubectx, kubens, and k9s speed up switching and navigation. Current practice uses single sign-on or short-lived tokens, separates production credentials from development, and shows the active context in the prompt.
+6. Kubernetes Pods: View, Debug, and Access
+   In simple terms
+   A pod is the smallest unit Kubernetes runs. It contains one or more containers that share an IP address and storage. Most of the time you do not create pods directly. A Deployment creates them for you. The commands in this group help you see and inspect pods. kubectl get pods lists them in the default namespace, -n chooses a namespace, and -A lists pods in all namespaces. kubectl describe pod shows details and recent events, which often explain why a pod is not running. kubectl logs shows output, and -f streams it. -c selects one container when a pod has several, and kubectl exec opens a shell inside a container. kubectl delete pod removes a pod. kubectl top pods shows CPU and memory use.
+   The reference has three gaps. Logs for a container that crashed need the --previous flag. Multi-container pods require -c to choose the container. Most important, deleting a pod is not a stop command in a Deployment. The controller creates a replacement immediately, so the pod comes back. The reference's comparison table places kubectl delete pod next to docker stop, which is misleading.
+   Background: how it was before
+   Before Kubernetes, a running process was tied to a server, and debugging meant reading that server's logs. When an application moved between servers, its logs moved too, so teams used log aggregation systems and remote shells to keep track. Kubernetes separated the notion of a workload from a machine, so the pod became the unit of observation. Its logs, events, and resource usage are all retrieved through the same API.
+   How it works internally
+   kubectl get pods reads Pod objects from the API server, which serves them from a cache updated by watches. describe combines the object's spec and status with its events. Events are stored temporarily, typically for about an hour, which is why old problems may disappear from describe. kubectl logs asks the API server to proxy the request to the kubelet on the pod's node, and the kubelet reads the container's log file. The --previous flag reads the log from the last terminated container, which is essential for crash loops. kubectl exec opens a streaming connection through the API server, and the kubelet asks the container runtime to start a process inside the container. That requires permission on the pods/exec resource.
+   kubectl delete pod marks the pod for deletion and gives it a grace period to stop. The ReplicaSet notices the missing pod and creates a new one, which is how Kubernetes self-heals. kubectl top pods depends on the metrics server, which scrapes resource data from each kubelet and exposes it through the metrics API. Without the metrics server, the command reports an error.
+   Advantages and disadvantages
+   Pods expose a consistent set of diagnostic tools, and the same commands work on every cluster. Deleting a pod is a fast way to clear a stuck instance, because the controller replaces it. The disadvantages are that logs are gone once the pod is removed unless a logging system has collected them, events expire quickly, and exec gives direct access that many organizations restrict. Multi-container pods make log commands more verbose.
+   Real-world examples
+   A pod is stuck in an error state. describe shows an event saying the image could not be pulled because the registry credentials were wrong. A pod restarts repeatedly, and logs --previous shows an exception from the last run. A pod on a busy node uses far more memory than its neighbors, and top pods reveals it. A team deletes a pod with a corrupted in-memory cache, and the Deployment creates a fresh one within seconds, which resolves the problem without a redeploy.
+   Alternatives and industry practice
+   Stern tails logs across many pods at once. Centralized logging through Loki, CloudWatch, or Elastic keeps logs after pods are removed. Ephemeral debug containers through kubectl debug attach a tool image to a running pod, which helps when the application image has no shell. Current practice restricts exec in production, relies on centralized logs and metrics, and uses deletion only as a deliberate restart mechanism.
+7. Kubernetes Deployments: Scale, Update, and Roll Back
+   In simple terms
+   A Deployment describes how many copies of a pod should run, which image they use, and how updates should happen. The commands in this group change that description. kubectl scale changes the number of copies. kubectl rollout status waits and reports progress during an update. kubectl rollout restart restarts every pod in a Deployment in a controlled way, which is useful after a configuration change. kubectl rollout undo returns to the previous version, and kubectl set image changes the image of one container. The notes' command for scale is correct, although the usual form uses the resource name: kubectl scale deployment/order-service --replicas=3.
+   One important caveat is that a Horizontal Pod Autoscaler overrides manual scaling. If an HPA manages the Deployment, a manual scale is corrected by the autoscaler within moments. Likewise, if a GitOps tool such as Argo CD manages the Deployment with self-healing, set image or undo changes are reverted to match Git.
+   Background: how it was before
+   Before Kubernetes, deploying a new version often meant stopping the application, copying files, and starting it again. Scaling meant provisioning servers manually. Early Kubernetes versions had an imperative command, rolling-update, that replaced pods one at a time, and in the Deployment API introduced around version 1.2 in 2016, updates became declarative and rollback history was stored in the cluster. Before that, rollbacks depended on whatever old image name the operator remembered.
+   How it works internally
+   A Deployment owns ReplicaSets, and each ReplicaSet corresponds to one version of the pod template. When you change the image or other template fields, the Deployment controller creates a new ReplicaSet and gradually shifts pods from the old one to the new one, according to the rolling update settings. scale updates the replica count in the spec, and the ReplicaSet creates or removes pods to match. rollout status watches the Deployment's conditions, such as Progressing and Available, and returns when the update completes or fails. rollout restart adds an annotation with the current time to the pod template, which changes the template and triggers a normal rolling update. rollout undo makes the Deployment's template match a previous ReplicaSet, and Kubernetes keeps a history of ReplicaSets, controlled by the revision history limit. set image patches the image field of one container in the template, which also starts a rollout.
+   Advantages and disadvantages
+   These commands give fast, controlled changes without editing YAML. Rollback is quick because the old ReplicaSet still exists. The disadvantages are that imperative changes make the cluster diverge from the files in version control, that rollback restores code but not data or database schema changes, and that automatic systems such as HPA or GitOps can silently undo a manual change. Teams can be surprised when a set image command is reverted minutes later.
+   Real-world examples
+   A service needs more capacity during a promotion, and an engineer scales it to five replicas with a single command, then watches rollout status to confirm the new pods are ready. A configuration change requires restarting pods to load new values, and rollout restart does it without downtime. A release introduces a bug, and rollout undo restores the previous version within a minute. The team then reviews why the bad change passed its tests and adds a check. A hotfix is applied with set image, and the team commits the same change to Git afterward so the next sync does not revert it.
+   Alternatives and industry practice
+   Argo Rollouts and Flagger provide canary and blue/green strategies with automated analysis. GitOps tools record every change as a commit and roll back by reverting the commit. Current practice keeps the desired state in Git, uses rollout status in pipelines to confirm success, reserves imperative commands for emergencies, and documents the rollback procedure, including any data steps.
+8. Kubernetes Services and Networking
+   In simple terms
+   Pods come and go, and their IP addresses change each time they are recreated. A Service gives a group of pods a stable name and address, and it sends traffic to whichever pods are ready. An Ingress describes HTTP routes from outside the cluster to Services. The commands in this group list those objects and create temporary tunnels for debugging. kubectl port-forward pod/<name> 8080:8080 forwards your computer's port 8080 to a port in a specific pod. kubectl port-forward svc/<name> 8080:80 does the same through a Service, which chooses one of its pods. These tunnels are for development and troubleshooting. They are not a way to publish an application to users.
+   Background: how it was before
+   Early server applications were reached through fixed IP addresses or DNS entries that operators updated by hand. Load balancers were configured with lists of backend addresses. When a server failed, someone had to remove it from the list. Kubernetes introduced the Service abstraction so that a group of changing pods could be addressed through one stable name. The Ingress object later added HTTP routing rules in a standard form, and its successor, the Gateway API, generally available since 2023, offers a more expressive model.
+   How it works internally
+   A Service selects pods by labels. The control plane keeps an EndpointSlice listing the addresses of the ready pods that match. Cluster DNS maps the Service name to its virtual address, and kube-proxy or a replacement programs network rules that forward traffic to one of the endpoints. Readiness matters here, because pods that are not ready are removed from the endpoints.
+   kubectl port-forward works differently. The client opens a connection to the API server, which proxies it to the kubelet on the pod's node, and the kubelet connects to the pod's port. The forward lasts only as long as the command runs. When you use a Service name, kubectl picks a pod behind it and forwards to that pod. kubectl get services shows each Service's type, cluster address, and ports. kubectl get ingress shows the HTTP rules and the hosts they match, but it does not tell you whether the ingress controller is working.
+   Advantages and disadvantages
+   Services give stable addressing and built-in load balancing across pods, and they work the same way on every cluster. Port forwarding lets a developer reach an internal service without exposing it. The disadvantages are that a Service of type ClusterIP is reachable only inside the cluster, that port forwards are fragile and single-user, and that Ingress resources depend on a controller that must be installed and maintained separately. Misconfigured selectors can produce a Service with no endpoints, which fails silently from the caller's view.
+   Real-world examples
+   A developer forwards port 8080 to the order service to test it with a local browser, then closes the forward when finished. An engineer runs get services and finds that the payment service has no endpoints, because its label was changed during a refactor. A team uses an Ingress to route api.example.com/orders to the order service and /payments to the payment service. A security review confirms that the Postgres service is ClusterIP, so it is reachable only from inside the cluster.
+   Alternatives and industry practice
+   Service meshes such as Istio and Linkerd add traffic management, mutual TLS, and detailed telemetry beyond basic Services. The Gateway API replaces Ingress for many new designs. Cloud load balancers integrate with Services of type LoadBalancer or with Ingress through controllers. Current practice keeps internal services as ClusterIP, uses port forwarding for temporary debugging only, and exposes external traffic through a managed load balancer or the Gateway API with TLS.
+9. Applying and Managing Resources from YAML
+   In simple terms
+   Kubernetes resources are usually described in YAML files, and these commands send those descriptions to the cluster. kubectl apply -f file.yaml creates a resource if it does not exist and updates it if it does. kubectl delete -f file.yaml removes the resources described in the file. kubectl get all lists several common resource types in a namespace. get configmaps, get secrets, and get pvc list configuration, secrets, and persistent volume claims.
+   The reference has an important error about get all. It does not list everything. It shows pods, services, deployments, ReplicaSets, StatefulSets, jobs, and cronjobs, but it omits ConfigMaps, Secrets, Ingresses, PersistentVolumeClaims, and HorizontalPodAutoscalers. A team that relies on get all to check a deployment can miss a missing ConfigMap or an unbound volume claim. Also, get secrets shows only names and types, not values. To see the encoded values, use kubectl get secret <name> -o yaml, and remember that base64 is an encoding, not encryption.
+   Background: how it was before
+   Early Kubernetes users created resources with imperative commands and kept a record in shell history or in notes. The result was hard to reproduce, because the cluster state was the only accurate description. Declarative configuration, where files describe the desired state, became the standard approach. Kubernetes introduced client-side apply, which stored the last applied configuration in an annotation, and later server-side apply, generally available in version 1.22, which tracks field ownership on the server. Server-side apply reduced conflicts between tools that edit the same object.
+   How it works internally
+   kubectl apply reads the file and computes a patch. Client-side apply compares the file, the last applied configuration stored in an annotation, and the live object. It then sends a patch that adds, changes, or removes the fields you specified. Server-side apply sends the desired fields to the API server, which records which manager owns each field. Conflicts occur when two managers claim the same field, and the command reports them. kubectl delete -f removes the objects named in the file, which is safe only if the file matches what is deployed.
+   kubectl get all makes a set of list requests for the common kinds in the namespace. Secrets are stored in the API server's backing store, usually etcd, and are returned to authorized clients as base64 values. Encryption at rest must be configured by the cluster operator, because by default Secrets are stored unencrypted. PersistentVolumeClaims show whether a volume is bound to a storage class.
+   Advantages and disadvantages
+   Declarative files are reviewable, repeatable, and portable across clusters. Apply is idempotent, so running it twice has the same effect as running it once. The disadvantages are that the command can overwrite changes made outside the file, that a delete -f on the wrong file can remove production resources, and that get all gives an incomplete view. Mixing imperative edits with apply leads to drift.
+   Real-world examples
+   A team applies its manifests to a staging namespace and reviews the output. When a developer changes the replica count in the file and applies it, the change is recorded in Git and the cluster updates. A cleanup script runs delete -f on the directory for an old feature, and it removes the feature's resources. A support engineer who suspects a missing configuration runs get configmaps and finds the expected name is absent, then checks the deployment that should have created it.
+   Alternatives and industry practice
+   kubectl diff shows what an apply would change, and kubectl apply --dry-run=server validates the file against the live API. GitOps tools such as Argo CD and Flux apply manifests from Git automatically and detect drift. Current practice uses server-side apply for pipelines, reviews diffs before applying, avoids manual edits to managed resources, and never stores plaintext secrets in files committed to Git.
+10. Debugging and Troubleshooting in Kubernetes
+    In simple terms
+    When something goes wrong in a cluster, the evidence is usually in three places: the events that Kubernetes records, the state of the objects involved, and the logs from the containers. The commands in this group bring those together. kubectl describe pod shows the pod's status, the reasons for its state, and recent events. kubectl get events lists cluster events, and sorting them shows the most recent first. kubectl run debug --image=busybox -it --rm -- /bin/sh creates a temporary pod with a shell, which is useful for testing network connections from inside the cluster. When the command finishes, --rm deletes the pod.
+    The reference's sort expression, .metadata.creationTimestamp, works, but events are usually sorted by .lastTimestamp, because an event can be recorded once and then repeated. Events also expire, typically after about an hour, so an investigation should start soon after a problem occurs. Finally, a debug pod inherits the namespace's network policies and security rules, and some clusters block it under Pod Security admission, so a failure to start the debug pod can itself be a clue.
+    Background: how it was before
+    Before Kubernetes, troubleshooting a distributed application meant checking several servers, each with its own logs, and matching timestamps by hand. Network problems were investigated with tools such as ping, traceroute, and tcpdump on a machine that had access to the same network. Kubernetes created an environment where containers are moved and replaced, so debugging needed tools that work through the API. The debug pod pattern became popular because it lets an engineer test connectivity from the same network position as the application.
+    How it works internally
+    Kubernetes components record events when they take actions, such as scheduling a pod, pulling an image, or failing a probe. Events are stored as objects and expire after a retention period set by the API server. describe gathers the object and its events by querying with a field selector. get events lists them, and sorting uses their timestamp fields. The kubectl run command creates a Pod object with the image and command you specify. The -it flags attach a terminal, and --rm tells the client to delete the Pod after the session ends.
+    The debug pod has the same network identity rules as any other pod. It receives an IP address from the cluster network, can resolve Service names through cluster DNS, and is subject to any network policies that apply to its namespace. A busybox pod lacks many tools, so curl or dig may need to be replaced with busybox equivalents, or a richer image such as curlimages/curl can be used.
+    Advantages and disadvantages
+    The commands provide a consistent way to gather evidence across clusters, and the debug pod tests the network from the application's point of view. The disadvantages are that events expire, that describe output can be long, and that temporary pods can be blocked by security policy. Debugging through a temporary pod also creates a risk of leaving resources behind if --rm is not used.
+    Real-world examples
+    A pod is in Pending state. describe reports that no node has enough memory, which points to a resource request that is too large for the cluster. A service fails intermittently. An engineer runs a debug pod and calls the service by name, and the connection times out, which suggests a network policy blocks traffic from the application namespace. get events sorted by time shows a flurry of image pull failures during a deployment, which traces back to an expired registry token. A team runs a debug pod with a DNS lookup to confirm that cluster DNS is healthy before blaming the application.
+    Alternatives and industry practice
+    Cluster monitoring with Prometheus alerts on conditions such as crash loops and unavailable replicas, so people do not have to notice them manually. Event exporters send events to a log system for longer retention. The kubectl debug command attaches an ephemeral container to a running pod, which is safer than running a new pod in some cases. K9s provides an interactive terminal interface for browsing events and pods. Current practice adds alerts on events and restart counts, keeps events in a retained store, and uses ephemeral debugging with restricted permissions.
+11. Docker vs Kubernetes: Side by Side
+    In simple terms
+    Docker and Kubernetes both run containers, but they operate at different levels. Docker starts a container on a machine when you ask it to, and that container stays in whatever state you leave it, unless a restart policy applies. Kubernetes keeps a desired state for an application across many machines and continuously corrects differences. That is why the same action has different commands. In Docker, you run a container. In Kubernetes, you describe an application and apply the description. The comparison table in the reference is useful as a translation guide, but several rows describe different ideas as if they were equal, and those rows need explanation.
+    The rows that need correction are these. The row Stop, with docker stop versus kubectl delete pod, is not equivalent. Deleting a pod in a Deployment causes a replacement, so to stop an application in Kubernetes you scale the Deployment to zero replicas or delete the Deployment. The row Scale is also incomplete. Docker Compose uses docker compose up --scale, and Kubernetes uses kubectl scale on a Deployment, which can conflict with an HPA. The row Port forward is also misleading. The Docker -p flag publishes a port permanently for the life of the container, while kubectl port-forward is a temporary tunnel for one client. Finally, the row Run an app compares docker run with kubectl apply, which is reasonable as a translation, but kubectl apply requires a manifest, a cluster, and a Deployment object, so it is more than a one-line equivalent.
+    Background: how it was before
+    Before Kubernetes, many teams used Docker directly on servers, often with scripts, or with the Docker Swarm mode introduced in 2014 and 2015. Orchestration was an extra layer added on top. Kubernetes, released as open source in 2014, made the orchestration layer the center. Docker remained the standard image format and a common runtime, but the day-to-day operations moved from commands on a host to declarations applied to a cluster. Many engineers learned Docker first, so the translation between the two models is a common need.
+    How it works internally
+    Docker's commands are imperative. Each command tells the daemon to do one thing immediately. A container persists until stopped or removed, and it does not return after a reboot unless a restart policy says so. Kubernetes's commands are mostly declarative. You describe the desired state, the API server stores it, and controllers work continuously to match it. A deleted pod is recreated because the desired state still calls for it. A node failure leads to rescheduling. Logs, exec, and port forwarding work through the API server and kubelet, rather than through a local daemon.
+    This difference explains the mapping. docker run corresponds roughly to creating a Deployment, but the Deployment also keeps the application running. docker logs corresponds to kubectl logs, with the addition of the pod and container selectors. docker exec corresponds to kubectl exec, with the same caveat about shells. docker stop has no direct equivalent, because stopping in Kubernetes means changing the desired state.
+    Advantages and disadvantages
+    Docker's imperative model is fast and simple for one machine, and it is easy to learn. Kubernetes's declarative model provides self-healing, scaling, and consistency across many machines, at the cost of more concepts. Mixing the two models causes confusion. An engineer who runs docker stop on a Kubernetes node is not stopping the application, because the kubelet will restart it.
+    Real-world examples
+    A developer who knows Docker uses docker compose up to run the stack locally, then moves to Kubernetes for staging. The developer discovers that kubectl delete pod does not stop the application and learns to scale the Deployment instead. A team that migrated from a single Docker host to a cluster adds a Deployment for each service and replaces its port publishing with a Service. A new engineer who previously used docker compose scale is shown the equivalent up --scale command and the warning about HPA.
+    Alternatives and industry practice
+    Podman provides a Docker-compatible command line without a daemon, and it can generate Kubernetes manifests from running containers. Tools such as kompose convert Compose files into Kubernetes manifests, although the output usually needs review. Current practice uses Docker, or a compatible builder, for images and local work, and Kubernetes or another orchestrator for production. The most important habit to build is thinking in desired state rather than in individual actions.
